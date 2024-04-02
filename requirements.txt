@@ -1,0 +1,6 @@
+cnocr==2.3.0.1
+loguru==0.7.2
+numpy==1.26.4
+opencv_python==4.9.0.80
+Pillow==10.3.0
+PyQt-Fluent-Widgets==1.5.4

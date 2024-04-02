@@ -1,0 +1,41 @@
+"""
+Author: Night-stars-1 nujj1042633805@gmail.com
+Date: 2024-04-01 22:14:42
+LastEditTime: 2024-04-02 12:19:28
+LastEditors: Night-stars-1 nujj1042633805@gmail.com
+"""
+
+import sys
+from pathlib import Path
+
+# 添加项目根目录到 sys.path
+project_root = Path(__file__).resolve().parent.parent
+sys.path.append(str(project_root))
+
+import math
+
+from core.adb import connect, screenshot
+from core.image import crop_image, show_image
+from core.ocr import predict
+
+connect()
+image = screenshot()
+image = crop_image(image, (250, 309, 381, 1193))
+# show_image(image)
+data = predict(image)
+# 计算每个文本框的中心点坐标
+centers = {}
+for item in data:
+    position = item["position"]
+    # 计算中心点坐标
+    center_x = (position[0][0] + position[2][0]) / 2
+    center_y = (position[0][1] + position[2][1]) / 2
+    centers[item["text"]] = (center_x, center_y)
+    for center, pos in centers.copy().items():
+        if abs(center_x - pos[0]) < 50 and pos != (center_x, center_y):
+            centers.pop(center)
+            if item["text"] in centers:
+                centers.pop(item["text"])
+            centers[center + item["text"]] = (center_x, center_y)
+
+print(centers)

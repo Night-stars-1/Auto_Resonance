@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-03-20 22:24:35
-LastEditTime: 2024-04-02 17:55:02
+LastEditTime: 2024-04-02 23:14:44
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -15,7 +15,7 @@ ADBOREDER = ""
 ADBPATH = ""
 
 
-def connect(order="127.0.0.1:21513", path="core\\lib\\adb"):
+def connect(order="127.0.0.1:7555", path="core\\lib\\adb"):
     """
     说明:
         连接ADB
@@ -27,7 +27,7 @@ def connect(order="127.0.0.1:21513", path="core\\lib\\adb"):
     ADBPATH = path
     shell = [ADBPATH, "connect", ADBOREDER]
     result = run(shell, shell=True, capture_output=True)
-    return "already connected" in str(result.stdout)
+    return "already connected" in str(result.stdout) or "connected to" in str(result.stdout)
 
 
 def kill():

@@ -5,10 +5,6 @@
         "cropped_pos": [12, 193, 6, 72]
     },
     {
-        "type": "click_image",
-        "image": ""
-    },
-    {
         "type": "ocr_click",
         "text": "点击屏幕进入游戏",
         "cropped_pos": [534, 741, 527, 606]

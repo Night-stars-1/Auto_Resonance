@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-03-20 22:24:35
-LastEditTime: 2024-04-02 17:42:25
+LastEditTime: 2024-04-03 12:19:44
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -17,5 +17,6 @@ if __name__ == "__main__":
         for task in tasks:
             analysis = AnalysisTasks(task)
             analysis.start()
+            logger.info(f"{task}运行完成")
     else:
         logger.error("ADB连接失败")

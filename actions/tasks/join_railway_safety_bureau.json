@@ -1,0 +1,11 @@
+[
+    {
+        "type": "wait",
+        "image": "railway_safety_bureau/railway_safety_bureau.png",
+        "cropped_pos": [875, 1093, 27, 158]
+    },
+    {
+        "type": "click",
+        "pos": [870, 311]
+    }
+]

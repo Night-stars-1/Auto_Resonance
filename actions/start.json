@@ -1,4 +1,6 @@
 [
-    "test_attack",
-    "test_attack"
+    "join_railway_safety_bureau",
+    {
+        "railway_safety_bureau_attack": 10
+    }
 ]

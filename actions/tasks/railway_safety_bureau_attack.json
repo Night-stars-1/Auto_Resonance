@@ -1,17 +1,9 @@
 [
     {
         "type": "wait",
-        "image": "taj1.png",
-        "cropped_pos": [875, 1093, 27, 158]
-    },
-    {
-        "type": "click",
-        "pos": [870, 311]
-    },
-    {
-        "type": "wait",
-        "image": "taj1.png",
-        "cropped_pos": [174, 294, 444, 547]
+        "image": "railway_safety_bureau/railway_safety_bureau.png",
+        "cropped_pos": [174, 294, 444, 547],
+        "trynum": 10
     },
     {
         "type": "click",
@@ -23,7 +15,7 @@
     },
     {
         "type": "wait",
-        "image": "start_attack.png",
+        "image": "railway_safety_bureau/start_attack.png",
         "cropped_pos": [1133, 1263, 128, 628]
     },
     {
@@ -32,9 +24,14 @@
     },
     {
         "type": "wait",
-        "image": "attack_end.png",
+        "image": "railway_safety_bureau/attack_end.png",
         "cropped_pos": [1057, 1255, 593, 669],
-        "trynum": 100
+        "trynum": 100,
+        "threshold": 0.99
+    },
+    {
+        "type": "click",
+        "pos": [1154, 628]
     },
     {
         "type": "click",

@@ -20,7 +20,7 @@ from core.ocr import predict
 
 connect()
 image = screenshot()
-image = crop_image(image, (250, 309, 381, 1193))
+image = crop_image(image, (381, 1193, 250, 309))
 # show_image(image)
 data = predict(image)
 # 计算每个文本框的中心点坐标

@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-02 12:25:55
-LastEditTime: 2024-04-02 18:39:41
+LastEditTime: 2024-04-03 13:17:37
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -25,35 +25,44 @@ class AnalysisTasks:
 
     def start(self):
         for action in self.actions:
-            action["image"] = "resources/" + action.get("image", "")
-            match action["type"]:
-                case "wait":
-                    self.wait(
-                        action["image"],
-                        action.get("cropped_pos", (0, 0, 0, 0)),
-                        action.get("trynum", 10),
-                    )
-                case "click_image":
-                    self.click_image(action["image"], action.get("cropped_pos", (0, 0, 0, 0)))
-                case "click":
-                    self.click(action["pos"])
-                case "ocr_click":
-                    self.ocr_click(
-                        action["text"], action.get("cropped_pos", (0, 0, 0, 0))
-                    )
-                case _:
-                    raise ValueError(f"Unknown action {action}")
+            if "image" in action:
+                action["image_path"] = "resources/" + action.pop("image", "")
+            action_type = action.pop("type")
+            method = getattr(self, action_type, None)
+            try:
+                if method:
+                    method(**action)
+                else:
+                    raise ValueError(f"未知活动 {action}")
+            except TypeError as error:
+                error_str = str(error)
+                if (
+                    "required positional argument" in error_str
+                    or "required keyword-only argument" in error_str
+                ):
+                    missing_arg = error_str.split("argument: ")[-1].replace("'", "")
+                    action_data = {"type": action_type, **action}
+                    logger.error(f"{action_data} - 错误：缺少必需的参数 - {missing_arg}")
+                elif (
+                    "got an unexpected keyword argument" in error_str
+                ):
+                    missing_arg = error_str.split("argument")[-1].replace("'", "")
+                    action_data = {"type": action_type, **action}
+                    logger.error(f"{action_data} - 错误：多余的参数 - {missing_arg}")
+                else:
+                    logger.error(error)
 
     def wait(
         self,
         image_path: str,
         cropped_pos: Tuple[int, int, int, int] = (0, 0, 0, 0),
         trynum=10,
+        threshold = 0.95
     ):
         for _ in range(trynum):
             image = screenshot()
             result = match_screenshot(image, image_path, cropped_pos)
-            if result["max_val"] > 0.95:
+            if result["max_val"] >= threshold:
                 break
             time.sleep(1)
 

@@ -1,3 +1,9 @@
+"""
+Author: Night-stars-1 nujj1042633805@gmail.com
+Date: 2024-04-01 23:18:15
+LastEditTime: 2024-04-03 12:22:35
+LastEditors: Night-stars-1 nujj1042633805@gmail.com
+"""
 import cv2 as cv
 
 from loguru import logger
@@ -9,9 +15,9 @@ def crop_image(screenshot, crop_coords):
         截取图片
     参数:
         :param screenshot: 截图
-        :param crop_coords: 截取坐标 (y_start, y_end, x_start, x_end)
+        :param crop_coords: 截取坐标 (x1, x2, y1, y2)
     """
-    return screenshot[crop_coords[0] : crop_coords[1], crop_coords[2] : crop_coords[3]]
+    return screenshot[crop_coords[2] : crop_coords[3], crop_coords[0] : crop_coords[1]]
 
 
 def match_screenshot(screenshot: cv.typing.MatLike, template_path: str, cropped_pos: Tuple[int, int, int, int]=(0, 0, 0, 0)) -> dict:
@@ -46,8 +52,8 @@ def match_screenshot(screenshot: cv.typing.MatLike, template_path: str, cropped_
     }
 
 
-def show_image(screenshot, name="image"):
+def show_image(screenshot, name="image", time=0):
     cv.namedWindow(name)
     cv.imshow(name, screenshot)
-    cv.waitKey(0)
+    cv.waitKey(time)
     cv.destroyAllWindows()

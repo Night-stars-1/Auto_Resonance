@@ -1,0 +1,24 @@
+[project]
+name = "Auto_Resonance"
+version = "0.1.0"
+description = "Default template for PDM package"
+authors = [
+    {name = "Night-stars-1", email = "nujj1042633805@gmail.com"},
+]
+dependencies = [
+    "pyqt5-qt5==5.15.2",
+    "cnocr==2.3.0.1",
+    "loguru==0.7.2",
+    "numpy==1.26.4",
+    "opencv-python==4.9.0.80",
+    "Pillow==10.3.0",
+    "PyQt-Fluent-Widgets==1.5.4",
+    "onnxruntime>=1.17.1",
+]
+requires-python = "==3.11.*"
+readme = "README.md"
+license = {text = "MIT"}
+
+
+[tool.pdm]
+distribution = false

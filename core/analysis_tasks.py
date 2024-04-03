@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-02 12:25:55
-LastEditTime: 2024-04-03 13:17:37
+LastEditTime: 2024-04-03 21:54:48
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -11,6 +11,7 @@ from typing import Dict, List, Optional, Tuple
 from loguru import logger
 
 from .adb import input_tap, screenshot
+from .exception_handling import get_excption
 from .image import match_screenshot, show_image
 from .ocr import predict
 from .utils import read_json
@@ -42,10 +43,10 @@ class AnalysisTasks:
                 ):
                     missing_arg = error_str.split("argument: ")[-1].replace("'", "")
                     action_data = {"type": action_type, **action}
-                    logger.error(f"{action_data} - 错误：缺少必需的参数 - {missing_arg}")
-                elif (
-                    "got an unexpected keyword argument" in error_str
-                ):
+                    logger.error(
+                        f"{action_data} - 错误：缺少必需的参数 - {missing_arg}"
+                    )
+                elif "got an unexpected keyword argument" in error_str:
                     missing_arg = error_str.split("argument")[-1].replace("'", "")
                     action_data = {"type": action_type, **action}
                     logger.error(f"{action_data} - 错误：多余的参数 - {missing_arg}")
@@ -57,20 +58,23 @@ class AnalysisTasks:
         image_path: str,
         cropped_pos: Tuple[int, int, int, int] = (0, 0, 0, 0),
         trynum=10,
-        threshold = 0.95
+        threshold=0.95,
     ):
         for _ in range(trynum):
             image = screenshot()
             result = match_screenshot(image, image_path, cropped_pos)
             if result["max_val"] >= threshold:
-                break
+                return
             time.sleep(1)
+        logger.info(get_excption())
 
-    def click_image(self, image_path: str, cropped_pos: Tuple[int, int, int, int] = (0, 0, 0, 0)):
+    def click_image(
+        self, image_path: str, cropped_pos: Tuple[int, int, int, int] = (0, 0, 0, 0), excursion_pos: Tuple[int, int] = (0, 0),
+    ):
         image = screenshot()
         result = match_screenshot(image, image_path, cropped_pos)
         if result["max_val"] > 0.95:
-            pos = result["max_loc"]
+            pos = (result["max_loc"][0]+excursion_pos[0], result["max_loc"][1]+excursion_pos[1])
             input_tap(pos)
         else:
             logger.error(f"未找到指定图片 => {image_path}")
@@ -92,6 +96,29 @@ class AnalysisTasks:
                 center_x = (position[0][0] + position[2][0]) / 2
                 center_y = (position[0][1] + position[2][1]) / 2
                 coordinates = (center_x, center_y)
+                break
+        if coordinates:
+            input_tap(coordinates)
+        else:
+            logger.error(f"未找到指定文本 => {text}")
+
+    def blurry_ocr_click(
+        self,
+        text: str,
+        cropped_pos: Tuple[int, int, int, int] = (0, 0, 0, 0),
+        excursion_pos: Tuple[int, int] = (0, 0),
+    ):
+        image = screenshot()
+        data = predict(image, cropped_pos)
+        coordinates = None
+        for item in data:
+            if text in item["text"]:
+                # 读取位置信息
+                position = item["position"]
+                # 计算中心坐标
+                center_x = (position[0][0] + position[2][0]) / 2
+                center_y = (position[0][1] + position[2][1]) / 2
+                coordinates = (center_x + excursion_pos[0], center_y + excursion_pos[1])
                 break
         if coordinates:
             input_tap(coordinates)

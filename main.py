@@ -26,6 +26,6 @@ if __name__ == "__main__":
                 for i in range(num):
                     analysis = AnalysisTasks(name)
                     analysis.start()
-                    logger.info(f"{task}运行完成")
+                    logger.info(f"{name}:{i+1}/{num}运行完成")
     else:
         logger.error("ADB连接失败")

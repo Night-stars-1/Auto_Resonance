@@ -12,8 +12,6 @@ from pathlib import Path
 project_root = Path(__file__).resolve().parent.parent
 sys.path.append(str(project_root))
 
-import math
-
 from core.adb import connect, screenshot
 from core.image import crop_image, show_image
 from core.ocr import predict

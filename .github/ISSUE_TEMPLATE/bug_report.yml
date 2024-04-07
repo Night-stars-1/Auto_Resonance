@@ -34,11 +34,11 @@ body:
       label: 截图或录屏
       description: 问题复现时候的截图或录屏
       placeholder: 点击文本框下面小长条可以上传文件
-  - type: textarea
-    id: ver
+  - type: input
+    id: star-ver
     attributes:
       label: 程序版本
-      placeholder: 1.0
+      placeholder: "1.0"
     validations:
       required: true
   - type: textarea

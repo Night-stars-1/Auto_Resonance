@@ -79,7 +79,7 @@ class HomeInterface(ScrollArea):
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
-        self.workers = []  # 用于存储活动的 Worker 实例
+        self.workers = {}  # 用于存储活动的 Worker 实例
 
         self.banner = BannerWidget(self)
         self.view = QWidget(self)
@@ -121,11 +121,12 @@ class HomeInterface(ScrollArea):
     def _run(self):
         from main import run, stop
         worker = Worker(run, stop)
-        self.workers.append(worker)
-        worker.finished.connect(lambda: self.on_worker_finished(worker))  # 连接信号
+        self.workers["run"] = worker
+        worker.finished.connect(lambda: self.on_worker_finished(worker))
         worker.start()
 
     def on_worker_finished(self, worker: Worker):
         # 线程完成时调用
+        print("Worker finished")
         worker.deleteLater()  # 安全删除Worker对象
-        self.workers.remove(worker)  # 从列表中移除引用
+        del self.workers["run"]

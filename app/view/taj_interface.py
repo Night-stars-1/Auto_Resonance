@@ -193,7 +193,6 @@ class TajInterface(ScrollArea):
         city_value = self.cityCard.value
         serial_number_value = self.levelSerialNumber.value
         level_value = self.levelCard.value
-        logger.info(level_value)
         ATTACK_RAILWAY_SAFTETY_BUREAU_CONFIG[1]["pos"] = SERIAL_NUMBER2POS[
             serial_number_value
         ]

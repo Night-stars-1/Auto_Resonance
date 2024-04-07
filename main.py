@@ -5,6 +5,7 @@ LastEditTime: 2024-04-03 13:45:03
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
+import time
 from loguru import logger
 
 from core.adb import connect

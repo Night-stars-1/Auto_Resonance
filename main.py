@@ -11,11 +11,18 @@ from core.adb import connect
 from core.analysis_tasks import AnalysisTasks
 from core.utils import read_json
 
-if __name__ == "__main__":
+STOP = False
+def stop():
+    global STOP
+    STOP = True
+
+def run():
+    global STOP
     status = connect()
     if status:
         tasks = read_json("actions/start.json")
         for task in tasks:
+            if STOP: return
             if isinstance(task, str):
                 analysis = AnalysisTasks(task)
                 analysis.start()
@@ -24,8 +31,12 @@ if __name__ == "__main__":
                 name = list(task.keys())[0]
                 num = list(task.values())[0]
                 for i in range(num):
+                    if STOP: return
                     analysis = AnalysisTasks(name)
                     analysis.start()
                     logger.info(f"{name}:{i+1}/{num}运行完成")
     else:
         logger.error("ADB连接失败")
+
+if __name__ == "__main__":
+    run()

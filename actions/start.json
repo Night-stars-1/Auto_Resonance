@@ -1,6 +1,6 @@
 [
     "join_railway_safety_bureau",
     {
-        "railway_safety_bureau_attack": 10
+        "attack_railway_safety_bureau": 10
     }
 ]

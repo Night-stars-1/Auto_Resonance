@@ -14,12 +14,12 @@ import sys
 from loguru import logger
 
 path_log = os.path.join("logs", "debug.log")
-level = "DEBUG"
+LEVEL = "DEBUG"
 logger.remove()
 
 logger.add(
     sys.stdout,
-    level=level,
+    level=LEVEL,
     colorize=True,
     format="<cyan>{module}</cyan>.<cyan>{function}</cyan>"
     ":<cyan>{line}</cyan> - "

@@ -1,26 +1,29 @@
 [
     {
-        "type": "click_image",
-        "image": "join_station.png",
-        "cropped_pos": [1067, 1271, 457, 536]
+        "type": "click_station",
+        "name": "7号自由港"
     },
     {
-        "type": "wait",
-        "image": "fame.png",
-        "cropped_pos": [25, 99, 634, 707]
-    },
-    {
-        "type": "blurry_ocr_click",
-        "text": "铁安局",
-        "excursion_pos": [0, 20]
+        "type": "go_outlets",
+        "name": "铁安局"
     },
     {
         "type": "wait",
         "image": "railway_safety_bureau/railway_safety_bureau.png",
-        "cropped_pos": [875, 1093, 27, 158]
+        "cropped_pos1": [
+            875,
+            27
+        ],
+        "cropped_pos2": [
+            1093,
+            158
+        ],
+        "trynum": 10
     },
     {
         "type": "click",
-        "pos": [870, 311]
+        "pos": [
+            903, 313
+        ]
     }
 ]

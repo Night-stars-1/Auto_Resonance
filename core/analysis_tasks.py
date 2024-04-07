@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-02 12:25:55
-LastEditTime: 2024-04-03 21:54:48
+LastEditTime: 2024-04-06 02:37:28
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -10,9 +10,9 @@ from typing import Dict, List, Optional, Tuple
 
 from loguru import logger
 
+import core.presets
+
 from .adb import input_tap, screenshot
-from .exception_handling import get_excption
-from .image import match_screenshot, show_image
 from .ocr import predict
 from .utils import read_json
 
@@ -24,15 +24,18 @@ class AnalysisTasks:
             f"actions/tasks/{task_name}.json"
         )
 
-    def start(self):
-        for action in self.actions:
+    def start(self, actions=None):
+        actions = actions or self.actions
+        for action in actions:
             if "image" in action:
                 action["image_path"] = "resources/" + action.pop("image", "")
             action_type = action.pop("type")
-            method = getattr(self, action_type, None)
+            method = getattr(core.presets, action_type, None)
             try:
                 if method:
                     method(**action)
+                elif action_type == "judgement_text":
+                    self.judgement_text(**action)
                 else:
                     raise ValueError(f"未知活动 {action}")
             except TypeError as error:
@@ -53,74 +56,64 @@ class AnalysisTasks:
                 else:
                     logger.error(error)
 
-    def wait(
-        self,
-        image_path: str,
-        cropped_pos: Tuple[int, int, int, int] = (0, 0, 0, 0),
-        trynum=10,
-        threshold=0.95,
-    ):
-        for _ in range(trynum):
-            image = screenshot()
-            result = match_screenshot(image, image_path, cropped_pos)
-            if result["max_val"] >= threshold:
-                return
-            time.sleep(1)
-        logger.info(get_excption())
-
-    def click_image(
-        self, image_path: str, cropped_pos: Tuple[int, int, int, int] = (0, 0, 0, 0), excursion_pos: Tuple[int, int] = (0, 0),
-    ):
-        image = screenshot()
-        result = match_screenshot(image, image_path, cropped_pos)
-        if result["max_val"] > 0.95:
-            pos = (result["max_loc"][0]+excursion_pos[0], result["max_loc"][1]+excursion_pos[1])
-            input_tap(pos)
-        else:
-            logger.error(f"未找到指定图片 => {image_path}")
-
-    def click(self, pos):
-        input_tap(pos)
-
-    def ocr_click(
-        self, text: str, cropped_pos: Tuple[int, int, int, int] = (0, 0, 0, 0)
-    ):
-        image = screenshot()
-        data = predict(image, cropped_pos)
-        coordinates = None
-        for item in data:
-            if item["text"] == text:
-                # 读取位置信息
-                position = item["position"]
-                # 计算中心坐标
-                center_x = (position[0][0] + position[2][0]) / 2
-                center_y = (position[0][1] + position[2][1]) / 2
-                coordinates = (center_x, center_y)
-                break
-        if coordinates:
-            input_tap(coordinates)
-        else:
-            logger.error(f"未找到指定文本 => {text}")
-
-    def blurry_ocr_click(
+    def judgement_text(
         self,
         text: str,
-        cropped_pos: Tuple[int, int, int, int] = (0, 0, 0, 0),
-        excursion_pos: Tuple[int, int] = (0, 0),
+        success: Optional[str | List[Dict[str, str]]],
+        fail: Optional[str | List[Dict[str, str]]],
+        cropped_pos1: Tuple[int, int] = (0, 0),
+        cropped_pos2: Tuple[int, int] = (0, 0),
+        must_succeed: bool = False,
+        is_click: bool = False,
+        is_use: bool = True
     ):
+        """
+        说明:
+            判断文本是否存在
+        参数:
+            :param text: 文本
+            :param success: 成功操作
+            :param fail: 失败操作
+            :param cropped_pos1: 裁剪坐标1
+            :param cropped_pos2: 裁剪坐标2
+            :param must_succeed: 是否必须成功
+            :param is_click: 是否点击
+            :param is_use: 是否使用
+        """
+        if not is_use: return True
+        logger.info(f"判断文本 {text} 是否存在")
+        time.sleep(0.5)
         image = screenshot()
-        data = predict(image, cropped_pos)
-        coordinates = None
+        data = predict(image, cropped_pos1, cropped_pos2)
         for item in data:
             if text in item["text"]:
-                # 读取位置信息
-                position = item["position"]
-                # 计算中心坐标
-                center_x = (position[0][0] + position[2][0]) / 2
-                center_y = (position[0][1] + position[2][1]) / 2
-                coordinates = (center_x + excursion_pos[0], center_y + excursion_pos[1])
-                break
-        if coordinates:
-            input_tap(coordinates)
+                logger.info(f"找到文本 => {text}")
+                if is_click:
+                    position = item["position"]
+                    # 计算中心坐标
+                    center_x = (position[0][0] + position[2][0]) / 2
+                    center_y = (position[0][1] + position[2][1]) / 2
+                    input_tap((center_x, center_y))
+                if isinstance(success, str):
+                    actions = read_json(f"actions/actions/{success}.json")
+                    self.start(actions)
+                elif isinstance(success, list):
+                    self.start(success)
+                return
+        logger.info(f"未找到文本 => {text}")
+        if isinstance(fail, str):
+            actions = read_json(f"actions/actions/{fail}.json")
+            self.start(actions)
+        elif isinstance(fail, list):
+            self.start(fail)
+        if not must_succeed:
+            return
         else:
-            logger.error(f"未找到指定文本 => {text}")
+            self.judgement_text(
+                text=text,
+                success=success,
+                fail=fail,
+                cropped_pos1=cropped_pos1,
+                cropped_pos2=cropped_pos2,
+                must_succeed=must_succeed,
+            )

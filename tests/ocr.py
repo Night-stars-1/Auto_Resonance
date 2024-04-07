@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-01 22:14:42
-LastEditTime: 2024-04-02 12:19:28
+LastEditTime: 2024-04-05 18:44:40
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -18,8 +18,8 @@ from core.ocr import predict
 
 connect()
 image = screenshot()
-image = crop_image(image, (381, 1193, 250, 309))
-# show_image(image)
+image = crop_image(image, cropped_pos1=(0, 66), cropped_pos2=(1280, 720))
+show_image(image)
 data = predict(image)
 # 计算每个文本框的中心点坐标
 centers = {}

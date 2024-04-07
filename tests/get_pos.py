@@ -22,14 +22,18 @@ connect()
 def click_event(event, x, y, flags, param):
     # 检查事件是否为左键点击
     if event == cv2.EVENT_LBUTTONDOWN:
+        color = param[y, x]
+        color_bgr = color.tolist()  # 将颜色值转换为列表形式
+
         print("Clicked at: ", (x, y))
+        print("Color (BGR): ", color_bgr)
 
 
 screenshot = screenshot()
 
 
 cv2.namedWindow("image")
-cv2.setMouseCallback("image", click_event)
+cv2.setMouseCallback("image", click_event, param=screenshot)
 cv2.imshow("image", screenshot)
 cv2.waitKey(0)
 cv2.destroyAllWindows()

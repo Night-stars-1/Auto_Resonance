@@ -15,7 +15,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
 lib64/
 parts/
 sdist/
@@ -109,3 +108,5 @@ venv.bak/
 
 # custom 
 logs/
+gui/
+examples/

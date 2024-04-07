@@ -1,0 +1,13 @@
+[
+    {
+        "type": "go_outlets",
+        "name": "休息区"
+    },
+    {
+        "type": "wait",
+        "image": "rest_area/rest_area_logo.png",
+        "cropped_pos1": [918, 48],
+        "cropped_pos2": [1049, 153],
+        "trynum": 10
+    }
+]

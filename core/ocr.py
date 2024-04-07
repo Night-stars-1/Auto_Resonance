@@ -1,12 +1,12 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-01 21:40:57
-LastEditTime: 2024-04-03 20:24:24
+LastEditTime: 2024-04-06 01:50:41
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
 from pathlib import Path
-from typing import Optional, Tuple, Union
+from typing import Tuple, Union
 
 import numpy as np
 from cnocr import CnOcr
@@ -17,7 +17,8 @@ ocr = CnOcr()
 
 def predict(
     img_fp: Union[str, Path, Image.Image, np.ndarray],
-    cropped_pos: Optional[Tuple[int, int, int, int]] = (0, 0, 0, 0),
+    cropped_pos1: Tuple[int, int] = (0, 0),
+    cropped_pos2: Tuple[int, int] = (0, 0),
 ):
     """
     说明：
@@ -26,9 +27,9 @@ def predict(
         :param img_fp: 图片
         :param cropped_pos: 切剪区域 (x1, x2, y1, y2)
     """
-    if cropped_pos != (0, 0, 0, 0):
+    if cropped_pos1 != (0, 0) and cropped_pos2 != (0, 0):
         img_fp = img_fp[
-            cropped_pos[2] : cropped_pos[3], cropped_pos[0] : cropped_pos[1]
+            cropped_pos1[1] : cropped_pos2[1], cropped_pos1[0] : cropped_pos2[0]
         ]
     out = ocr.ocr(img_fp)
     return [
@@ -37,20 +38,20 @@ def predict(
             "score": predict_data["score"],
             "position": [
                 [
-                    predict_data["position"][0][0] + cropped_pos[0],
-                    predict_data["position"][0][1] + cropped_pos[2],
+                    predict_data["position"][0][0] + cropped_pos1[0],
+                    predict_data["position"][0][1] + cropped_pos1[1],
                 ],
                 [
-                    predict_data["position"][1][0] + cropped_pos[0],
-                    predict_data["position"][1][1] + cropped_pos[2],
+                    predict_data["position"][1][0] + cropped_pos1[0],
+                    predict_data["position"][1][1] + cropped_pos1[1],
                 ],
                 [
-                    predict_data["position"][2][0] + cropped_pos[0],
-                    predict_data["position"][2][1] + cropped_pos[2],
+                    predict_data["position"][2][0] + cropped_pos1[0],
+                    predict_data["position"][2][1] + cropped_pos1[1],
                 ],
                 [
-                    predict_data["position"][3][0] + cropped_pos[0],
-                    predict_data["position"][3][1] + cropped_pos[2],
+                    predict_data["position"][3][0] + cropped_pos1[0],
+                    predict_data["position"][3][1] + cropped_pos1[1],
                 ],
             ],
         }

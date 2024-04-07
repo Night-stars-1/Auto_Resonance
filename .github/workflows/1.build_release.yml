@@ -20,11 +20,38 @@ jobs:
         with:
           submodules: "false"
 
+      - name: Set up python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      # 步骤3：安装依赖
+      - name: Pip Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pyinstaller
+
+      - name: Generate program
+        run: |
+          pyinstaller -D --distpath ./dist/ -i "app/resource/images/logo.ico" -n "heiyue" gui.py -y -w --add-data ".venv/label_cn.txt;cnocr" --add-data site-packages/onnxruntime/capi/onnxruntime_providers_shared.dll:onnxruntime/capi --hidden-import=scipy.special._cdflib
+
+      - name: Move assets to dist directory
+        run: |
+          Copy-Item -Path ".\app\resource\" -Destination ".\dist\heiyue\app\resource\" -Recurse -Force
+          Copy-Item -Path ".\README.md" -Destination ".\dist\heiyue\" -Force
+
+      - name: Create zip archive
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          Rename-Item -Path .\dist\heiyue -NewName 黑月无人驾驶_${{ github.ref_name }}
+          Compress-Archive -Path .\dist\黑月无人驾驶_${{ github.ref_name }}\ -DestinationPath .\dist\黑月无人驾驶_${{ github.ref_name }}.zip -Force
+
       - name: Create release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v1
         with:
-          name: March7thAssistant ${{ github.ref_name }}
+          name: 黑月无人驾驶 ${{ github.ref_name }}
           files: |
-            ./main.py
+            ./dist/黑月无人驾驶_${{ github.ref_name }}.zip
           prerelease: true

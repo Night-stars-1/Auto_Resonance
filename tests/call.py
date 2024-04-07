@@ -23,9 +23,7 @@ except TypeError as error:
         missing_arg = error_str.split("argument: ")[-1].replace("'", "")
         action_data = {"type": method_name, **action}
         print(f"{action_data} - 错误：缺少必需的参数 - {missing_arg}")
-    elif (
-        "got an unexpected keyword argument" in error_str
-    ):
+    elif "got an unexpected keyword argument" in error_str:
         missing_arg = error_str.split("argument")[-1].replace("'", "")
         action_data = {"type": method_name, **action}
         print(f"{action_data} - 错误：多余的参数 - {missing_arg}")

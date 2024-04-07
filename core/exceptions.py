@@ -10,6 +10,7 @@ class Exception(Exception):
         logger.error(message)
         logger.debug(traceback.format_exc())
 
+
 class TypeError(Exception):
 
     def __init__(self, message):

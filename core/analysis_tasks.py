@@ -65,7 +65,7 @@ class AnalysisTasks:
         cropped_pos2: Tuple[int, int] = (0, 0),
         must_succeed: bool = False,
         is_click: bool = False,
-        is_use: bool = True
+        is_use: bool = True,
     ):
         """
         说明:
@@ -80,7 +80,8 @@ class AnalysisTasks:
             :param is_click: 是否点击
             :param is_use: 是否使用
         """
-        if not is_use: return True
+        if not is_use:
+            return True
         logger.info(f"判断文本 {text} 是否存在")
         time.sleep(0.5)
         image = screenshot()

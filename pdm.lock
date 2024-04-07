@@ -2,10 +2,10 @@
 # It is not intended for manual editing.
 
 [metadata]
-groups = ["default"]
+groups = ["default", "dev"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:594f16511bfff14ae20fa864b7e362416665cb397bf33f95b30d4a1b91fb69a1"
+content_hash = "sha256:b400c4b3aa485195fd1f14e8332576d6284c6d6f93dbc9b3eb19b046fdda9ff4"
 
 [[package]]
 name = "aiohttp"
@@ -1029,6 +1029,15 @@ marker = "platform_system == \"Linux\""
 files = [
     {file = "pycparser-2.22-py3-none-any.whl", hash = "sha256:c3702b6d3dd8c7abc1afa565d7e63d53a1d0bd86cdc24edd75470f4de499cfcc"},
     {file = "pycparser-2.22.tar.gz", hash = "sha256:491c8be9c040f5390f5bf44a5b07752bd07f56edf992381b05c701439eec10f6"},
+]
+
+[[package]]
+name = "pyinstall"
+version = "0.1.4"
+summary = "Installer for Python packages"
+groups = ["dev"]
+files = [
+    {file = "pyinstall-0.1.4.tar.gz", hash = "sha256:bb2407a3664ce25454f7e4a93763198f3a6a43c0cc727e33a06c0ce18324cd15"},
 ]
 
 [[package]]

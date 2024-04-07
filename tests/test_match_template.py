@@ -13,11 +13,12 @@ from core.image import show_image
 
 connect()
 
+
 def match_and_draw(img, template, threshold, color):
     h, w = template.shape[:2]
     res = cv2.matchTemplate(img, template, cv2.TM_CCOEFF_NORMED)
     loc = np.where(res >= threshold)
-    
+
     # 将匹配结果存储在集合中，避免重复
     match_set = set()
     for pt in zip(*loc[::-1]):
@@ -27,10 +28,19 @@ def match_and_draw(img, template, threshold, color):
     for pt in match_set:
         cv2.rectangle(img, pt, (pt[0] + w, pt[1] + h), color, 1)
         score = res[pt[1], pt[0]]
-        cv2.putText(img, f"{score:.2f}", (pt[0], pt[1] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1)
+        cv2.putText(
+            img,
+            f"{score:.2f}",
+            (pt[0], pt[1] - 10),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.5,
+            color,
+            1,
+        )
+
 
 # 读取原图
-#img = cv2.imread("resources/MuMu12-20240404-215502.png")
+# img = cv2.imread("resources/MuMu12-20240404-215502.png")
 img = screenshot()
 # 模板图片
 stastion1 = cv2.imread("tests/image1.png")

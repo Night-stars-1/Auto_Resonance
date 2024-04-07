@@ -3,7 +3,7 @@ from PyQt5.QtCore import QObject, pyqtSignal
 
 
 class SignalBus(QObject):
-    """ Signal bus """
+    """Signal bus"""
 
     switchToSampleCard = pyqtSignal(str, int)
     switchToCard = pyqtSignal(str)

@@ -3,16 +3,16 @@ from queue import Queue
 
 
 class Trie:
-    """ String trie """
+    """String trie"""
 
     def __init__(self):
-        self.key = ''
+        self.key = ""
         self.value = None
         self.children = [None] * 26
         self.isEnd = False
 
     def insert(self, key: str, value):
-        """ insert item """
+        """insert item"""
         key = key.lower()
 
         node = self
@@ -31,7 +31,7 @@ class Trie:
         node.value = value
 
     def get(self, key, default=None):
-        """ get value of key """
+        """get value of key"""
         node = self.searchPrefix(key)
         if not (node and node.isEnd):
             return default
@@ -39,7 +39,7 @@ class Trie:
         return node.value
 
     def searchPrefix(self, prefix):
-        """ search node matchs the prefix """
+        """search node matchs the prefix"""
         prefix = prefix.lower()
         node = self
         for c in prefix:
@@ -52,7 +52,7 @@ class Trie:
         return node
 
     def items(self, prefix):
-        """ search items match the prefix """
+        """search items match the prefix"""
         node = self.searchPrefix(prefix)
         if not node:
             return []

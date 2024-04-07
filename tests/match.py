@@ -13,6 +13,4 @@ from core.adb import connect, screenshot
 
 connect()
 image = screenshot()
-logger.info(
-    match_screenshot(image, "resources/attack_end.png", [1057, 1255, 593, 669])
-)
+logger.info(match_screenshot(image, "resources/attack_end.png", [1057, 1255, 593, 669]))

@@ -16,7 +16,6 @@ class Worker(QThread):
 
     def run(self):
         self.func()
-    
+
     def stop(self):
         self.stop_func()
-

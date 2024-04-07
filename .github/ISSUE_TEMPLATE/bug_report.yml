@@ -5,7 +5,7 @@ title: "[Bug] 请在这里简要描述BUG，否则该Issue将直接关闭"
 body:
   - type: markdown
     attributes:
-      value: |
+      value:
         为了使我们更好地帮助你，请提供以下信息。
   - type: textarea
     id: desc
@@ -34,8 +34,8 @@ body:
       label: 截图或录屏
       description: 问题复现时候的截图或录屏
       placeholder: 点击文本框下面小长条可以上传文件
-  - type: input
-    id: star-ver
+  - type: textarea
+    id: ver
     attributes:
       label: 程序版本
       placeholder: 1.0

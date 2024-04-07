@@ -12,19 +12,20 @@ from ..components.button_card import ButtonCardView
 from ..common.style_sheet import StyleSheet
 from .logger_interface import LoggerInterface
 
+
 class BannerWidget(QWidget):
-    """ Banner widget """
+    """Banner widget"""
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.setFixedHeight(336)
 
         self.vBoxLayout = QVBoxLayout(self)
-        self.galleryLabel = QLabel('黑月无人驾驶', self)
-        self.banner = QPixmap(':/gallery/images/header1.png')
+        self.galleryLabel = QLabel("黑月无人驾驶", self)
+        self.banner = QPixmap(":/gallery/images/header1.png")
         self.linkCardView = LinkCardView(self)
 
-        self.galleryLabel.setObjectName('galleryLabel')
+        self.galleryLabel.setObjectName("galleryLabel")
 
         self.vBoxLayout.setSpacing(0)
         self.vBoxLayout.setContentsMargins(0, 20, 0, 0)
@@ -33,26 +34,22 @@ class BannerWidget(QWidget):
         self.vBoxLayout.setAlignment(Qt.AlignLeft | Qt.AlignTop)
 
         self.linkCardView.addCard(
-            FluentIcon.GITHUB,
-            'GitHub repo',
-            '黑月无人驾驶',
-            REPO_URL
+            FluentIcon.GITHUB, "GitHub repo", "黑月无人驾驶", REPO_URL
         )
 
     def paintEvent(self, e):
         super().paintEvent(e)
         painter = QPainter(self)
-        painter.setRenderHints(
-            QPainter.SmoothPixmapTransform | QPainter.Antialiasing)
+        painter.setRenderHints(QPainter.SmoothPixmapTransform | QPainter.Antialiasing)
         painter.setPen(Qt.NoPen)
 
         path = QPainterPath()
         path.setFillRule(Qt.WindingFill)
         w, h = self.width(), self.height()
         path.addRoundedRect(QRectF(0, 0, w, h), 10, 10)
-        path.addRect(QRectF(0, h-50, 50, 50))
-        path.addRect(QRectF(w-50, 0, 50, 50))
-        path.addRect(QRectF(w-50, h-50, 50, 50))
+        path.addRect(QRectF(0, h - 50, 50, 50))
+        path.addRect(QRectF(w - 50, 0, 50, 50))
+        path.addRect(QRectF(w - 50, h - 50, 50, 50))
         path = path.simplified()
 
         # init linear gradient effect
@@ -65,17 +62,16 @@ class BannerWidget(QWidget):
         else:
             gradient.setColorAt(0, QColor(0, 0, 0, 255))
             gradient.setColorAt(1, QColor(0, 0, 0, 0))
-            
+
         painter.fillPath(path, QBrush(gradient))
 
         # draw banner image
-        pixmap = self.banner.scaled(
-            self.size(), transformMode=Qt.SmoothTransformation)
+        pixmap = self.banner.scaled(self.size(), transformMode=Qt.SmoothTransformation)
         painter.fillPath(path, QBrush(pixmap))
 
 
 class HomeInterface(ScrollArea):
-    """ Home interface """
+    """Home interface"""
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
@@ -89,8 +85,8 @@ class HomeInterface(ScrollArea):
         self.loadSamples()
 
     def __initWidget(self):
-        self.view.setObjectName('view')
-        self.setObjectName('homeInterface')
+        self.view.setObjectName("view")
+        self.setObjectName("homeInterface")
         StyleSheet.HOME_INTERFACE.apply(self)
 
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
@@ -103,23 +99,23 @@ class HomeInterface(ScrollArea):
         self.vBoxLayout.setAlignment(Qt.AlignTop)
 
     def loadSamples(self):
-        """ load samples """
+        """load samples"""
         # basic input samples
-        basicInputView = ButtonCardView(
-            "开始运行", self.view)
+        basicInputView = ButtonCardView("开始运行", self.view)
 
         basicInputView.addSampleCard(
             icon=":/gallery/images/controls/Button.png",
             title="运行",
             content="运行测试版本",
             func=self._run,
-            routekey="LoggerInterface"
+            routekey="LoggerInterface",
         )
 
         self.vBoxLayout.addWidget(basicInputView)
 
     def _run(self):
         from main import run, stop
+
         worker = Worker(run, stop)
         self.workers["run"] = worker
         worker.finished.connect(lambda: self.on_worker_finished(worker))

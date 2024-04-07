@@ -15,6 +15,7 @@ from ..exception_handling import get_excption
 from ..image import get_all_color_pos, match_screenshot
 from ..ocr import predict
 
+
 def wait(
     image_path: str,
     cropped_pos1: Tuple[int, int] = (0, 0),
@@ -135,7 +136,7 @@ def blurry_ocr_click(
     cropped_pos2: Tuple[int, int] = (0, 0),
     excursion_pos: Tuple[int, int] = (0, 0),
     trynum=3,
-    log=True
+    log=True,
 ):
     """
     说明:
@@ -163,5 +164,6 @@ def blurry_ocr_click(
         if coordinates:
             input_tap(coordinates)
             return True
-    if log: logger.error(f"未找到指定文本 => {text}")
+    if log:
+        logger.error(f"未找到指定文本 => {text}")
     return False

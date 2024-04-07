@@ -9,7 +9,11 @@ from core.presets import go_outlets, wait
 
 def go_business(type: Literal["buy", "sell"] = "buy"):
     result = go_outlets("交易所")
-    is_join = wait("resources/shop/business_notes.png", cropped_pos1=(242, 11), cropped_pos2=(414, 66))
+    is_join = wait(
+        "resources/shop/business_notes.png",
+        cropped_pos1=(242, 11),
+        cropped_pos2=(414, 66),
+    )
     if result and is_join:
         if type == "buy":
             input_tap((927, 321))

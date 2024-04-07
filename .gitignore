@@ -110,3 +110,4 @@ venv.bak/
 logs/
 gui/
 examples/
+test.txt

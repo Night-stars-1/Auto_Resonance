@@ -20,6 +20,7 @@ class STATION:
     说明:
         站点类
     """
+
     def __init__(self, station: bool) -> None:
         self.station = station
 
@@ -97,7 +98,9 @@ class STATION:
         start = time.perf_counter()
         while time.perf_counter() - start < FIGHT_TIME:
             bgrs = get_bgrs(screenshot(), [(1114, 630), (1204, 624), (236, 26)])
-            if [245, 245, 245] <= bgrs[0] <= [255, 255, 255] and [0, 0, 0] <= bgrs[1] <= [
+            if [245, 245, 245] <= bgrs[0] <= [255, 255, 255] and [0, 0, 0] <= bgrs[
+                1
+            ] <= [
                 10,
                 10,
                 10,

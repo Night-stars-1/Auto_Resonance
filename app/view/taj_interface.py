@@ -1,4 +1,4 @@
-# coding:utf-8
+
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QLabel, QWidget
 from loguru import logger
@@ -97,7 +97,7 @@ class TajInterface(ScrollArea):
             "actions/tasks/attack_railway_safety_bureau.json",
             ATTACK_RAILWAY_SAFTETY_BUREAU_CONFIG,
         )
-        self.scrollWidget = QWidget()
+        self.scrollWidget = QWidget(self)
         self.expandLayout = ExpandLayout(self.scrollWidget)
 
         # setting label

@@ -103,7 +103,7 @@ class HomeInterface(ScrollArea):
         # basic input samples
         basicInputView = ButtonCardView("开始运行", self.view)
 
-        basicInputView.addSampleCard(
+        self.run = basicInputView.addSampleCard(
             icon=":/gallery/images/controls/Button.png",
             title="运行",
             content="运行测试版本",
@@ -114,14 +114,21 @@ class HomeInterface(ScrollArea):
         self.vBoxLayout.addWidget(basicInputView)
 
     def _run(self):
-        from main import run, stop
-
-        worker = Worker(run, stop)
-        self.workers["run"] = worker
-        worker.finished.connect(lambda: self.on_worker_finished(worker))
-        worker.start()
+        """运行自动化程序"""
+        if self.run.titleLabel.text() == "运行":
+            self.run.titleLabel.setText("停止")
+            from main import run, stop
+            
+            worker = Worker(run, stop)
+            self.workers["run"] = worker
+            worker.finished.connect(lambda: self.on_worker_finished(worker))
+            worker.start()
+        else:
+            self.run.titleLabel.setText("运行")
+            self.workers["run"].stop()
 
     def on_worker_finished(self, worker: Worker):
         # 线程完成时调用
+        self.run.titleLabel.setText("运行")
         worker.deleteLater()  # 安全删除Worker对象
         del self.workers["run"]

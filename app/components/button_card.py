@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-06 22:03:56
-LastEditTime: 2024-04-07 12:40:05
+LastEditTime: 2024-04-07 21:05:48
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -82,3 +82,4 @@ class ButtonCardView(QWidget):
         """add sample card"""
         card = SampleCard(icon, title, content, func, routekey, self)
         self.flowLayout.addWidget(card)
+        return card

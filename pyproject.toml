@@ -13,7 +13,7 @@ dependencies = [
     "opencv-python==4.9.0.80",
     "Pillow==10.3.0",
     "PyQt-Fluent-Widgets==1.5.4",
-    "onnxruntime>=1.17.1",
+    "onnxruntime==1.17.1",
 ]
 requires-python = "==3.11.*"
 readme = "README.md"

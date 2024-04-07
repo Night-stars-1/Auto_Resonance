@@ -61,6 +61,5 @@ class LoggerInterface(ScrollArea):
         logger.add(
             LoguruHandler(self.log_widget),
             level="INFO",
-            enqueue=True,
             format="{message}",
         )

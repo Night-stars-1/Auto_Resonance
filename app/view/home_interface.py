@@ -127,6 +127,5 @@ class HomeInterface(ScrollArea):
 
     def on_worker_finished(self, worker: Worker):
         # 线程完成时调用
-        print("Worker finished")
         worker.deleteLater()  # 安全删除Worker对象
         del self.workers["run"]

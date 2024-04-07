@@ -17,14 +17,16 @@ path_log = os.path.join("logs", "debug.log")
 LEVEL = "DEBUG"
 logger.remove()
 
-logger.add(
-    sys.stdout,
-    level=LEVEL,
-    colorize=True,
-    format="<cyan>{module}</cyan>.<cyan>{function}</cyan>"
-    ":<cyan>{line}</cyan> - "
-    "<level>{message}</level>",
-)
+if not getattr(sys, 'frozen', False):
+    logger.add(
+        sys.stdout,
+        level=LEVEL,
+        colorize=True,
+        format="<cyan>{module}</cyan>.<cyan>{function}</cyan>"
+        ":<cyan>{line}</cyan> - "
+        "<level>{message}</level>",
+    )
+
 logger.add(
     path_log,
     format="{time:HH:mm:ss} - "

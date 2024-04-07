@@ -40,14 +40,16 @@ jobs:
 
       - name: Move assets to dist directory
         run: |
+          Copy-Item -Path ".\actions\" -Destination ".\dist\heiyue\actions\" -Recurse -Force
+          Copy-Item -Path ".\resources\" -Destination ".\dist\heiyue\resources\" -Recurse -Force
           Copy-Item -Path ".\app\resource\" -Destination ".\dist\heiyue\app\resource\" -Recurse -Force
           Copy-Item -Path ".\README.md" -Destination ".\dist\heiyue\" -Force
 
       - name: Create zip archive
         if: startsWith(github.ref, 'refs/tags/')
         run: |
-          Rename-Item -Path .\dist\heiyue -NewName 黑月无人驾驶_${{ github.ref_name }}
-          Compress-Archive -Path .\dist\黑月无人驾驶_${{ github.ref_name }}\ -DestinationPath .\dist\黑月无人驾驶_${{ github.ref_name }}.zip -Force
+          Rename-Item -Path .\dist\heiyue -NewName Auto_Resonance_${{ github.ref_name }}
+          Compress-Archive -Path .\dist\Auto_Resonance_${{ github.ref_name }}\ -DestinationPath .\dist\Auto_Resonance_${{ github.ref_name }}.zip -Force
 
       - name: Create release
         if: startsWith(github.ref, 'refs/tags/')
@@ -55,5 +57,5 @@ jobs:
         with:
           name: 黑月无人驾驶 ${{ github.ref_name }}
           files: |
-            ./dist/黑月无人驾驶_${{ github.ref_name }}.zip
+            ./dist/Auto_Resonance_${{ github.ref_name }}.zip
           prerelease: true

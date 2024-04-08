@@ -1,20 +1,24 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-03-20 22:24:35
-LastEditTime: 2024-04-06 01:48:11
+LastEditTime: 2024-04-08 21:59:02
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
 import random
+import time
 from subprocess import DEVNULL, run
 
 import cv2 as cv
 import numpy as np
 
+from .exceptions import StopExecution
+
 ADBOREDER = ""
 ADBPATH = ""
 EXCURSIONX = [-10, 10]
 EXCURSIONY = [-10, 10]
+STOP = False
 
 
 def connect(order="127.0.0.1:7555", path="core\\lib\\adb"):
@@ -29,9 +33,15 @@ def connect(order="127.0.0.1:7555", path="core\\lib\\adb"):
     ADBPATH = path
     shell = [ADBPATH, "connect", ADBOREDER]
     result = run(shell, shell=True, capture_output=True, check=False)
-    return "already connected" in str(result.stdout) or "connected to" in str(
+    status = "already connected" in str(result.stdout) or "connected to" in str(
         result.stdout
     )
+    return status and stop
+
+
+def stop():
+    global STOP
+    STOP = True
 
 
 def kill():
@@ -93,19 +103,17 @@ def input_tap(pos=(880, 362)):
 
 def screenshot() -> cv.typing.MatLike:
     """
-    说明:
-        截图
-    参数:
-        :param path: 手机中截图保存位置
+    截图
     """
-    global ADBOREDER, ADBPATH
+    global ADBOREDER, ADBPATH, STOP
+    if STOP:
+        raise StopExecution()
     shell = [ADBPATH, "-s", ADBOREDER, "exec-out", "screencap", "-p"]
     result = run(shell, shell=True, capture_output=True, check=False)
 
     # 将截图数据转换为 NumPy 数组
     image_array = np.frombuffer(result.stdout, np.uint8)
 
-    # 使用 OpenCV 解码图像数据
     screenshot = cv.imdecode(image_array, cv.IMREAD_COLOR)
 
     return screenshot

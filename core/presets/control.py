@@ -10,14 +10,16 @@ from typing import Tuple
 
 from loguru import logger
 
+from .decorator import ensure_resources_prefix
+
 from ..adb import input_swipe, input_tap, screenshot
 from ..exception_handling import get_excption
 from ..image import get_all_color_pos, match_screenshot
 from ..ocr import predict
 
-
+@ensure_resources_prefix
 def wait(
-    image_path: str,
+    image: str,
     cropped_pos1: Tuple[int, int] = (0, 0),
     cropped_pos2: Tuple[int, int] = (0, 0),
     trynum=10,
@@ -27,14 +29,13 @@ def wait(
     说明:
         等待指定图片出现
     参数:
-        :param image_path: 图片路径
+        :param image: 图片路径
         :param cropped_pos: 裁剪坐标
         :param trynum: 尝试次数
         :param threshold: 阈值
     """
     for _ in range(trynum):
-        image = screenshot()
-        result = match_screenshot(image, image_path, cropped_pos1, cropped_pos2)
+        result = match_screenshot(screenshot(), image, cropped_pos1, cropped_pos2)
         if result["max_val"] >= threshold:
             return True
         time.sleep(1)
@@ -51,9 +52,9 @@ def wait_time(seconds: float):
     """
     time.sleep(seconds)
 
-
+@ensure_resources_prefix
 def click_image(
-    image_path: str,
+    image: str,
     cropped_pos1: Tuple[int, int] = (0, 0),
     cropped_pos2: Tuple[int, int] = (0, 0),
     excursion_pos: Tuple[int, int] = (0, 0),
@@ -71,8 +72,7 @@ def click_image(
     """
     time.sleep(0.5)
     for _ in range(trynum):
-        image = screenshot()
-        result = match_screenshot(image, image_path, cropped_pos1, cropped_pos2)
+        result = match_screenshot(screenshot(), image, cropped_pos1, cropped_pos2)
         if result["max_val"] > 0.95:
             pos = (
                 result["max_loc"][0] + excursion_pos[0],
@@ -80,7 +80,7 @@ def click_image(
             )
             input_tap(pos)
             return True
-    logger.error(f"未找到指定图片 => {image_path}")
+    logger.error(f"未找到指定图片 => {image}")
     logger.info(get_excption())
     return False
 
@@ -167,3 +167,29 @@ def blurry_ocr_click(
     if log:
         logger.error(f"未找到指定文本 => {text}")
     return False
+
+def find_text(
+    text: str,
+    cropped_pos1: Tuple[int, int] = (0, 0),
+    cropped_pos2: Tuple[int, int] = (0, 0),
+):
+    """
+    说明:
+        查找文本
+    参数:
+        :param text: 文本
+        :param cropped_pos1: 裁剪坐标1
+        :param cropped_pos2: 裁剪坐标2
+    """
+    image = screenshot()
+    data = predict(image, cropped_pos1, cropped_pos2)
+    for item in data:
+        if text in item["text"]:
+            logger.info(f"找到文本 => {text}")
+            position = item["position"]
+            # 计算中心坐标
+            center_x = (position[0][0] + position[2][0]) / 2
+            center_y = (position[0][1] + position[2][1]) / 2
+            return (center_x, center_y)
+    logger.error(f"未找到指定文本 => {text}")
+    return None

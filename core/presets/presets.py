@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:24:47
-LastEditTime: 2024-04-07 13:40:26
+LastEditTime: 2024-04-08 13:26:02
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -35,15 +35,14 @@ STATION_NAME2PNG = {
 
 def click_station(name: str):
     logger.info(f"点击站点 => {name}")
-    if match_screenshot(screenshot(), "resources/main_map.png")["max_val"] > 0.95:
-        logger.info("检测到主地图界面，点击地图")
-    else:
+    if match_screenshot(screenshot(), "resources/main_map.png")["max_val"] < 0.95:
         logger.info("未检测到主地图界面，返回主地图")
         go_home()
     reslut = predict(screenshot(), cropped_pos1=(1131, 498), cropped_pos2=(1226, 515))
     if name in [item["text"] for item in reslut]:
         logger.info("已在目标站点")
         return True
+    logger.info("检测到主地图界面，点击地图")
     input_tap((1201, 666))
     time.sleep(1)
 
@@ -179,6 +178,7 @@ def go_home():
     说明:
         返回主界面
     """
+    logger.info("返回主界面")
 
     def wait_home():
         time.sleep(1)
@@ -187,7 +187,7 @@ def go_home():
         ):
             time.sleep(1)
 
-    input_tap((197, 40))
+    input_tap((228, 27))
     wait_home()
 
 

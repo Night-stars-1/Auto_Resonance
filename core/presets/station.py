@@ -1,13 +1,14 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:24:47
-LastEditTime: 2024-04-06 01:41:57
+LastEditTime: 2024-04-08 17:44:49
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
 import time
 
 from loguru import logger
+
 from core.adb import input_tap, screenshot
 from core.image import get_bgr, get_bgrs, match_screenshot
 
@@ -23,6 +24,7 @@ class STATION:
 
     def __init__(self, station: bool) -> None:
         self.station = station
+        self.wait()
 
     def __bool__(self) -> bool:
         return self.station
@@ -36,9 +38,9 @@ class STATION:
         start = time.perf_counter()
         while time.perf_counter() - start < MAP_WAIT_TIME:
             image = screenshot()
-            bgr = get_bgr(image, (956, 232))
+            attack_bgrs = get_bgrs(image, [(944, 247), (967, 229), (1056, 229)])
             reach_bgrs = get_bgrs(image, [(839, 354), (814, 359), (1051, 641)])
-            if [5, 165, 230] <= bgr <= [15, 175, 240]:
+            if [7, 167, 233] <= attack_bgrs[0] <= [10, 173, 247] and [7, 167, 233] <= attack_bgrs[1] <= [10, 173, 247] and [7, 167, 233] <= attack_bgrs[2] <= [10, 173, 247]:
                 logger.info("检测到拦截，进行攻击")
                 self.join_wait_fight()
             elif [20, 20, 20] <= reach_bgrs[0] <= [25, 25, 25] and [

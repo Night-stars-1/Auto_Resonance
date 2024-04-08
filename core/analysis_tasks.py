@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-02 12:25:55
-LastEditTime: 2024-04-06 02:37:28
+LastEditTime: 2024-04-08 20:14:10
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -12,6 +12,7 @@ from loguru import logger
 
 import core.presets
 
+from .presets import find_text
 from .adb import input_tap, screenshot
 from .ocr import predict
 from .utils import read_json
@@ -23,13 +24,15 @@ class AnalysisTasks:
         self.actions: List[Dict[str, str]] = read_json(
             f"actions/tasks/{task_name}.json"
         )
+        self.stop = False
 
     def start(self, actions=None):
         actions = actions or self.actions
         for action in actions:
-            if "image" in action:
-                action["image_path"] = "resources/" + action.pop("image", "")
-            action_type = action.pop("type")
+            logger.debug(f"执行活动 => {action}")
+            if self.stop:
+                return False
+            action_type = action.pop("type", "异常")
             method = getattr(core.presets, action_type, None)
             try:
                 if method:
@@ -84,29 +87,18 @@ class AnalysisTasks:
             return True
         logger.info(f"判断文本 {text} 是否存在")
         time.sleep(0.5)
-        image = screenshot()
-        data = predict(image, cropped_pos1, cropped_pos2)
-        for item in data:
-            if text in item["text"]:
-                logger.info(f"找到文本 => {text}")
-                if is_click:
-                    position = item["position"]
-                    # 计算中心坐标
-                    center_x = (position[0][0] + position[2][0]) / 2
-                    center_y = (position[0][1] + position[2][1]) / 2
-                    input_tap((center_x, center_y))
-                if isinstance(success, str):
-                    actions = read_json(f"actions/actions/{success}.json")
-                    self.start(actions)
-                elif isinstance(success, list):
-                    self.start(success)
-                return
-        logger.info(f"未找到文本 => {text}")
+        result = find_text(text, cropped_pos1, cropped_pos2)
+        if result:
+            action = success
+            if is_click:
+                input_tap(result["center"])
+        else:
+            action = fail
         if isinstance(fail, str):
-            actions = read_json(f"actions/actions/{fail}.json")
+            actions = read_json(f"actions/actions/{action}.json")
             self.start(actions)
-        elif isinstance(fail, list):
-            self.start(fail)
+        elif isinstance(action, list):
+            self.start(action.copy())
         if not must_succeed:
             return
         else:

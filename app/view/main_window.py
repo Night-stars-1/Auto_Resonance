@@ -1,38 +1,31 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-02 19:27:03
-LastEditTime: 2024-04-07 13:00:04
+LastEditTime: 2024-04-08 13:10:44
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
+from typing import Union
+
 # coding: utf-8
-from PyQt5.QtCore import QSize, Qt, QUrl
-from PyQt5.QtGui import QDesktopServices, QIcon
-from PyQt5.QtWidgets import QApplication
+from PyQt5.QtCore import QSize
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QApplication, QWidget
 from qfluentwidgets import FluentIcon as FIF
 from qfluentwidgets import (
-    FluentWindow,
-    InfoBar,
-    InfoBarPosition,
-    MessageBox,
     MSFluentWindow,
-    NavigationAvatarWidget,
     NavigationBarPushButton,
     NavigationItemPosition,
     SplashScreen,
-    Theme,
-    setTheme,
-    setThemeColor,
-    toggleTheme,
 )
 
-from ..common import resource
+from ..common import resource  # 图标数据
 from ..common.config import cfg
-from ..common.icon import Icon
+from ..common.icon import FluentIconBase
 from ..common.signal_bus import signalBus
-from ..common.translator import Translator
 from .home_interface import HomeInterface
 from .logger_interface import LoggerInterface
+from .setting_interface import SettingInterface
 from .taj_interface import TajInterface
 
 
@@ -48,6 +41,7 @@ class MainWindow(MSFluentWindow):
         self.homeInterface = HomeInterface(self)
         self.tajInterface = TajInterface(self)
         self.loggerInterface = LoggerInterface(self)
+        self.settingInterface = SettingInterface(self)
 
         self.connectSignalToSlot()
 
@@ -62,16 +56,35 @@ class MainWindow(MSFluentWindow):
     def initNavigation(self):
         # add navigation items
         self.addSubInterface(self.homeInterface, FIF.HOME, "Home")
-        self.wights[self.homeInterface.objectName()] = self.homeInterface
         self.addSubInterface(self.tajInterface, FIF.AIRPLANE, "铁安局")
-        self.wights[self.tajInterface.objectName()] = self.tajInterface
         self.addSubInterface(self.loggerInterface, FIF.ALIGNMENT, "日志")
-        self.wights[self.loggerInterface.objectName()] = self.loggerInterface
+
+        # add custom widget to bottom
+        self.addSubInterface(
+            self.settingInterface,
+            FIF.SETTING,
+            "设置",
+            position=NavigationItemPosition.BOTTOM,
+        )
+
+    def addSubInterface(
+        self,
+        interface: QWidget,
+        icon: Union[FluentIconBase, QIcon, str],
+        text: str,
+        selectedIcon=None,
+        position=NavigationItemPosition.TOP,
+        isTransparent=False,
+    ) -> NavigationBarPushButton:
+        super().addSubInterface(
+            interface, icon, text, selectedIcon, position, isTransparent
+        )
+        self.wights[interface.objectName()] = interface
 
     def initWindow(self):
         self.resize(960, 780)
         self.setMinimumWidth(760)
-        self.setWindowIcon(QIcon("./app/resource/images/logo.png"))
+        self.setWindowIcon(QIcon("./app/resource/images/logo.ico"))
         self.setWindowTitle("黑月无人驾驶")
 
         self.setMicaEffectEnabled(cfg.get(cfg.micaEnabled))

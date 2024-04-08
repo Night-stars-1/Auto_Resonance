@@ -1,5 +1,8 @@
 [
     {
+        "type": "go_home"
+    },
+    {
         "type": "go_outlets",
         "name": "休息区"
     },

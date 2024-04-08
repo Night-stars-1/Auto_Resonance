@@ -1,48 +1,66 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-03-20 22:24:35
-LastEditTime: 2024-04-07 18:02:58
+LastEditTime: 2024-04-08 21:47:46
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
 from loguru import logger
 
+from auto.railway_safety_bureau.main import start as rsb_start
+from auto.rest_area.main import start as ra_start
 from core.adb import connect
+from core.adb import stop as adb_stop
 from core.analysis_tasks import AnalysisTasks
+from core.exceptions import StopExecution
 from core.utils import read_json
 
-STOP = False
-
+analysis = None
 
 def stop():
-    global STOP
-    STOP = True
+    """
+    说明:
+        停止运行
+    """
+    adb_stop()
+
+def main():
+    status = connect()
+    if status:
+        ra_start()
+        rsb_start()
+    else:
+        logger.error("ADB连接失败")
+    return status
 
 
 def run():
-    global STOP
+    """
+    这是从json文件中读取任务并执行的函数，可以根据需要修改json文件中的任务\n
+    gui不会执行这个函数，如果需要执行这个函数，请执行main.py\n
+    `python main.py`
+    """
+    global analysis
     status = connect()
     if status:
         tasks = read_json("actions/start.json")
         for task in tasks:
-            if STOP:
-                return
             if isinstance(task, str):
                 analysis = AnalysisTasks(task)
-                analysis.start()
+                if (status := analysis.start()) == False:
+                    return
                 logger.info(f"{task}运行完成")
             elif isinstance(task, dict):
                 name = list(task.keys())[0]
                 num = list(task.values())[0]
                 for i in range(num):
-                    if STOP:
-                        return
                     analysis = AnalysisTasks(name)
-                    analysis.start()
+                    if (status := analysis.start()) == False:
+                        return
                     logger.info(f"{name}:{i+1}/{num}运行完成")
     else:
         logger.error("ADB连接失败")
 
 
 if __name__ == "__main__":
-    run()
+    main()

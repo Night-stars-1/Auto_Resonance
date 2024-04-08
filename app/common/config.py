@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-02 19:13:20
-LastEditTime: 2024-04-02 19:55:22
+LastEditTime: 2024-04-08 00:19:18
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -14,13 +14,9 @@ from qfluentwidgets import (
     BoolValidator,
     ConfigItem,
     ConfigSerializer,
-    FolderListValidator,
-    FolderValidator,
     OptionsConfigItem,
     OptionsValidator,
     QConfig,
-    RangeConfigItem,
-    RangeValidator,
     Theme,
     __version__,
     qconfig,
@@ -53,11 +49,8 @@ def isWin11():
 class Config(QConfig):
     """Config of application"""
 
-    # folders
-    musicFolders = ConfigItem("Folders", "LocalMusic", [], FolderListValidator())
-    downloadFolder = ConfigItem(
-        "Folders", "Download", "app/download", FolderValidator()
-    )
+    # uuid
+    uuid = ConfigItem("Global", "uuid", "", None)
 
     # main window
     micaEnabled = ConfigItem("MainWindow", "MicaEnabled", isWin11(), BoolValidator())
@@ -67,24 +60,6 @@ class Config(QConfig):
         "Auto",
         OptionsValidator([1, 1.25, 1.5, 1.75, 2, "Auto"]),
         restart=True,
-    )
-    language = OptionsConfigItem(
-        "MainWindow",
-        "Language",
-        Language.AUTO,
-        OptionsValidator(Language),
-        LanguageSerializer(),
-        restart=True,
-    )
-
-    # Material
-    blurRadius = RangeConfigItem(
-        "Material", "AcrylicBlurRadius", 15, RangeValidator(0, 40)
-    )
-
-    # software update
-    checkUpdateAtStartUp = ConfigItem(
-        "Update", "CheckUpdateAtStartUp", True, BoolValidator()
     )
 
 

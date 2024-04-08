@@ -1,16 +1,22 @@
-# coding:utf-8
-from PyQt5.QtCore import Qt, QRectF
-from PyQt5.QtGui import QPixmap, QPainter, QColor, QBrush, QPainterPath, QLinearGradient
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel
+"""
+Author: Night-stars-1 nujj1042633805@gmail.com
+Date: 2024-04-02 19:12:22
+LastEditTime: 2024-04-08 21:15:56
+LastEditors: Night-stars-1 nujj1042633805@gmail.com
+"""
 
-from qfluentwidgets import ScrollArea, isDarkTheme, FluentIcon
+from typing import Dict
+
+from PyQt5.QtCore import QRectF, Qt
+from PyQt5.QtGui import QBrush, QColor, QLinearGradient, QPainter, QPainterPath, QPixmap
+from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget
+from qfluentwidgets import FluentIcon, ScrollArea, isDarkTheme
+
 from ..common.config import REPO_URL
-from ..common.worker import Worker
-from ..common.icon import Icon, FluentIconBase
-from ..components.link_card import LinkCardView
-from ..components.button_card import ButtonCardView
 from ..common.style_sheet import StyleSheet
-from .logger_interface import LoggerInterface
+from ..common.worker import Worker
+from ..components.link_card import LinkCardView
+from ..components.text_button_card import TextButtonCardView
 
 
 class BannerWidget(QWidget):
@@ -45,17 +51,17 @@ class BannerWidget(QWidget):
 
         path = QPainterPath()
         path.setFillRule(Qt.WindingFill)
-        w, h = self.width(), self.height()
+        w, h = self.width(), self.height()  # 窗口的宽度和高度
         path.addRoundedRect(QRectF(0, 0, w, h), 10, 10)
         path.addRect(QRectF(0, h - 50, 50, 50))
         path.addRect(QRectF(w - 50, 0, 50, 50))
         path.addRect(QRectF(w - 50, h - 50, 50, 50))
         path = path.simplified()
 
-        # init linear gradient effect
+        # 初始化线性渐变效果
         gradient = QLinearGradient(0, 0, 0, h)
 
-        # draw background color
+        # 绘制背景颜色
         if not isDarkTheme():
             gradient.setColorAt(0, QColor(207, 216, 228, 255))
             gradient.setColorAt(1, QColor(207, 216, 228, 0))
@@ -65,7 +71,7 @@ class BannerWidget(QWidget):
 
         painter.fillPath(path, QBrush(gradient))
 
-        # draw banner image
+        # 绘制图片
         pixmap = self.banner.scaled(self.size(), transformMode=Qt.SmoothTransformation)
         painter.fillPath(path, QBrush(pixmap))
 
@@ -75,7 +81,7 @@ class HomeInterface(ScrollArea):
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
-        self.workers = {}  # 用于存储活动的 Worker 实例
+        self.workers: Dict[str, Worker] = {}  # 用于存储活动的 Worker 实例
 
         self.banner = BannerWidget(self)
         self.view = QWidget(self)
@@ -101,11 +107,12 @@ class HomeInterface(ScrollArea):
     def loadSamples(self):
         """load samples"""
         # basic input samples
-        basicInputView = ButtonCardView("开始运行", self.view)
+        basicInputView = TextButtonCardView("开始运行", self.view)
 
         self.run = basicInputView.addSampleCard(
             icon=":/gallery/images/controls/Button.png",
             title="运行",
+            text="运行顺序:\n1.购买桦石\n2.刷铁安局",
             content="运行测试版本",
             func=self._run,
             routekey="LoggerInterface",
@@ -117,14 +124,13 @@ class HomeInterface(ScrollArea):
         """运行自动化程序"""
         if self.run.titleLabel.text() == "运行":
             self.run.titleLabel.setText("停止")
-            from main import run, stop
-            
-            worker = Worker(run, stop)
+            from main import main, stop
+
+            worker = Worker(main, stop)
             self.workers["run"] = worker
             worker.finished.connect(lambda: self.on_worker_finished(worker))
             worker.start()
         else:
-            self.run.titleLabel.setText("运行")
             self.workers["run"].stop()
 
     def on_worker_finished(self, worker: Worker):

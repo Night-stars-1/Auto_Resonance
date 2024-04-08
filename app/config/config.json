@@ -1,0 +1,13 @@
+{
+    "MainWindow": {
+        "DpiScale": "Auto",
+        "MicaEnabled": true
+    },
+    "QFluentWidgets": {
+        "ThemeColor": "#ff009faa",
+        "ThemeMode": "Auto"
+    },
+    "Global": {
+        "uuid": "6386"
+    }
+}

@@ -44,7 +44,7 @@
             }
         ],
         "must_succeed": true,
-        "is_use": false
+        "is_use": true
     },
     {
         "type": "click",

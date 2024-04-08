@@ -9,6 +9,7 @@ from qfluentwidgets import ScrollArea, SettingCardGroup
 from ..common.utils import debounce, read_json, save_json
 from ..common.style_sheet import StyleSheet
 from ..components.combo_box_title_card import ComboBoxTitleCard
+from core.models.config import config
 
 CITYDATA = {
     "修格里城": {
@@ -38,65 +39,12 @@ SERIAL_NUMBER2POS = {
     "3": [1150, 663],
 }
 POS2SERIAL_NUMBER = {"[635, 662]": "1", "[890, 663]": "2", "[1150, 663]": "3"}
-ATTACK_RAILWAY_SAFTETY_BUREAU_CONFIG = [
-    {
-        "type": "wait",
-        "image": "railway_safety_bureau/railway_safety_bureau.png",
-        "cropped_pos1": [174, 444],
-        "cropped_pos2": [294, 547],
-        "trynum": 10,
-    },
-    {"type": "click", "pos": [1137, 660]},
-    {
-        "type": "judgement_text",
-        "text": "差异",
-        "success": None,
-        "fail": [
-            {"type": "click", "pos": [87, 38]},
-            {"type": "wait_time", "seconds": 1},
-            {"type": "click", "pos": [932, 306]},
-        ],
-        "must_succeed": True,
-    },
-    {"type": "click", "pos": [883, 540]},
-    {
-        "type": "click_image",
-        "image": "railway_safety_bureau/start_attack.png",
-        "cropped_pos1": [1133, 128],
-        "cropped_pos2": [1263, 628],
-        "trynum": 10,
-    },
-    {"type": "wait_fight_end"},
-    {"type": "click", "pos": [1154, 628]},
-    {"type": "click", "pos": [1154, 628]},
-]
-JOIN_RAILWAY_SAFTETY_BUREAU_CONFIG = [
-    {"type": "click_station", "name": "7号自由港"},
-    {"type": "go_outlets", "name": "铁安局"},
-    {
-        "type": "wait",
-        "image": "railway_safety_bureau/railway_safety_bureau.png",
-        "cropped_pos1": [875, 27],
-        "cropped_pos2": [1093, 158],
-        "trynum": 10,
-    },
-    {"type": "click", "pos": [903, 313]},
-]
-
 
 class TajInterface(ScrollArea):
     """铁安局 interface"""
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
-        self.join_config = read_json(
-            "actions/tasks/join_railway_safety_bureau.json",
-            JOIN_RAILWAY_SAFTETY_BUREAU_CONFIG,
-        )
-        self.attack_config = read_json(
-            "actions/tasks/attack_railway_safety_bureau.json",
-            ATTACK_RAILWAY_SAFTETY_BUREAU_CONFIG,
-        )
         self.scrollWidget = QWidget(self)
         self.expandLayout = ExpandLayout(self.scrollWidget)
 
@@ -110,7 +58,7 @@ class TajInterface(ScrollArea):
             FIF.LANGUAGE,
             "城市",
             options=list(CITYDATA.keys()),
-            default=self.join_config[0].get("name"),
+            default=config.rsb.city,
             content="选择刷取铁安局的城市",
             parent=self.configGroup,
         )
@@ -120,7 +68,7 @@ class TajInterface(ScrollArea):
             "关卡序号",
             options=["1", "2", "3"],
             default=POS2SERIAL_NUMBER.get(
-                str(self.attack_config[1].get("pos", [635, 662]))
+                str(config.rsb.levelSerialPos)
             ),
             content="选择刷取铁安局的关卡序号",
             parent=self.configGroup,
@@ -132,7 +80,7 @@ class TajInterface(ScrollArea):
             options=CITYDATA.get(self.cityCard.value, {}).get(
                 self.levelSerialNumber.value, ["所有"]
             ),
-            default=self.attack_config[2].get("text"),
+            default=config.rsb.name,
             content="选择刷取铁安局的关卡名称",
             parent=self.configGroup,
         )
@@ -193,20 +141,7 @@ class TajInterface(ScrollArea):
         city_value = self.cityCard.value
         serial_number_value = self.levelSerialNumber.value
         level_value = self.levelCard.value
-        ATTACK_RAILWAY_SAFTETY_BUREAU_CONFIG[1]["pos"] = SERIAL_NUMBER2POS[
-            serial_number_value
-        ]
-        if level_value == "所有":
-            ATTACK_RAILWAY_SAFTETY_BUREAU_CONFIG[2]["is_use"] = False
-        else:
-            ATTACK_RAILWAY_SAFTETY_BUREAU_CONFIG[2]["text"] = level_value
-            ATTACK_RAILWAY_SAFTETY_BUREAU_CONFIG[2]["is_use"] = True
-        JOIN_RAILWAY_SAFTETY_BUREAU_CONFIG[0]["name"] = city_value
-        save_json(
-            "actions/tasks/attack_railway_safety_bureau.json",
-            ATTACK_RAILWAY_SAFTETY_BUREAU_CONFIG,
-        )
-        save_json(
-            "actions/tasks/join_railway_safety_bureau.json",
-            JOIN_RAILWAY_SAFTETY_BUREAU_CONFIG,
-        )
+        config.rsb.city = city_value
+        config.rsb.levelSerialPos = SERIAL_NUMBER2POS[serial_number_value]
+        config.rsb.name = level_value
+        config.save_config()

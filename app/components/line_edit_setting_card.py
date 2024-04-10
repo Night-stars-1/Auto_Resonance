@@ -1,16 +1,22 @@
+"""
+Author: Night-stars-1 nujj1042633805@gmail.com
+Date: 2024-04-07 23:54:39
+LastEditTime: 2024-04-10 01:11:23
+LastEditors: Night-stars-1 nujj1042633805@gmail.com
+"""
 from typing import Union
 
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QIcon
-from qfluentwidgets import SettingCard, FluentIconBase, LineEdit
-from qfluentwidgets import OptionsConfigItem, qconfig
+from qfluentwidgets import SettingCard, FluentIconBase, LineEdit, PasswordLineEdit, ConfigItem
+from qfluentwidgets import qconfig
 
 class LineEditSettingCard(SettingCard):
     """ Setting card with a push button """
 
     text_change = pyqtSignal()
 
-    def __init__(self, configItem: str, holderText: str, icon: Union[str, QIcon, FluentIconBase], title: str, content=None, parent=None):
+    def __init__(self, configItem: ConfigItem, holderText: str, icon: Union[str, QIcon, FluentIconBase], title: str, content=None, parent=None, isPassword=False):
         """
         Parameters
         ----------
@@ -32,9 +38,13 @@ class LineEditSettingCard(SettingCard):
         super().__init__(icon, title, content, parent)
         self.configItem = configItem
 
-        self.lineEdit = LineEdit(self)
+        if isPassword:
+            self.lineEdit = PasswordLineEdit(self)
+        else:
+            self.lineEdit = LineEdit(self)
         self.lineEdit.setText(qconfig.get(self.configItem))
         self.lineEdit.setPlaceholderText(holderText)
+
         self.lineEdit.textChanged.connect(self.textChanged)
         self.hBoxLayout.addWidget(self.lineEdit, 0, Qt.AlignRight)
         self.hBoxLayout.addSpacing(16)

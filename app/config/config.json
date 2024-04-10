@@ -3,11 +3,12 @@
         "DpiScale": "Auto",
         "MicaEnabled": true
     },
+    "Global": {
+        "goodsType": false,
+        "uuid": ""
+    },
     "QFluentWidgets": {
         "ThemeColor": "#ff009faa",
         "ThemeMode": "Auto"
-    },
-    "Global": {
-        "uuid": "6386"
     }
 }

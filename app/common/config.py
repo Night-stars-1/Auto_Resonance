@@ -51,6 +51,7 @@ class Config(QConfig):
 
     # uuid
     uuid = ConfigItem("Global", "uuid", "", None)
+    goodsType = ConfigItem("Global", "goodsType", False, BoolValidator())
 
     # main window
     micaEnabled = ConfigItem("MainWindow", "MicaEnabled", isWin11(), BoolValidator())

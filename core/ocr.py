@@ -12,7 +12,7 @@ import numpy as np
 from cnocr import CnOcr
 from PIL import Image
 
-ocr = CnOcr()
+ocr = CnOcr(rec_root="resources/model/cnocr", det_root="resources/model/cnstd")
 
 
 def predict(

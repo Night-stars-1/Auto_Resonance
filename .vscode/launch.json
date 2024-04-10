@@ -8,7 +8,7 @@
             "name": "Python 调试程序: 当前文件",
             "type": "debugpy",
             "request": "launch",
-            "program": "${file}",
+            "program": "${workspaceFolder}/test.py",
             "console": "integratedTerminal"
         }
     ]

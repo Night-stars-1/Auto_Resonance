@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-03-20 22:24:35
-LastEditTime: 2024-04-08 21:47:46
+LastEditTime: 2024-04-10 12:55:39
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -17,6 +17,7 @@ from core.utils import read_json
 
 analysis = None
 
+
 def stop():
     """
     说明:
@@ -24,8 +25,9 @@ def stop():
     """
     adb_stop()
 
-def main():
-    status = connect()
+
+def main(order, path):
+    status = connect(order, path)
     if status:
         ra_start()
         rsb_start()

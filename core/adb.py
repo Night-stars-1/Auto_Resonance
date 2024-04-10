@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-03-20 22:24:35
-LastEditTime: 2024-04-08 21:59:02
+LastEditTime: 2024-04-10 13:34:03
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -21,7 +21,7 @@ EXCURSIONY = [-10, 10]
 STOP = False
 
 
-def connect(order="127.0.0.1:7555", path="core\\lib\\adb"):
+def connect(order="127.0.0.1:7555", path="resources\\lib\\adb"):
     """
     说明:
         连接ADB

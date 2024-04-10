@@ -4,8 +4,7 @@ from qfluentwidgets import FluentIcon as FIF
 from PyQt5.QtCore import Qt, QStandardPaths
 from PyQt5.QtWidgets import QWidget, QLabel
 
-from app.components.line_edit_setting_card import LineEditSettingCard
-
+from ..components.settings.line_edit_setting_card import LineEditSettingCard
 from ..common.config import cfg
 from ..common.style_sheet import StyleSheet
 
@@ -48,6 +47,20 @@ class SettingInterface(ScrollArea):
             "商品请求测试",
             self.musicInThisPCGroup
         )
+        self.adbPathCard = LineEditSettingCard(
+            cfg.adbPath,
+            "ADB路径",
+            FIF.PALETTE,
+            "ADB程序路径",
+            parent=self.musicInThisPCGroup
+        )
+        self.adbOrderCard = LineEditSettingCard(
+            cfg.adbOrder,
+            "ADB地址",
+            FIF.PALETTE,
+            "ADB地址",
+            parent=self.musicInThisPCGroup
+        )
         self.__initWidget()
 
     def __initWidget(self):
@@ -74,6 +87,8 @@ class SettingInterface(ScrollArea):
         self.musicInThisPCGroup.addSettingCard(self.goodsTypeCard)
         self.musicInThisPCGroup.addSettingCard(self.uuidCard)
         self.musicInThisPCGroup.addSettingCard(self.testCard)
+        self.musicInThisPCGroup.addSettingCard(self.adbPathCard)
+        self.musicInThisPCGroup.addSettingCard(self.adbOrderCard)
 
         # add setting card group to layout
         self.expandLayout.setSpacing(28)

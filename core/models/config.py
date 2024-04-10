@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-08 17:45:06
-LastEditTime: 2024-04-10 00:16:43
+LastEditTime: 2024-04-10 13:57:51
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -23,82 +23,86 @@ CONFIG_PATH = ROOT_PATH / "config.json"
 class RestAreaModel(BaseModel):
     """休息区模型"""
 
+    class RunTimeModel(BaseModel):
+        runtime: float = 0.0
+        """运行时间"""
+
+    huashi: RunTimeModel = RunTimeModel()
+    """桦石"""
+
 
 class RSBModel(BaseModel):
     """铁安局模型"""
 
     city: str = "7号自由港"
     """刷取城市"""
-    levelSerialPos: List[int] = "1"
+    levelSerialPos: List[int] = [635, 662]
     """刷取关卡序号位置"""
     name: str = "所有"
     """刷取关卡名称 所有为全部刷取"""
-
-
-class CityLevelModel(BaseModel):
-    """城市声望等级模型"""
-
-    七号自由港: int = Field(0, alias="7号自由港")
-    修格里城: int = 0
-    曼德矿场: int = 0
-    澄明数据中心: int = 0
-    荒原站: int = 0
-
-
-class CityDataModel(BaseModel):
-    """城市数据模型"""
-
-    buy_num: float = 0.0
-    """购买数量"""
-    revenue: float = 0.0
-    """收益"""
-
-
-class RaisePriceModel(BaseModel):
-    """往返砍抬模型"""
-
-    percentage: float = 0.0
-    """百分比"""
-    profit: int = 0
-    """利润"""
-
-
-class GoBackModel(BaseModel):
-    """砍抬提价模型"""
-
-    raise_price: RaisePriceModel = RaisePriceModel()
-    """抬价"""
-    cut_price: RaisePriceModel = RaisePriceModel()
-    """砍价"""
-
-
-class SkillLevelModel(BaseModel):
-    """技能等级模型"""
-
-    星花: int = 0
-    卡洛琳: int = 0
-    伊尔: int = 0
-    菲妮娅: int = 0
-    叶珏: int = 0
-    黛丝莉: int = 0
-    阿知波: int = 0
-    塞西尔: int = 0
-    瓦伦汀: int = 0
-    魇: int = 0
-    奈弥: int = 0
-    甘雅: int = 0
-    艾略特: int = 0
-    朱利安: int = 0
-    瑞秋: int = 0
-    山岚: int = 0
-    卡莲: int = 0
-    静流: int = 0
-    雷火: int = 0
-    狮鬃: int = 0
+    num: int = 1
+    """刷取次数"""
 
 
 class UserModel(BaseModel):
     """用户模型"""
+
+    class CityLevelModel(BaseModel):
+        """城市声望等级模型"""
+
+        七号自由港: int = Field(0, alias="7号自由港")
+        修格里城: int = 0
+        曼德矿场: int = 0
+        澄明数据中心: int = 0
+        荒原站: int = 0
+
+    class CityDataModel(BaseModel):
+        """城市数据模型"""
+
+        buy_num: float = 0.0
+        """购买数量"""
+        revenue: float = 0.0
+        """收益"""
+
+    class GoBackModel(BaseModel):
+        """砍抬提价模型"""
+
+        class RaisePriceModel(BaseModel):
+            """往返砍抬模型"""
+
+            percentage: float = 0.0
+            """百分比"""
+            profit: int = 0
+            """利润"""
+
+        raise_price: RaisePriceModel = RaisePriceModel()
+        """抬价"""
+        cut_price: RaisePriceModel = RaisePriceModel()
+        """砍价"""
+
+    class SkillLevelModel(BaseModel):
+        """技能等级模型"""
+
+        星花: int = 0
+        卡洛琳: int = 0
+        伊尔: int = 0
+        菲妮娅: int = 0
+        叶珏: int = 0
+        黛丝莉: int = 0
+        阿知波: int = 0
+        塞西尔: int = 0
+        瓦伦汀: int = 0
+        魇: int = 0
+        奈弥: int = 0
+        甘雅: int = 0
+        艾略特: int = 0
+        朱利安: int = 0
+        瑞秋: int = 0
+        山岚: int = 0
+        卡莲: int = 0
+        静流: int = 0
+        雷火: int = 0
+        狮鬃: int = 0
 
     city_level: CityLevelModel = CityLevelModel()
     """城市等级"""
@@ -124,6 +128,8 @@ class Config(BaseModel):
     rsb: RSBModel = RSBModel()
     """铁安局配置"""
     user: UserModel = UserModel()
+    rest_area: RestAreaModel = RestAreaModel()
+    """休息区配置"""
 
     def save_config(self):
         """保存配置"""

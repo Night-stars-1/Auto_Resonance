@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-02 19:27:03
-LastEditTime: 2024-04-08 13:10:44
+LastEditTime: 2024-04-10 13:47:36
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -18,6 +18,8 @@ from qfluentwidgets import (
     NavigationItemPosition,
     SplashScreen,
 )
+
+from app.view.daily_task_interface import DailyTaskInterface
 
 from ..common import resource  # 图标数据
 from ..common.config import cfg
@@ -42,6 +44,7 @@ class MainWindow(MSFluentWindow):
         self.tajInterface = TajInterface(self)
         self.loggerInterface = LoggerInterface(self)
         self.settingInterface = SettingInterface(self)
+        self.daily_task_interface = DailyTaskInterface(self)
 
         self.connectSignalToSlot()
 
@@ -58,6 +61,7 @@ class MainWindow(MSFluentWindow):
         self.addSubInterface(self.homeInterface, FIF.HOME, "Home")
         self.addSubInterface(self.tajInterface, FIF.AIRPLANE, "铁安局")
         self.addSubInterface(self.loggerInterface, FIF.ALIGNMENT, "日志")
+        self.addSubInterface(self.daily_task_interface, FIF.CALENDAR, "每日任务")
 
         # add custom widget to bottom
         self.addSubInterface(

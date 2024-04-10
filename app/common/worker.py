@@ -6,7 +6,11 @@ LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
 from PyQt5.QtCore import QThread
+
 from core.exceptions import StopExecution
+
+from .config import cfg
+
 
 class Worker(QThread):
     def __init__(self, func, stop, parent=None):
@@ -16,7 +20,7 @@ class Worker(QThread):
 
     def run(self):
         try:
-            self.func()
+            self.func(cfg.adbOrder.value, cfg.adbPath.value)
         except StopExecution:
             pass
 

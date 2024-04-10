@@ -81,7 +81,7 @@ class HomeInterface(ScrollArea):
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
-        self.workers: Dict[str, Worker] = {}  # 用于存储活动的 Worker 实例
+        self.workers: Worker = None  # 用于存储活动的 Worker 实例
 
         self.banner = BannerWidget(self)
         self.view = QWidget(self)
@@ -126,15 +126,14 @@ class HomeInterface(ScrollArea):
             self.run.titleLabel.setText("停止")
             from main import main, stop
 
-            worker = Worker(main, stop)
-            self.workers["run"] = worker
-            worker.finished.connect(lambda: self.on_worker_finished(worker))
-            worker.start()
+            self.workers = Worker(main, stop)
+            self.workers.finished.connect(lambda: self.on_worker_finished(self.workers))
+            self.workers.start()
         else:
-            self.workers["run"].stop()
+            self.workers.stop()
 
     def on_worker_finished(self, worker: Worker):
         # 线程完成时调用
         self.run.titleLabel.setText("运行")
         worker.deleteLater()  # 安全删除Worker对象
-        del self.workers["run"]
+        self.workers = None

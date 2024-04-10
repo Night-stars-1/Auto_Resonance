@@ -111,4 +111,4 @@ logs/
 gui/
 examples/
 test.*
-config.json
+config*

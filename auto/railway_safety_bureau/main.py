@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-08 19:51:16
-LastEditTime: 2024-04-08 21:53:05
+LastEditTime: 2024-04-10 13:35:02
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -32,19 +32,24 @@ def join(city: str):
 
 
 def start():
-    logger.info(f"开始铁安局 => {rsb.name}")
     join(rsb.city)
 
-    wait("railway_safety_bureau/railway_safety_bureau.png", (174, 444), (294, 547), 10)
-    click(rsb.levelSerialPos)
-    while True:
-        if not find_text(rsb.name) or rsb.name == "所有":
-            click((87, 38))
-            wait_time(1)
-            click((932, 306))
-        break
-    click((883, 540))
-    click_image("railway_safety_bureau/start_attack.png", (1133, 128), (1263, 628), 10)
-    wait_fight_end()
-    click((1154, 628))
-    click((1154, 628))
+    for n in range(config.rsb.num):
+        logger.info(f"开始铁安局 => {rsb.name}:{n+1}")
+        wait("railway_safety_bureau/railway_safety_bureau.png", (174, 444), (294, 547), 10)
+        click(rsb.levelSerialPos)
+        while True:
+            if rsb.name == "所有":
+                break
+            if not find_text(rsb.name):
+                click((87, 38))
+                wait_time(1)
+                click((932, 306))
+            break
+        click((883, 540))
+        click_image(
+            "railway_safety_bureau/start_attack.png", (1133, 128), (1263, 628), trynum=10
+        )
+        wait_fight_end()
+        click((1154, 628))
+        click((1154, 628))

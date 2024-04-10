@@ -22,6 +22,8 @@ from qfluentwidgets import (
     qconfig,
 )
 
+from core import adb
+
 
 class Language(Enum):
     """Language enumeration"""
@@ -52,6 +54,8 @@ class Config(QConfig):
     # uuid
     uuid = ConfigItem("Global", "uuid", "", None)
     goodsType = ConfigItem("Global", "goodsType", False, BoolValidator())
+    adbPath = ConfigItem("Global", "adbPath", "resources\\lib\\adb", None)
+    adbOrder = ConfigItem("Global", "adbOrder", "127.0.0.1:7555", None)
 
     # main window
     micaEnabled = ConfigItem("MainWindow", "MicaEnabled", isWin11(), BoolValidator())

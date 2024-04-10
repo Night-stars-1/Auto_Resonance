@@ -6,7 +6,7 @@ import time
 from typing import Dict, List, Literal
 from ..models.goods import GoodModel, GoodsModel
 from ..models.srap import SrapRequestModel
-from ..models.config import CityDataModel, CityLevelModel, GoBackModel, config as config_model
+from ..models.config import UserModel, config as config_model
 
 def round5(x):
     return int(Decimal(x).quantize(Decimal('1'), rounding=ROUND_HALF_UP))
@@ -63,14 +63,14 @@ for role_name, role_level in config.skill_level:
 max_book = 10
 message = '暂无'
 
-def get_city_data_by_city_level(city_level_: CityLevelModel) -> Dict[str, CityDataModel]:
+def get_city_data_by_city_level(city_level_: UserModel.CityLevelModel) -> Dict[str, UserModel.CityDataModel]:
     city_level_data = {}
     for attached_name, city_name in attached_to_city_data.items():
         city_level = city_level_.model_dump(by_alias=True)
         if city_name not in city_level.keys():
             continue
         level = city_level[city_name] + 1
-        city_level_data[attached_name] = CityDataModel.model_validate(city_data[city_name][level])
+        city_level_data[attached_name] = UserModel.CityDataModel.model_validate(city_data[city_name][level])
     return city_level_data
 
 
@@ -122,7 +122,7 @@ class SHOP:
                     num = goods_data['num']
                     buy_price = goods_data['price'] # 购买价格
                     old_no_revenue_sell_price = sell_data[goods_name].price # 不带税的售价，砍抬前
-                    no_revenue_sell_price = round5(old_no_revenue_sell_price * (1 + getattr(config, type_, GoBackModel()).raise_price.percentage)) # 不带税的售价
+                    no_revenue_sell_price = round5(old_no_revenue_sell_price * (1 + getattr(config, type_, UserModel.GoBackModel()).raise_price.percentage)) # 不带税的售价
                     tax_rate = config.city_data[sell_city_name].revenue # 税率
                     no_tax_rate_price = (no_revenue_sell_price - buy_price) * num # 不带税的利润
                     revenue = (no_revenue_sell_price - buy_price) * tax_rate # 税收
@@ -132,7 +132,7 @@ class SHOP:
                 tax_rate = config.city_data[buy_city_name].revenue
                 buy_price = round5(target['price'] * (1 + tax_rate))
                 city_tired = (city_tired_data.get(f"{buy_city_name}-{sell_city_name}", 99999) + 
-                              getattr(config, type_, GoBackModel()).raise_price.profit + getattr(config, type_, GoBackModel()).cut_price.profit)
+                              getattr(config, type_, UserModel.GoBackModel()).raise_price.profit + getattr(config, type_, UserModel.GoBackModel()).cut_price.profit)
                 tired_profit = round5(profit / city_tired)
                 book_profit = 0 if target['book'] == 0 else round5(profit / target['book'])
                 
@@ -165,12 +165,12 @@ class SHOP:
         """
         for good_name, good_data in self.buy_goods[city_name].items():
             if target['num'] < config.max_goods_num:
-                buy_num = config.city_data.get(city_name, CityDataModel()).buy_num
+                buy_num = config.city_data.get(city_name, UserModel.CityDataModel()).buy_num
                 skill_num = config.goods_addition.get(good_name, 0)  # 使用 get 方法处理默认值
                 old_num = round5(good_data.num * (1 + buy_num + skill_num))
                 num = min(old_num, config.max_goods_num - target['num'])  # 确保不超过最大商品数量
                 old_price = good_data.price
-                price = round5(old_price * (1 - getattr(config, type_, GoBackModel()).cut_price.percentage))
+                price = round5(old_price * (1 - getattr(config, type_, UserModel.GoBackModel()).cut_price.percentage))
 
                 # 检查商品是否已经在target['goodsData']中
                 if good_name not in target['goodsData']:

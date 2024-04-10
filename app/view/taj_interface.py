@@ -1,15 +1,23 @@
+"""
+Author: Night-stars-1 nujj1042633805@gmail.com
+Date: 2024-04-06 19:32:25
+LastEditTime: 2024-04-10 13:56:53
+LastEditors: Night-stars-1 nujj1042633805@gmail.com
+"""
 
+from loguru import logger
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QLabel, QWidget
-from loguru import logger
 from qfluentwidgets import ExpandLayout
 from qfluentwidgets import FluentIcon as FIF
 from qfluentwidgets import ScrollArea, SettingCardGroup
 
-from ..common.utils import debounce, read_json, save_json
-from ..common.style_sheet import StyleSheet
-from ..components.combo_box_title_card import ComboBoxTitleCard
 from core.models.config import config
+
+from ..common.style_sheet import StyleSheet
+from ..common.utils import debounce, read_json, save_json
+from ..components.combo_box_title_card import ComboBoxTitleCard
+from ..components.line_edit_card import LineEditCard
 
 CITYDATA = {
     "修格里城": {
@@ -40,6 +48,7 @@ SERIAL_NUMBER2POS = {
 }
 POS2SERIAL_NUMBER = {"[635, 662]": "1", "[890, 663]": "2", "[1150, 663]": "3"}
 
+
 class TajInterface(ScrollArea):
     """铁安局 interface"""
 
@@ -48,7 +57,7 @@ class TajInterface(ScrollArea):
         self.scrollWidget = QWidget(self)
         self.expandLayout = ExpandLayout(self.scrollWidget)
 
-        # setting label
+        # label
         self.settingLabel = QLabel("铁安局", self)
 
         # personalization
@@ -67,9 +76,7 @@ class TajInterface(ScrollArea):
             FIF.LANGUAGE,
             "关卡序号",
             options=["1", "2", "3"],
-            default=POS2SERIAL_NUMBER.get(
-                str(config.rsb.levelSerialPos)
-            ),
+            default=POS2SERIAL_NUMBER.get(str(config.rsb.levelSerialPos)),
             content="选择刷取铁安局的关卡序号",
             parent=self.configGroup,
         )
@@ -85,6 +92,16 @@ class TajInterface(ScrollArea):
             parent=self.configGroup,
         )
         self.levelCard.comboBox.currentIndexChanged.connect(self.save_config)
+
+        self.numCard = LineEditCard(
+            FIF.LANGUAGE,
+            "刷取次数",
+            "刷取次数",
+            default=str(config.rsb.num),
+            content="选择刷取铁安局的关卡名称",
+            parent=self.configGroup,
+        )
+        self.numCard.lineEdit.textChanged.connect(self.save_config)
         self.__initWidget()
 
     def __initWidget(self):
@@ -109,6 +126,7 @@ class TajInterface(ScrollArea):
         self.configGroup.addSettingCard(self.cityCard)
         self.configGroup.addSettingCard(self.levelSerialNumber)
         self.configGroup.addSettingCard(self.levelCard)
+        self.configGroup.addSettingCard(self.numCard)
 
         # add setting card group to layout
         self.expandLayout.setSpacing(28)
@@ -144,4 +162,5 @@ class TajInterface(ScrollArea):
         config.rsb.city = city_value
         config.rsb.levelSerialPos = SERIAL_NUMBER2POS[serial_number_value]
         config.rsb.name = level_value
+        config.rsb.num = int(self.numCard.lineEdit.text())
         config.save_config()

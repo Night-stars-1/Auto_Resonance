@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-01 23:18:15
-LastEditTime: 2024-04-06 01:50:03
+LastEditTime: 2024-04-12 00:33:52
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -78,7 +78,7 @@ def get_bgr(
 ) -> List[int]:
     """
     说明:
-        获取指定位置的颜色
+        获取指定位置的BGR
     参数:
         :param image: 图片
         :param pos: 位置 (x, y)
@@ -91,6 +91,31 @@ def get_bgr(
         ]
         pos = (pos[0] - cropped_pos1[0], pos[1] - cropped_pos1[1])
     color = image[pos[1], pos[0]]
+    return color.tolist()
+
+
+def get_hsv(
+    image,
+    pos=(0, 0),
+    cropped_pos1: Tuple[int, int] = (0, 0),
+    cropped_pos2: Tuple[int, int] = (0, 0),
+) -> List[int]:
+    """
+    说明:
+        获取指定位置的HSV
+    参数:
+        :param image: 图片
+        :param pos: 位置 (x, y)
+        :param cropped_pos1: 切剪区域 (x1, y1)
+        :param cropped_pos2: 切剪区域 (x2, y2)
+    """
+    image_hsv = cv.cvtColor(image, cv.COLOR_RGB2HSV)
+    if cropped_pos1 != (0, 0) and cropped_pos2 != (0, 0):
+        image_hsv = image_hsv[
+            cropped_pos1[1] : cropped_pos2[1], cropped_pos1[0] : cropped_pos2[0]
+        ]
+        pos = (pos[0] - cropped_pos1[0], pos[1] - cropped_pos1[1])
+    color = image_hsv[int(pos[1]), int(pos[0])]
     return color.tolist()
 
 
@@ -124,7 +149,7 @@ def get_bgrs(
 
 
 def get_all_color_pos(
-    image, threshold_lower=200, threshold_upper=255, min_area=80, max_area=150
+    image, threshold_lower=200, threshold_upper=255, min_area=40, max_area=150
 ):
     """
     说明:

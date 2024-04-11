@@ -1,3 +1,10 @@
+"""
+Author: Night-stars-1 nujj1042633805@gmail.com
+Date: 2024-04-05 15:17:19
+LastEditTime: 2024-04-11 23:17:58
+LastEditors: Night-stars-1 nujj1042633805@gmail.com
+"""
+
 import time
 
 from loguru import logger
@@ -15,8 +22,8 @@ def sell_business(num=20):
     参数:
         :param num: 期望议价的价格
     """
-    while is_empty_goods():
-        input_tap((669, 201))
+    while not is_empty_goods():
+        input_tap((820, 163))
     logger.info("货物已全部出售")
     click_bargain_button(num)
     click_sell_button()
@@ -28,7 +35,7 @@ def is_empty_goods():
     bgr = get_bgr(
         screenshot(), (728, 235), cropped_pos1=(477, 188), cropped_pos2=(859, 262)
     )
-    return [33, 54, 65] <= bgr <= [40, 60, 70]
+    return [18, 25, 25] <= bgr <= [25, 30, 30]
 
 
 def click_bargain_button(num=20):

@@ -10,6 +10,9 @@ from ..common.style_sheet import StyleSheet
 
 from core.goods.kmou import get_goods_info as get_goods_info_kmou
 from core.goods.srap import get_goods_info as get_goods_info_srap
+from demo import run
+
+from ..common.worker import Worker
 
 class SettingInterface(ScrollArea):
     """ Setting interface """
@@ -100,6 +103,9 @@ class SettingInterface(ScrollArea):
         self.testCard.clicked.connect(self.createSuccessInfoBar)
 
     def createSuccessInfoBar(self):
+        self.workers = Worker(run, run)
+        self.workers.start()
+        '''
         InfoBar.success(
             title="成功",
             content=get_goods_info_kmou(cfg.uuid.value) if cfg.goodsType.value else get_goods_info_srap(),
@@ -109,3 +115,4 @@ class SettingInterface(ScrollArea):
             duration=2000,
             parent=self
         )
+        '''

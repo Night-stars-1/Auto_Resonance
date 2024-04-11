@@ -28,6 +28,8 @@ class GoodModel(BaseModel):
     """价格"""
     base_price: int
     """基础价格"""
+    isSpeciality: bool = False
+    """是否特产"""
 
     def __init__(self, **data: Any) -> None:
         if "station" in data:
@@ -39,9 +41,13 @@ class GoodsModel(BaseModel):
     """商品列表模型"""
 
     goods: List[GoodModel]
+    """商品列表"""
     buy_goods: Dict[str, Dict[str, GoodModel]] = {}
+    """城市可购买的商品信息"""
     sell_goods: Dict[str, Dict[str, GoodModel]] = {}
+    """城市可出售的商品信息"""
     speciality_goods: Dict[str, Dict[str, GoodModel]] = {}
+    """城市可购买的特产商品信息"""
 
     def __init__(self, **data: Any) -> None:
         super().__init__(**data)
@@ -55,6 +61,7 @@ class GoodsModel(BaseModel):
             if good.type == "buy":
                 city_good_data = city_goods[good.city][good.name]
                 good.num = city_good_data.num
+                good.isSpeciality= city_good_data.isSpeciality
                 self.buy_goods.setdefault(good.city, {}).setdefault(good.name, good)
                 if city_good_data.isSpeciality:
                     self.speciality_goods.setdefault(good.city, {}).setdefault(
@@ -66,7 +73,6 @@ class GoodsModel(BaseModel):
     def find(self, **kargs) -> List[GoodModel]:
         data = []
         for i in self.goods:
-            for key, value in kargs.items():
-                if getattr(i, key) == value:
-                    data.append(i)
+            if all(getattr(i, key) == value for key, value in kargs.items()):
+                data.append(i)
         return data

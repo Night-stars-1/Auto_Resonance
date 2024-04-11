@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-04 18:06:25
-LastEditTime: 2024-04-06 02:22:19
+LastEditTime: 2024-04-11 22:38:40
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -10,12 +10,12 @@ from typing import Tuple
 
 from loguru import logger
 
-from .decorator import ensure_resources_prefix
-
 from ..adb import input_swipe, input_tap, screenshot
 from ..exception_handling import get_excption
 from ..image import get_all_color_pos, match_screenshot
 from ..ocr import predict
+from .decorator import ensure_resources_prefix
+
 
 @ensure_resources_prefix
 def wait(
@@ -51,6 +51,7 @@ def wait_time(seconds: float):
         :param time: 时间
     """
     time.sleep(seconds)
+
 
 @ensure_resources_prefix
 def click_image(
@@ -168,10 +169,13 @@ def blurry_ocr_click(
         logger.error(f"未找到指定文本 => {text}")
     return False
 
+
 def find_text(
     text: str,
     cropped_pos1: Tuple[int, int] = (0, 0),
     cropped_pos2: Tuple[int, int] = (0, 0),
+    log=True,
+    return_image=False,
 ):
     """
     说明:
@@ -180,16 +184,23 @@ def find_text(
         :param text: 文本
         :param cropped_pos1: 裁剪坐标1
         :param cropped_pos2: 裁剪坐标2
+        :param image: 是否返回图片
     """
     image = screenshot()
     data = predict(image, cropped_pos1, cropped_pos2)
     for item in data:
         if text in item["text"]:
-            logger.info(f"找到文本 => {text}")
+            if log:
+                logger.info(f"找到文本 => {text}")
             position = item["position"]
             # 计算中心坐标
             center_x = (position[0][0] + position[2][0]) / 2
             center_y = (position[0][1] + position[2][1]) / 2
+            if return_image:
+                return (center_x, center_y), image
             return (center_x, center_y)
-    logger.error(f"未找到指定文本 => {text}")
+    if log:
+        logger.error(f"未找到指定文本 => {text}")
+    if return_image:
+        return None, None
     return None

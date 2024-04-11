@@ -1,12 +1,12 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-04 17:54:58
-LastEditTime: 2024-04-05 21:49:49
+LastEditTime: 2024-04-11 23:02:46
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
 import time
-from typing import List
+from typing import List, Tuple
 
 import cv2 as cv
 import numpy as np
@@ -14,35 +14,76 @@ from loguru import logger
 
 from core.adb import input_swipe, input_tap, screenshot
 from core.exception_handling import get_excption
-from core.image import crop_image, get_bgr
+from core.image import crop_image, get_bgr, get_hsv
 from core.ocr import predict
-from core.presets import ocr_click
+from core.presets import click, find_text, ocr_click
 
 
-def buy_business(goods: List[List[str]], num: int = 20):
+def buy_business(
+    goods: List[str],
+    num: int = 20,
+    max_book: int = 0,
+):
     """
     说明:
         购买商品
     参数:
         :param goods: 商品列表
         :param num: 期望议价的价格
+        :param max_book: 最大使用进货书量
     """
-    for item in goods:
-        for good in item:
-            logger.info(f"正在购买: {good}")
-            result = ocr_click(
-                good, cropped_pos1=(622, 136), cropped_pos2=(854, 685), log=False
-            )  # 点击商品
-            if not result:
-                result = find_good(good)  # 点击失败查找并点击商品
-            if (boatload := get_boatload()) == 0:
-                logger.info("已满载")
-                break
-            logger.info(f"剩余载货量: {boatload}%")
+    book = 0
+    for good in goods:
+        result, book = buy_good(good, book, max_book)
+        if not result:
+            logger.info(f"商品{good}购买失败")
+        if (boatload := get_boatload()) == 0:
+            logger.info("已满载")
+            break
+        logger.info(f"剩余载货量: {boatload}%")
     click_bargain_button(num)
     click_buy_button()
     time.sleep(0.5)
     return input_tap((896, 676))
+
+
+def buy_good(good: str, book: int, max_book: int, again: bool = False):
+    logger.info(f"正在购买: {good}")
+    pos, image = find_text(
+        good,
+        cropped_pos1=(622, 136),
+        cropped_pos2=(854, 685),
+        log=False,
+        return_image=True,
+    )  # 点击商品
+    if not pos:
+        pos, image = find_good(good)  # 点击失败查找并点击商品
+    if pos:
+        hsv = get_hsv(image, pos)
+        if hsv[-1] <= 80:
+            if book < max_book:
+                use_book(pos, book)
+                return not again and buy_good(good, max_book, again=True)[0], book + 1
+            else:
+                return False, book
+        else:
+            click(pos)
+            return True, book
+    else:
+        return False, book
+
+
+def use_book(pos: Tuple[int, int], book: int):
+    """
+    说明:
+        使用进货书
+    """
+    logger.info(f"使用进货书:{book}")
+    click((pos[0] - 215, pos[1]))
+    time.sleep(1.0)
+    click((959, 541))
+    while get_hsv(screenshot(), pos)[-1] < 80:
+        time.sleep(0.5)
 
 
 def find_good(good, timeout=10):
@@ -51,7 +92,6 @@ def find_good(good, timeout=10):
         查找并点击商品
     """
     start = time.time()
-    result = False
     while (spend_time := time.time() - start) < timeout:
         if spend_time < timeout / 2:
             input_swipe((678, 558), (693, 314))
@@ -59,12 +99,16 @@ def find_good(good, timeout=10):
             input_swipe((693, 314), (678, 558))
         # 等待拖到动画结束
         time.sleep(1)
-        result = ocr_click(
-            good, cropped_pos1=(622, 136), cropped_pos2=(854, 685), log=False
+        result, image = find_text(
+            good,
+            cropped_pos1=(622, 136),
+            cropped_pos2=(854, 685),
+            log=False,
+            return_image=True,
         )
         if result:
-            return True
-    return result
+            return result, image
+    return None, None
 
 
 def get_boatload():

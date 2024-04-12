@@ -284,6 +284,8 @@ class SHOP:
         ):  # 直到货仓被装满
             target.book += 1
             for name, good in sorted_goods:
+                if name not in self.sell_goods[sell_city_name]:
+                    continue
                 buy_price, buy_num = self.get_good_buy_price(
                     good.price, good.num, buy_city_name, name
                 )
@@ -325,6 +327,8 @@ class SHOP:
         """
         routes: List[RoutesModel] = []
         for city1, city2 in itertools.combinations(set(self.buy_goods.keys()), 2):
+            if city1 not in all_city_info or city2 not in all_city_info:
+                continue
             city_routes = RoutesModel()
             target1 = self.get_pending_purchase(city1, city2)
             target2 = self.get_pending_purchase(city2, city1)

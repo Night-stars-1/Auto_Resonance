@@ -1,12 +1,10 @@
 # coding:utf-8
 from loguru import logger
-from PyQt5.QtCore import QStandardPaths, Qt
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QLabel, QWidget
-from qfluentwidgets import ExpandLayout
 from qfluentwidgets import FluentIcon as FIF
 from qfluentwidgets import (
-    InfoBar,
-    InfoBarPosition,
+    ExpandLayout,
     PrimaryPushSettingCard,
     ScrollArea,
     SettingCardGroup,
@@ -76,7 +74,7 @@ class SettingInterface(ScrollArea):
         self.setViewportMargins(0, 80, 0, 20)
         self.setWidget(self.scrollWidget)
         self.setWidgetResizable(True)
-        self.setObjectName("settingInterface")
+        self.setObjectName("SettingInterface")
 
         # initialize style sheet
         self.scrollWidget.setObjectName("scrollWidget")
@@ -107,9 +105,16 @@ class SettingInterface(ScrollArea):
         self.testCard.clicked.connect(self.createSuccessInfoBar)
 
     def createSuccessInfoBar(self):
-        from demo import run
+        from auto.run_business import run
+
         signalBus.switchToCard.emit("LoggerInterface")
-        self.workers = Worker(run, run, city_config=cfg.toDict()["RunningBusiness"])
+        self.workers = Worker(
+            run,
+            run,
+            city_config=cfg.toDict()["RunningBusiness"],
+            type_=cfg.goodsType.value,
+            uuid=cfg.uuid.value,
+        )
         self.workers.start()
         """
         InfoBar.success(

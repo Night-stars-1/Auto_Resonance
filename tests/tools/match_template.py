@@ -51,13 +51,11 @@ def match_and_draw(img, template, threshold, color):
 img = screenshot()
 # 模板图片
 stastion1 = cv2.imread("tests/image1.png")
-stastion2 = cv2.imread("tests/image2.png")
 # 阈值
 threshold = 0.90
 
 # 对两个模板进行匹配并标记
 match_and_draw(img, stastion1, threshold, (0, 255, 0))  # 用绿色标记stastion1的匹配结果
-match_and_draw(img, stastion2, threshold, (0, 0, 255))  # 用红色标记stastion2的匹配结果
 
 # 显示结果
 cv2.imshow("Detected", img)

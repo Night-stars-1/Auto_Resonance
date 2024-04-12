@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:24:47
-LastEditTime: 2024-04-12 00:13:17
+LastEditTime: 2024-04-12 21:46:28
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -41,7 +41,10 @@ class STATION:
         while time.perf_counter() - start < MAP_WAIT_TIME:
             image = screenshot()
             attack_bgrs = get_bgrs(image, [(944, 247), (967, 229), (1056, 229)])
-            reach_bgrs = get_bgrs(image, [(839, 354), (814, 359), (1051, 641)])
+            reach_bgrs = get_bgrs(
+                image, [(839, 354), (814, 359), (1051, 641), (658, 690)]
+            )
+            logger.debug(f"行车检测: {reach_bgrs}")
             if (
                 [8, 168, 234] <= attack_bgrs[0] <= [9, 171, 245]
                 and [8, 168, 234] <= attack_bgrs[1] <= [9, 171, 245]
@@ -58,7 +61,9 @@ class STATION:
                 input_tap((877, 359))
                 self.wait_home()
                 return True
-            elif reach_bgrs[2] == [251, 253, 253]:
+            elif reach_bgrs[2] == [251, 253, 253] and not (
+                [235, 235, 250] <= reach_bgrs[2] <= [240, 240, 255]
+            ):
                 logger.info("点击加速弹丸")
                 input_tap((1061, 657))
             time.sleep(1)
@@ -116,6 +121,7 @@ class STATION:
                 10,
             ]:
                 logger.info("战斗结束")
+                time.sleep(0.5)
                 input_tap((1151, 626))
                 return True
             elif bgrs[2] == [124, 126, 125]:

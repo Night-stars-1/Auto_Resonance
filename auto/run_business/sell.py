@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 15:17:19
-LastEditTime: 2024-04-11 23:17:58
+LastEditTime: 2024-04-12 22:02:20
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -57,6 +57,10 @@ def click_bargain_button(num=20):
                 time.sleep(0.5)
             elif bgr == [251, 253, 253]:
                 logger.info("议价次数不足")
+                return True
+            elif bgr == [62, 63, 63]:
+                logger.info("疲劳不足")
+                input_tap((83, 36))
                 return True
     return False
 

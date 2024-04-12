@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 18:50:23
-LastEditTime: 2024-04-12 00:32:57
+LastEditTime: 2024-04-12 01:44:36
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -43,7 +43,7 @@ def get_all_station():
         area = cv2.contourArea(contour)
 
         # 只处理指定面积的轮廓
-        if 40 < area < 200:
+        if 40 < area:
             # 计算每个轮廓的边界框
             x, y, w, h = cv2.boundingRect(contour)
             pos = (x + w / 2, y + h / 2)

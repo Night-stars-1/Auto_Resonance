@@ -13,14 +13,15 @@ from .config import cfg
 
 
 class Worker(QThread):
-    def __init__(self, func, stop, parent=None):
-        super(Worker, self).__init__(parent)
+    def __init__(self, func, stop, **kargs):
+        super(Worker, self).__init__()
         self.func = func
         self.stop_func = stop
+        self.kargs = kargs
 
     def run(self):
         try:
-            self.func(cfg.adbOrder.value, cfg.adbPath.value)
+            self.func(**self.kargs)
         except StopExecution:
             pass
 

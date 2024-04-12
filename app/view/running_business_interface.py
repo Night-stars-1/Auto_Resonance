@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-10 22:54:08
-LastEditTime: 2024-04-11 21:45:09
+LastEditTime: 2024-04-12 21:06:56
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -14,7 +14,7 @@ from qfluentwidgets import ScrollArea, SettingCardGroup
 
 from ..common.config import cfg
 from ..common.style_sheet import StyleSheet
-from ..components.settings.line_edit_setting_card import LineEditSettingCard
+from ..components.settings.spin_box_setting_card import SpinBoxSettingCard
 
 
 class RunningBusinessInterface(ScrollArea):
@@ -35,67 +35,76 @@ class RunningBusinessInterface(ScrollArea):
         # basic input samples
         self.configGroup = SettingCardGroup("进货书设置", self.scrollWidget)
 
-        self.七号自由港 = LineEditSettingCard(
+        self.七号自由港 = SpinBoxSettingCard(
             cfg.七号自由港,
-            "七号自由港单次最大进货书",
             FIF.ACCEPT,
             "七号自由港",
+            "七号自由港单次最大进货书",
             parent=self.configGroup,
         )
-        self.澄明数据中心 = LineEditSettingCard(
+        self.澄明数据中心 = SpinBoxSettingCard(
             cfg.澄明数据中心,
-            "澄明数据中心单次最大进货书",
             FIF.ACCEPT,
             "澄明数据中心",
+            "澄明数据中心单次最大进货书",
             parent=self.configGroup,
         )
-        self.阿妮塔战备工厂 = LineEditSettingCard(
+        self.阿妮塔战备工厂 = SpinBoxSettingCard(
             cfg.阿妮塔战备工厂,
-            "阿妮塔战备工厂单次最大进货书",
             FIF.ACCEPT,
             "阿妮塔战备工厂",
+            "阿妮塔战备工厂单次最大进货书",
             parent=self.configGroup,
         )
-        self.阿妮塔能源研究所 = LineEditSettingCard(
+        self.阿妮塔能源研究所 = SpinBoxSettingCard(
             cfg.阿妮塔能源研究所,
-            "阿妮塔能源研究所单次最大进货书",
             FIF.ACCEPT,
             "阿妮塔能源研究所",
+            "阿妮塔能源研究所单次最大进货书",
             parent=self.configGroup,
         )
-        self.淘金乐园 = LineEditSettingCard(
+        self.淘金乐园 = SpinBoxSettingCard(
             cfg.淘金乐园,
-            "淘金乐园单次最大进货书",
             FIF.ACCEPT,
             "淘金乐园",
+            "淘金乐园单次最大进货书",
             parent=self.configGroup,
         )
-        self.曼德矿场 = LineEditSettingCard(
+        self.曼德矿场 = SpinBoxSettingCard(
             cfg.曼德矿场,
-            "曼德矿场单次最大进货书",
             FIF.ACCEPT,
             "曼德矿场",
+            "曼德矿场单次最大进货书",
             parent=self.configGroup,
         )
-        self.荒原站 = LineEditSettingCard(
+        self.荒原站 = SpinBoxSettingCard(
             cfg.荒原站,
-            "荒原站单次最大进货书",
             FIF.ACCEPT,
             "荒原站",
+            "荒原站单次最大进货书",
             parent=self.configGroup,
         )
-        self.铁盟哨站 = LineEditSettingCard(
+        self.铁盟哨站 = SpinBoxSettingCard(
             cfg.铁盟哨站,
-            "铁盟哨站单次最大进货书",
             FIF.ACCEPT,
             "铁盟哨站",
+            "铁盟哨站单次最大进货书",
             parent=self.configGroup,
         )
-        self.修格里城 = LineEditSettingCard(
+        self.修格里城 = SpinBoxSettingCard(
             cfg.修格里城,
-            "修格里城单次最大进货书",
             FIF.ACCEPT,
             "修格里城",
+            "修格里城单次最大进货书",
+            parent=self.configGroup,
+        )
+        self.priceThreshold = SpinBoxSettingCard(
+            cfg.priceThreshold,
+            FIF.ACCEPT,
+            "价格阈值",
+            "低价值商品统计阈值",
+            spin_box_min=0,
+            spin_box_max=1000,
             parent=self.configGroup,
         )
 
@@ -128,6 +137,7 @@ class RunningBusinessInterface(ScrollArea):
         self.configGroup.addSettingCard(self.荒原站)
         self.configGroup.addSettingCard(self.铁盟哨站)
         self.configGroup.addSettingCard(self.修格里城)
+        self.configGroup.addSettingCard(self.priceThreshold)
 
         # add setting card group to layout
         self.expandLayout.setSpacing(28)

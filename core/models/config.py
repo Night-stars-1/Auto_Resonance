@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-08 17:45:06
-LastEditTime: 2024-04-11 20:58:06
+LastEditTime: 2024-04-12 17:15:19
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -54,15 +54,6 @@ class RunningBusinessModel(BaseModel):
         修格里城: int = 0
         曼德矿场: int = 0
         澄明数据中心: int = 0
-        荒原站: int = 0
-
-    class CityDataModel(BaseModel):
-        """城市数据模型"""
-
-        buy_num: float = 0.0
-        """购买数量"""
-        revenue: float = 0.0
-        """税率"""
 
     class GoBackModel(BaseModel):
         """砍抬提价模型"""
@@ -106,16 +97,12 @@ class RunningBusinessModel(BaseModel):
 
     city_level: CityLevelModel = CityLevelModel()
     """城市等级"""
-    city_data: Dict[str, CityDataModel] = {}
-    """城市数据"""
     go: GoBackModel = GoBackModel()
     """出发配置"""
     back: GoBackModel = GoBackModel()
     """返回配置"""
     skill_level: SkillLevelModel = SkillLevelModel()
     """技能等级"""
-    goods_addition: dict = {}
-    """商品附加"""
     max_goods_num: int = 0
     """最大商品数量"""
     max_book: int = 10

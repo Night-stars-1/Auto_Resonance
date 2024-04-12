@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:24:47
-LastEditTime: 2024-04-12 00:36:20
+LastEditTime: 2024-04-12 22:14:42
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -149,6 +149,17 @@ def click_station_ocr(name: str):
             return STATION(True)
         time.sleep(0.5)
     return STATION(False)
+
+
+def get_city():
+    """
+    说明:
+        获取当前城市
+    """
+    go_home()
+    reslut = predict(screenshot(), cropped_pos1=(1131, 498), cropped_pos2=(1238, 516))
+    logger.info(f"当前站点: {reslut[0]['text']}")
+    return reslut[0]["text"]
 
 
 def go_city():

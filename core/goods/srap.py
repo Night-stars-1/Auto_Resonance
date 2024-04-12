@@ -1,9 +1,11 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-08 22:57:00
-LastEditTime: 2024-04-11 23:24:35
+LastEditTime: 2024-04-12 12:55:55
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
+
+from typing import Dict
 
 import requests
 
@@ -11,7 +13,7 @@ from ..models.srap import SrapRequestModel
 from .shop import SHOP
 
 
-def get_goods_info():
+def get_goods_info(city_config: Dict[str, int], _=None):
     headers = {
         "accept": "application/json",
         "Content-Type": "application/json",
@@ -26,4 +28,4 @@ def get_goods_info():
         "https://goda.srap.link/getGoods", headers=headers, json=json_data
     )
     data = SrapRequestModel.model_validate(response.json())
-    return SHOP(data).get_optimal_route()
+    return SHOP(data, city_config).get_optimal_route()

@@ -1,21 +1,30 @@
 # coding:utf-8
-from qfluentwidgets import SettingCardGroup, ScrollArea, ExpandLayout, PrimaryPushSettingCard, InfoBar, InfoBarPosition, SwitchSettingCard
+from loguru import logger
+from PyQt5.QtCore import QStandardPaths, Qt
+from PyQt5.QtWidgets import QLabel, QWidget
+from qfluentwidgets import ExpandLayout
 from qfluentwidgets import FluentIcon as FIF
-from PyQt5.QtCore import Qt, QStandardPaths
-from PyQt5.QtWidgets import QWidget, QLabel
-
-from ..components.settings.line_edit_setting_card import LineEditSettingCard
-from ..common.config import cfg
-from ..common.style_sheet import StyleSheet
+from qfluentwidgets import (
+    InfoBar,
+    InfoBarPosition,
+    PrimaryPushSettingCard,
+    ScrollArea,
+    SettingCardGroup,
+    SwitchSettingCard,
+)
 
 from core.goods.kmou import get_goods_info as get_goods_info_kmou
 from core.goods.srap import get_goods_info as get_goods_info_srap
-from demo import run
 
+from ..common.config import cfg
+from ..common.signal_bus import signalBus
+from ..common.style_sheet import StyleSheet
 from ..common.worker import Worker
+from ..components.settings.line_edit_setting_card import LineEditSettingCard
+
 
 class SettingInterface(ScrollArea):
-    """ Setting interface """
+    """Setting interface"""
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
@@ -26,14 +35,13 @@ class SettingInterface(ScrollArea):
         self.settingLabel = QLabel("设置", self)
 
         # music folders
-        self.musicInThisPCGroup = SettingCardGroup(
-            "配置", self.scrollWidget)
+        self.musicInThisPCGroup = SettingCardGroup("配置", self.scrollWidget)
         self.goodsTypeCard = SwitchSettingCard(
             FIF.TAG,
             "数据源",
             "On为 KMou，Off为 SRAP",
             configItem=cfg.goodsType,
-            parent=self.musicInThisPCGroup
+            parent=self.musicInThisPCGroup,
         )
         self.uuidCard = LineEditSettingCard(
             cfg.uuid,
@@ -41,28 +49,24 @@ class SettingInterface(ScrollArea):
             FIF.PALETTE,
             "KMou商品请求 UUID",
             parent=self.musicInThisPCGroup,
-            isPassword=True
+            isPassword=True,
         )
         self.testCard = PrimaryPushSettingCard(
-            "测试",
-            FIF.TAG,
-            "商品请求测试",
-            "商品请求测试",
-            self.musicInThisPCGroup
+            "测试", FIF.TAG, "商品请求测试", "商品请求测试", self.musicInThisPCGroup
         )
         self.adbPathCard = LineEditSettingCard(
             cfg.adbPath,
             "ADB路径",
             FIF.PALETTE,
             "ADB程序路径",
-            parent=self.musicInThisPCGroup
+            parent=self.musicInThisPCGroup,
         )
         self.adbOrderCard = LineEditSettingCard(
             cfg.adbOrder,
             "ADB地址",
             FIF.PALETTE,
             "ADB地址",
-            parent=self.musicInThisPCGroup
+            parent=self.musicInThisPCGroup,
         )
         self.__initWidget()
 
@@ -72,11 +76,11 @@ class SettingInterface(ScrollArea):
         self.setViewportMargins(0, 80, 0, 20)
         self.setWidget(self.scrollWidget)
         self.setWidgetResizable(True)
-        self.setObjectName('settingInterface')
+        self.setObjectName("settingInterface")
 
         # initialize style sheet
-        self.scrollWidget.setObjectName('scrollWidget')
-        self.settingLabel.setObjectName('settingLabel')
+        self.scrollWidget.setObjectName("scrollWidget")
+        self.settingLabel.setObjectName("settingLabel")
         StyleSheet.SETTING_INTERFACE.apply(self)
 
         # initialize layout
@@ -99,13 +103,15 @@ class SettingInterface(ScrollArea):
         self.expandLayout.addWidget(self.musicInThisPCGroup)
 
     def __connectSignalToSlot(self):
-        """ connect signal to slot """
+        """connect signal to slot"""
         self.testCard.clicked.connect(self.createSuccessInfoBar)
 
     def createSuccessInfoBar(self):
-        self.workers = Worker(run, run)
+        from demo import run
+        signalBus.switchToCard.emit("LoggerInterface")
+        self.workers = Worker(run, run, city_config=cfg.toDict()["RunningBusiness"])
         self.workers.start()
-        '''
+        """
         InfoBar.success(
             title="成功",
             content=get_goods_info_kmou(cfg.uuid.value) if cfg.goodsType.value else get_goods_info_srap(),
@@ -115,4 +121,4 @@ class SettingInterface(ScrollArea):
             duration=2000,
             parent=self
         )
-        '''
+        """

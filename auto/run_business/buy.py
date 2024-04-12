@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-04 17:54:58
-LastEditTime: 2024-04-11 23:02:46
+LastEditTime: 2024-04-12 22:55:38
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -14,7 +14,7 @@ from loguru import logger
 
 from core.adb import input_swipe, input_tap, screenshot
 from core.exception_handling import get_excption
-from core.image import crop_image, get_bgr, get_hsv
+from core.image import crop_image, get_bgr, get_hsv, show_image
 from core.ocr import predict
 from core.presets import click, find_text, ocr_click
 
@@ -59,11 +59,15 @@ def buy_good(good: str, book: int, max_book: int, again: bool = False):
     if not pos:
         pos, image = find_good(good)  # 点击失败查找并点击商品
     if pos:
-        hsv = get_hsv(image, pos)
-        if hsv[-1] <= 80:
+        hsv = get_hsv(image, (564, 667 if pos[1] + 22 > 720 else pos[1] + 22))
+        logger.debug(f"是否进货检测: {hsv}")
+        if hsv[-1] >= 200:
             if book < max_book:
                 use_book(pos, book)
-                return not again and buy_good(good, max_book, again=True)[0], book + 1
+                return (
+                    not again and buy_good(good, book, max_book, again=True)[0],
+                    book + 1,
+                )
             else:
                 return False, book
         else:
@@ -78,7 +82,7 @@ def use_book(pos: Tuple[int, int], book: int):
     说明:
         使用进货书
     """
-    logger.info(f"使用进货书:{book}")
+    logger.info(f"使用进货书:{book+1}")
     click((pos[0] - 215, pos[1]))
     time.sleep(1.0)
     click((959, 541))
@@ -158,6 +162,10 @@ def click_bargain_button(num=20):
                 time.sleep(0.5)
             elif bgr == [251, 253, 253]:
                 logger.info("议价次数不足")
+                return True
+            elif bgr == [62, 63, 63]:
+                logger.info("疲劳不足")
+                input_tap((83, 36))
                 return True
     return False
 

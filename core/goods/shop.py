@@ -1,18 +1,68 @@
 # TODO: 1.数据模型化 2.提高可读性
 
+import itertools
 import json
 from decimal import Decimal, ROUND_HALF_UP
 from itertools import combinations
 from typing import Dict, List, Literal, Tuple
 
-from core.models.city_goods import RouteModel, RoutesModel, TargetGoodModel
-from ..models.goods import GoodModel, GoodsModel
-from ..models.srap import SrapRequestModel
+from loguru import logger
+
+from core.models.city_goods import (
+    CityDataModel,
+    RouteModel,
+    RoutesModel,
+)
+from ..models.goods import GoodsModel
 from ..models.config import RunningBusinessModel, config as config_model
 
 
 def round5(x):
     return int(Decimal(x).quantize(Decimal("1"), rounding=ROUND_HALF_UP))
+
+
+def show(routes: RoutesModel):
+    route = routes.city_data
+    to_goods_num = ",".join(
+        [f"{name}{route[0].goods_data[name].num}" for name in route[0].goods_data]
+    )
+    back_goods_num = ",".join(
+        [f"{name}{route[1].goods_data[name].num}" for name in route[1].goods_data]
+    )
+    profit = route[0].profit + route[1].profit
+    book = route[0].book + route[1].book
+    city_tired = route[0].city_tired + route[1].city_tired
+    tired_profit = round5(profit / city_tired)
+    book_profit = book and round5(profit / book)
+    message = f"""{route[0].buy_city_name}<->{route[0].sell_city_name}:
+{route[0].buy_city_name}:
+    商品数量: {to_goods_num}
+    商品总量: {route[0].num}
+    购买价格: {route[0].buy_price}
+    出售价格: {route[0].sell_price}
+    商品利润: {route[0].profit}
+    所需疲劳: {route[0].city_tired}
+    疲劳利润: {route[0].tired_profit}
+    单书利润: {route[0].book_profit}
+    书本数量: {route[0].book}
+{route[0].sell_city_name}:
+    商品数量: {back_goods_num}
+    商品总量: {route[1].num}
+    购买价格: {route[1].buy_price}
+    出售价格: {route[1].sell_price}
+    商品利润: {route[1].profit}
+    所需疲劳: {route[1].city_tired}
+    疲劳利润: {route[1].tired_profit}
+    单书利润: {route[1].book_profit}
+    书本数量: {route[1].book}
+总计:
+    利润: {profit}
+    所需疲劳: {city_tired}
+    疲劳利润: {tired_profit}
+    单书利润: {book_profit}
+    书本数量: {book}"""
+
+    return message
 
 
 with open("resources/goods/CityGoodsData.json", "r", encoding="utf-8") as file:
@@ -59,7 +109,7 @@ skill_data = {
         5: {"goods": ["学会书籍"], "param": 0.1},
     },
     "阿知波": {
-        4: {"goods": ["拼装 模型"], "param": 0.2},
+        4: {"goods": ["拼装模型"], "param": 0.2},
         5: {"goods": ["拼装模型"], "param": 0.1},
     },
     "闻笙": {
@@ -91,7 +141,8 @@ skill_data = {
     },
 }
 config = config_model.running_business.model_copy()
-
+goods_addition: dict = {}
+"""商品附加"""
 for role_name, role_level in config.skill_level:
     role_skill_data = skill_data.get(role_name, [])
 
@@ -103,35 +154,33 @@ for role_name, role_level in config.skill_level:
             )
 
             for good_name in goods:
-                if good_name not in config.goods_addition:
-                    config.goods_addition[good_name] = param
+                if good_name not in goods_addition:
+                    goods_addition[good_name] = param
                 else:
-                    config.goods_addition[good_name] += param
-
-max_book = 10
-message = "暂无"
+                    goods_addition[good_name] += param
 
 
 def get_city_data_by_city_level(
     city_level_: RunningBusinessModel.CityLevelModel,
-) -> Dict[str, RunningBusinessModel.CityDataModel]:
+) -> Dict[str, CityDataModel]:
     city_level_data = {}
     for attached_name, city_name in attached_to_city_data.items():
         city_level = city_level_.model_dump(by_alias=True)
         if city_name not in city_level.keys():
             continue
         level = city_level[city_name] + 1
-        city_level_data[attached_name] = RunningBusinessModel.CityDataModel.model_validate(
+        city_level_data[attached_name] = CityDataModel.model_validate(
             city_data[city_name][level]
         )
     return city_level_data
 
 
-config.city_data = get_city_data_by_city_level(config.city_level)
+all_city_info: Dict[str, CityDataModel] = get_city_data_by_city_level(config.city_level)
+"""城市税率等声望信息"""
 
 
 class SHOP:
-    def __init__(self, goods_data: GoodsModel) -> None:
+    def __init__(self, goods_data: GoodsModel, city_config: Dict[str, int]) -> None:
         self.goods_data = goods_data
         self.buy_goods = self.goods_data.buy_goods
         """城市可购买的商品信息"""
@@ -139,280 +188,195 @@ class SHOP:
         """城市可出售的商品信息"""
         self.config = config
         """配置信息"""
+        self.city_config = city_config
+        """城市最大单次进货书"""
 
-    def set_buy_goods(
-        self,
-        city_name: str,
-        target: TargetGoodModel,
-        type_: Literal["go", "sell"] = "go",
+    def get_good_buy_price(self, price, num, city_name, good_name, type_="go"):
+        """
+        说明:
+            获取购买商品的价格
+        参数:
+            :param price: 商品价格
+            :param num: 商品数量
+            :param city_name: 城市名称
+            :param good_name: 商品名称
+            :param type_: 列车方向 go/back
+        """
+        buy_num = all_city_info.get(
+            city_name, CityDataModel()
+        ).buy_num  # 城市声望数量加成
+        skill_num = goods_addition.get(good_name, 0)  # 角色技能增加的数量
+        new_num = round5(num * (1 + buy_num + skill_num))
+        tax_rate = all_city_info[city_name].revenue  # 税率
+        new_price = round5(
+            price  # 砍价前的价格
+            * (
+                1
+                - getattr(
+                    config, type_, RunningBusinessModel.GoBackModel()
+                ).cut_price.percentage
+                + tax_rate
+            )
+        )  # 砍价后的价格
+        return new_price, new_num
+
+    def get_good_sell_price(
+        self, buy_price: int, city_name: str, good_name: str, type_="go"
     ):
         """
         说明:
-            设置购买商品的信息
+            获取出售商品的价格
         参数:
+            :param buy_price: 购买价格
             :param city_name: 城市名称
-            :param target: 目标数据
-            :param type_: 类型 go/back
+            :param good_name: 商品名称
+            :param type_: 列车方向 go/back
         """
-        buy_city_goods = self.buy_goods[city_name]
-        for good_name, good_data in buy_city_goods.items():
-            if target.num < config.max_goods_num:
-                buy_num = config.city_data.get(
-                    city_name, RunningBusinessModel.CityDataModel()
-                ).buy_num
-                skill_num = config.goods_addition.get(
-                    good_name, 0
-                )  # 角色技能增加的数量
-                num = min(
-                    round5(good_data.num * (1 + buy_num + skill_num)),
-                    config.max_goods_num - target.num,
-                )  # 确保购买数量不超过最大商品数量
-                price = round5(
-                    good_data.price  # 砍价前的价格
-                    * (
-                        1
-                        - getattr(
-                            config, type_, RunningBusinessModel.GoBackModel()
-                        ).cut_price.percentage
-                    )
-                )  # 砍价后的价格
+        base_sell_price = self.sell_goods[city_name][
+            good_name
+        ].price  # 不带税的售价，砍抬前
+        no_revenue_sell_price = round5(
+            base_sell_price
+            * (
+                1
+                + getattr(
+                    config, type_, RunningBusinessModel.GoBackModel()
+                ).raise_price.percentage
+            )
+        )  # 不带税的售价, 抬价后
+        tax_rate = all_city_info[city_name].revenue  # 税率
+        no_tax_profit = no_revenue_sell_price - buy_price  # 不带税的利润, 单个商品
+        revenue = (no_revenue_sell_price - buy_price) * tax_rate  # 税收
 
-                # 检查商品是否已经在target.goods_data中
-                if good_name not in target.goods_data:
-                    target.goods_data[good_name] = TargetGoodModel.GoodsData(
-                        num=0, price=0
-                    )
+        new_sell_price = round5((no_revenue_sell_price - revenue))
+        return new_sell_price, no_tax_profit
 
-                target.goods_data[good_name].num += num
-                # 更新价格时考虑到可能存在多个来源的同一商品，这里仅采用了最后一次计算的价格
-                target.goods_data[good_name].price = price
-
-                if buy_city_goods[good_name].isSpeciality:
-                    # 特产利润，计算总购买价
-                    target.num += num
-                    target.price += price * num
-
-        return target
-
-    def get_goods_profit(
-        self,
-        sell_city_goods: Dict[str, GoodModel],
-        buy_city_goods: Dict[str, GoodModel],
-        goods_data: Dict[str, TargetGoodModel.GoodsData],
-        sell_city_name: str,
-        type_: Literal["gp", "back"] = "go",
-    ) -> Tuple[int, int, Dict[str, int], Dict[str, TargetGoodModel.GoodsData]]:
+    def get_pending_purchase(self, buy_city_name: str, sell_city_name: str, type_="go"):
         """
         说明:
-            获取所有商品的利润
+            获取需要购买的物品的信息
         参数:
-            :param sell_city_goods: 出售城市的商品数据
-            :param buy_city_goods: 购买城市的商品数据
-            :param goods_data: 待购的商品数据
+            :param buy_city_name: 购买城市名称
             :param sell_city_name: 出售城市名称
-            :param type_: 列车方向 go/back
-        返回:
-            :return: 总卖价, 总利润, 非特产利润, 特产商品数据
         """
-        sell_price = 0  # 总卖价
-        profit = 0  # 总利润
-        normal_goods = {}  # 非特产利润
-        speciality_goods = {}  # 特产商品数据
-        for good_name, good_data in goods_data.items():
-            # 跳过不存在的商品
-            if good_name not in sell_city_goods:
-                continue
-            num = good_data.num
-            buy_price = good_data.price  # 购买价格
-            old_no_revenue_sell_price = sell_city_goods[
-                good_name
-            ].price  # 不带税的售价，砍抬前
-            # 不带税的售价
-            no_revenue_sell_price = round5(
-                old_no_revenue_sell_price
-                * (
-                    1
-                    + getattr(
-                        config, type_, RunningBusinessModel.GoBackModel()
-                    ).raise_price.percentage
+        goods = self.buy_goods[buy_city_name]
+        sorted_goods = sorted(
+            goods.items(), key=lambda item: item[1].isSpeciality, reverse=True
+        )
+        # 总疲劳
+        city_tired = (
+            city_tired_data.get(f"{buy_city_name}-{sell_city_name}", 99999)
+            + getattr(
+                config, type_, RunningBusinessModel.GoBackModel()
+            ).raise_price.profit
+            + getattr(
+                config, type_, RunningBusinessModel.GoBackModel()
+            ).cut_price.profit
+        )
+        target: RouteModel = RouteModel(
+            buy_city_name=buy_city_name,
+            sell_city_name=sell_city_name,
+            city_tired=city_tired,
+        )
+        while (
+            target.num < config.max_goods_num
+            and target.book < self.city_config[buy_city_name]
+        ):  # 直到货仓被装满
+            target.book += 1
+            for name, good in sorted_goods:
+                buy_price, buy_num = self.get_good_buy_price(
+                    good.price, good.num, buy_city_name, name
                 )
-            )
-            tax_rate = config.city_data[sell_city_name].revenue  # 税率
-            no_tax_rate_price = (
-                no_revenue_sell_price - buy_price
-            ) * num  # 不带税的利润
-            revenue = (no_revenue_sell_price - buy_price) * tax_rate  # 税收
-            profit += no_tax_rate_price  # 利润
-
-            if not buy_city_goods[good_name].isSpeciality:
-                # 低价值商品利润
-                normal_goods[good_name] = round5(
-                    (no_revenue_sell_price - revenue) * num
+                num = min(
+                    buy_num,
+                    config.max_goods_num - target.num,
+                )  # 确保购买数量不超过最大商品数量
+                # print(f"{buy_city_name}:{name}=>{buy_price} {buy_num}")
+                sell_price, profit = self.get_good_sell_price(
+                    buy_price, sell_city_name, name
                 )
-            else:
-                speciality_goods[good_name] = good_data
-                # 高价值商品利润，添加到总利润里
-                sell_price += round5((no_revenue_sell_price - revenue) * num)
-        return sell_price, profit, normal_goods, speciality_goods
+                all_profit = profit * num
+                # print(f"{buy_city_name}<=>{sell_city_name}:{name}=>{sell_price} {rate_price}")
+                if profit >= self.city_config["priceThreshold"] or good.isSpeciality:
+                    target.buy_goods.append(name)
+                    target.goods_data.setdefault(name, RouteModel.GoodsData())
+                    target.goods_data[name].num += num
+                    target.goods_data[name].buy_price += buy_price
+                    target.goods_data[name].sell_price += sell_price
+                    target.goods_data[name].profit += all_profit
+                    target.num += num
+                    target.profit += all_profit
+                    target.buy_price += buy_price * num
+                    target.sell_price += sell_price * num
+                else:
+                    target.normal_goods.setdefault(name, 0)
+                    target.normal_goods[name] += all_profit
+        target.tired_profit = round5(target.profit / city_tired)
+        target.book_profit = target.book and round5(target.profit / target.book)
+        return target
 
     def get_route_profit(self, type_="go"):
         """
         说明:
             获取路线利润
         参数:
-            :param user_data: 用户数据
-            :param max_book: 最大进货书数量
             :param type_: 列车方向 go/back
             :return: 路线数据
         """
-        routes: RoutesModel = RoutesModel()
-        for buy_city_name, buy_city_goods in self.buy_goods.items():
-            target = TargetGoodModel()
-            # 购买基础量，不带书
-            target = self.set_buy_goods(buy_city_name, target, type_)
-            while target.num < config.max_goods_num: # 直到货仓被装满
-                target.book += 1
-                target = self.set_buy_goods(buy_city_name, target, type_)
-
-            for sell_city_name, sell_city_goods in self.sell_goods.items():
-                # 跳过同城市和不存在的城市
-                if (
-                    buy_city_name == sell_city_name
-                    or sell_city_name not in config.city_data
-                    or buy_city_name not in config.city_data
-                ):
-                    # print(f"buy_city_name: {buy_city_name}, sell_city_name: {sell_city_name}")
-                    continue
-                sell_price, profit, normal_goods, speciality_goods = self.get_goods_profit(
-                    sell_city_goods,
-                    buy_city_goods,
-                    target.goods_data,
-                    sell_city_name,
-                    type_,
-                )
-
-                tax_rate = config.city_data[buy_city_name].revenue  # 税率
-                # 总疲劳
-                city_tired = (
-                    city_tired_data.get(f"{buy_city_name}-{sell_city_name}", 99999)
-                    + getattr(config, type_, RunningBusinessModel.GoBackModel()).raise_price.profit
-                    + getattr(config, type_, RunningBusinessModel.GoBackModel()).cut_price.profit
-                )
-
-                tired_profit = round5(profit / city_tired)  # 单位疲劳
-                book_profit = (
-                    0 if target.book == 0 else round5(profit / target.book)
-                )  # 单书利润
-                buy_price = round5(target.price * (1 + tax_rate))  # 总买价
-
-                routes.root.append(
-                    RouteModel(
-                        buy_city_name=buy_city_name,
-                        sell_city_name=sell_city_name,
-                        tax_rate=tax_rate,
-                        buy_price=buy_price,
-                        sell_price=sell_price,
-                        city_tired=city_tired,
-                        profit=profit,
-                        tired_profit=tired_profit,
-                        book_profit=book_profit,
-                        book=target.book,
-                        num=target.num,
-                        goods_data=speciality_goods,
-                    )
-                )
-
+        routes: List[RoutesModel] = []
+        for city1, city2 in itertools.combinations(set(self.buy_goods.keys()), 2):
+            city_routes = RoutesModel()
+            target1 = self.get_pending_purchase(city1, city2)
+            target2 = self.get_pending_purchase(city2, city1)
+            city_routes.city_data = [target1, target2]
+            # 总计
+            city_routes.book = (
+                city_routes.city_data[0].book + city_routes.city_data[1].book
+            )
+            city_routes.city_tired = (
+                city_routes.city_data[0].city_tired
+                + city_routes.city_data[1].city_tired
+            )
+            city_routes.profit = (
+                city_routes.city_data[0].profit + city_routes.city_data[1].profit
+            )
+            city_routes.tired_profit = round5(
+                city_routes.profit / city_routes.city_tired
+            )
+            city_routes.book_profit = round5(city_routes.profit / city_routes.book)
+            routes.append(city_routes)
         return routes
 
-    def get_book_routes_by_city_name(
-        self,
-        book_routes: List[RouteModel],
-        buy_city_name: str,
-        sell_city_name: str,
-        book: int,
-    ):
-        """
-        说明:
-            通过城市名称获取单位疲劳最高的书本路线
-        参数:
-            :param book_routes: 书本路线
-            :param buy_city_name: 购买城市名称
-            :param sell_city_name: 出售城市名称
-            :param book: 书本数量
-        """
-        return max(
-            (
-                route
-                for route in book_routes
-                if route.buy_city_name == buy_city_name
-                and route.sell_city_name == sell_city_name
-                and route.book <= 10 - book
-            ),
-            key=lambda obj: obj.tired_profit,
-            default=RouteModel(),
-        )
-
-    def get_optimal_route(self) -> Tuple[RouteModel, RouteModel, int]:
+    def get_optimal_route(self):
         """
         说明:
             获取往返路线的最优路线
         """
         # TODO 也许需要改成异步
         routes = self.get_route_profit("back")
-        optimal_route: Tuple[RouteModel, RouteModel, int]  = (RouteModel(), RouteModel(), 0)
-        set_go_city: List[Tuple[str, str]] = []
-        for go_route in routes:
-            if (go_route.buy_city_name, go_route.sell_city_name) in set_go_city:
-                continue
-            set_go_city.append((go_route.sell_city_name, go_route.buy_city_name))
-            back_route = routes.find(buy_city_name=go_route.sell_city_name, sell_city_name=go_route.buy_city_name)
-            if back_route is not None:
-                profit = go_route.profit + back_route.profit
-                city_tired = go_route.city_tired + back_route.city_tired
-                tired_profit = round5(profit / city_tired)
-                if tired_profit > optimal_route[2]:
-                    optimal_route = [go_route, back_route, tired_profit]
+        benchmark_profit = sum(route.book_profit for route in routes) / len(routes)
 
+        optimal_route = max(
+            (route for route in routes if route.book_profit > benchmark_profit),
+            key=lambda route: route.tired_profit,
+            default=RoutesModel(),  # 如果没有符合条件的对象，返回None
+        )
+        """
+        for good in routes:
+            logger.info(show(good))
+        """
+        optimal_route.city_data[0].normal_goods = {
+            k: v
+            for k, v in sorted(
+                optimal_route.city_data[0].normal_goods.items(),
+                key=lambda item: item[1],
+            )
+        }
+        optimal_route.city_data[1].normal_goods = {
+            k: v
+            for k, v in sorted(
+                optimal_route.city_data[1].normal_goods.items(),
+                key=lambda item: item[1],
+            )
+        }
         return optimal_route
-
-    def show(self, route: Tuple[RouteModel, RouteModel]):
-        to_goods_num = ",".join(
-            [f"{name}{route[0].goods_data[name].num}" for name in route[0].goods_data]
-        )
-        back_goods_num = ",".join(
-            [f"{name}{route[1].goods_data[name].num}" for name in route[1].goods_data]
-        )
-        profit = route[0].profit + route[1].profit
-        book = route[0].book + route[1].book
-        city_tired = route[0].city_tired + route[1].city_tired
-        tired_profit = round5(profit / city_tired)
-        book_profit = round5(profit / book)
-        message = f"""{route[0].buy_city_name}<->{route[0].sell_city_name}:
-{route[0].buy_city_name}:
-    商品数量: {to_goods_num}
-    商品总量: {route[0].num}
-    购买价格: {route[0].buy_price}
-    出售价格: {route[0].sell_price}
-    商品利润: {route[0].profit}
-    所需疲劳: {route[0].city_tired}
-    疲劳利润: {route[0].tired_profit}
-    单书利润: {route[0].book_profit}
-    书本数量: {route[0].book}
-{route[0].sell_city_name}:
-    商品数量: {back_goods_num}
-    商品总量: {route[1].num}
-    购买价格: {route[1].buy_price}
-    出售价格: {route[1].sell_price}
-    商品利润: {route[1].profit}
-    所需疲劳: {route[1].city_tired}
-    疲劳利润: {route[1].tired_profit}
-    单书利润: {route[1].book_profit}
-    书本数量: {route[1].book}
-总计:
-    利润: {profit}
-    所需疲劳: {city_tired}
-    疲劳利润: {tired_profit}
-    单书利润: {book_profit}
-    书本数量: {book}"""
-
-        return message

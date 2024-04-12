@@ -20,6 +20,7 @@ from qfluentwidgets import (
 )
 
 from app.view.daily_task_interface import DailyTaskInterface
+from app.view.running_business_interface import RunningBusinessInterface
 
 from ..common import resource  # 图标数据
 from ..common.config import cfg
@@ -45,6 +46,7 @@ class MainWindow(MSFluentWindow):
         self.loggerInterface = LoggerInterface(self)
         self.settingInterface = SettingInterface(self)
         self.daily_task_interface = DailyTaskInterface(self)
+        self.running_business_interface = RunningBusinessInterface(self)
 
         self.connectSignalToSlot()
 
@@ -62,6 +64,7 @@ class MainWindow(MSFluentWindow):
         self.addSubInterface(self.tajInterface, FIF.AIRPLANE, "铁安局")
         self.addSubInterface(self.loggerInterface, FIF.ALIGNMENT, "日志")
         self.addSubInterface(self.daily_task_interface, FIF.CALENDAR, "每日任务")
+        self.addSubInterface(self.running_business_interface, FIF.TRAIN, "跑商配置")
 
         # add custom widget to bottom
         self.addSubInterface(

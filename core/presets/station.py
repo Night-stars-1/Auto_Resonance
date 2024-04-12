@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:24:47
-LastEditTime: 2024-04-08 17:44:49
+LastEditTime: 2024-04-12 21:46:28
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -13,7 +13,7 @@ from core.adb import input_tap, screenshot
 from core.image import get_bgr, get_bgrs, match_screenshot
 
 FIGHT_TIME = 300
-MAP_WAIT_TIME = 300
+MAP_WAIT_TIME = 3000
 
 
 class STATION:
@@ -22,9 +22,9 @@ class STATION:
         站点类
     """
 
-    def __init__(self, station: bool) -> None:
+    def __init__(self, station: bool, is_destine: bool = False) -> None:
         self.station = station
-        self.wait()
+        self.is_destine = is_destine
 
     def __bool__(self) -> bool:
         return self.station
@@ -34,13 +34,22 @@ class STATION:
         说明:
             等待进入站点
         """
+        if self.is_destine:
+            return True
         logger.info("进入行车监听")
         start = time.perf_counter()
         while time.perf_counter() - start < MAP_WAIT_TIME:
             image = screenshot()
             attack_bgrs = get_bgrs(image, [(944, 247), (967, 229), (1056, 229)])
-            reach_bgrs = get_bgrs(image, [(839, 354), (814, 359), (1051, 641)])
-            if [7, 167, 233] <= attack_bgrs[0] <= [10, 173, 247] and [7, 167, 233] <= attack_bgrs[1] <= [10, 173, 247] and [7, 167, 233] <= attack_bgrs[2] <= [10, 173, 247]:
+            reach_bgrs = get_bgrs(
+                image, [(839, 354), (814, 359), (1051, 641), (658, 690)]
+            )
+            logger.debug(f"行车检测: {reach_bgrs}")
+            if (
+                [8, 168, 234] <= attack_bgrs[0] <= [9, 171, 245]
+                and [8, 168, 234] <= attack_bgrs[1] <= [9, 171, 245]
+                and [8, 168, 234] <= attack_bgrs[2] <= [9, 171, 245]
+            ):
                 logger.info("检测到拦截，进行攻击")
                 self.join_wait_fight()
             elif [20, 20, 20] <= reach_bgrs[0] <= [25, 25, 25] and [
@@ -52,7 +61,9 @@ class STATION:
                 input_tap((877, 359))
                 self.wait_home()
                 return True
-            elif reach_bgrs[2] == [251, 253, 253]:
+            elif reach_bgrs[2] == [251, 253, 253] and not (
+                [235, 235, 250] <= reach_bgrs[2] <= [240, 240, 255]
+            ):
                 logger.info("点击加速弹丸")
                 input_tap((1061, 657))
             time.sleep(1)
@@ -95,6 +106,8 @@ class STATION:
                 input_tap(result["max_loc"])
                 logger.info("加入攻击成功, 进入战斗监听")
                 break
+            else:
+                logger.info("加入战斗失败")
             time.sleep(1)
         # 等待战斗结束
         start = time.perf_counter()
@@ -108,6 +121,7 @@ class STATION:
                 10,
             ]:
                 logger.info("战斗结束")
+                time.sleep(0.5)
                 input_tap((1151, 626))
                 return True
             elif bgrs[2] == [124, 126, 125]:

@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-06 23:29:48
-LastEditTime: 2024-04-08 21:33:26
+LastEditTime: 2024-04-12 00:59:07
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -13,14 +13,15 @@ from .config import cfg
 
 
 class Worker(QThread):
-    def __init__(self, func, stop, parent=None):
-        super(Worker, self).__init__(parent)
+    def __init__(self, func, stop, **kargs):
+        super(Worker, self).__init__()
         self.func = func
         self.stop_func = stop
+        self.kargs = kargs
 
     def run(self):
         try:
-            self.func(cfg.adbOrder.value, cfg.adbPath.value)
+            self.func(**self.kargs)
         except StopExecution:
             pass
 

@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-02 19:13:20
-LastEditTime: 2024-04-08 00:19:18
+LastEditTime: 2024-04-11 20:59:15
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -22,8 +22,7 @@ from qfluentwidgets import (
     qconfig,
 )
 
-from core import adb
-
+from .running_business_config import RunningBusinessConfig
 
 class Language(Enum):
     """Language enumeration"""
@@ -48,7 +47,7 @@ def isWin11():
     return sys.platform == "win32" and sys.getwindowsversion().build >= 22000
 
 
-class Config(QConfig):
+class Config(RunningBusinessConfig):
     """Config of application"""
 
     # uuid

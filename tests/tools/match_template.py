@@ -1,8 +1,15 @@
+"""
+Author: Night-stars-1 nujj1042633805@gmail.com
+Date: 2024-04-04 21:54:38
+LastEditTime: 2024-04-11 17:42:36
+LastEditors: Night-stars-1 nujj1042633805@gmail.com
+"""
+
 import sys
 from pathlib import Path
 
 # 添加项目根目录到 sys.path
-project_root = Path(__file__).resolve().parent.parent
+project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(project_root))
 
 import cv2
@@ -44,13 +51,11 @@ def match_and_draw(img, template, threshold, color):
 img = screenshot()
 # 模板图片
 stastion1 = cv2.imread("tests/image1.png")
-stastion2 = cv2.imread("tests/image2.png")
 # 阈值
 threshold = 0.90
 
 # 对两个模板进行匹配并标记
 match_and_draw(img, stastion1, threshold, (0, 255, 0))  # 用绿色标记stastion1的匹配结果
-match_and_draw(img, stastion2, threshold, (0, 0, 255))  # 用红色标记stastion2的匹配结果
 
 # 显示结果
 cv2.imshow("Detected", img)

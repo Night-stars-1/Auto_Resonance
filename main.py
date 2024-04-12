@@ -12,7 +12,6 @@ from auto.rest_area.main import start as ra_start
 from core.adb import connect
 from core.adb import stop as adb_stop
 from core.analysis_tasks import AnalysisTasks
-from core.exceptions import StopExecution
 from core.utils import read_json
 
 analysis = None

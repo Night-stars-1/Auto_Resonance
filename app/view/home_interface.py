@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-02 19:12:22
-LastEditTime: 2024-04-08 21:15:56
+LastEditTime: 2024-04-12 01:43:08
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -12,7 +12,7 @@ from PyQt5.QtGui import QBrush, QColor, QLinearGradient, QPainter, QPainterPath,
 from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget
 from qfluentwidgets import FluentIcon, ScrollArea, isDarkTheme
 
-from ..common.config import REPO_URL
+from ..common.config import REPO_URL, cfg
 from ..common.style_sheet import StyleSheet
 from ..common.worker import Worker
 from ..components.link_card import LinkCardView
@@ -126,7 +126,9 @@ class HomeInterface(ScrollArea):
             self.run.titleLabel.setText("停止")
             from main import main, stop
 
-            self.workers = Worker(main, stop)
+            self.workers = Worker(
+                main, stop, order=cfg.adbOrder.value, path=cfg.adbPath.value
+            )
             self.workers.finished.connect(lambda: self.on_worker_finished(self.workers))
             self.workers.start()
         else:

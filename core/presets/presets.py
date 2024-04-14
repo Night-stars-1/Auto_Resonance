@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:24:47
-LastEditTime: 2024-04-12 22:14:42
+LastEditTime: 2024-04-14 23:25:19
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -197,15 +197,11 @@ def go_home():
     """
     logger.info("返回主界面")
 
-    def wait_home():
+    while (
+        match_screenshot(screenshot(), "resources/main_map.png")["max_val"] < 0.95
+    ):
         time.sleep(1)
-        while (
-            match_screenshot(screenshot(), "resources/main_map.png")["max_val"] < 0.95
-        ):
-            time.sleep(1)
-
-    input_tap((228, 27))
-    wait_home()
+        input_tap((228, 27))
 
 
 def wait_fight_end():

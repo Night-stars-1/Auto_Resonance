@@ -32,7 +32,7 @@ class RouteModel(BaseModel):
     """出售城市"""
     goods_data: Dict[str, GoodsData] = {}
     """商品数据"""
-    buy_goods: List[str] = []
+    buy_goods: List[Dict[str, int]] = []
     """待购商品列表"""
     normal_goods: Dict[str, int] = {}
     """低价值商品"""

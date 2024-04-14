@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-04 17:54:58
-LastEditTime: 2024-04-12 22:55:38
+LastEditTime: 2024-04-14 23:25:56
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -61,7 +61,7 @@ def buy_good(good: str, book: int, max_book: int, again: bool = False):
     if pos:
         hsv = get_hsv(image, (564, 667 if pos[1] + 22 > 720 else pos[1] + 22))
         logger.debug(f"是否进货检测: {hsv}")
-        if hsv[-1] >= 200:
+        if hsv[-1] >= 220:
             if book < max_book:
                 use_book(pos, book)
                 return (

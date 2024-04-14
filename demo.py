@@ -12,6 +12,8 @@ from auto.run_business import run
 
 if __name__ == "__main__":
     run(
+        "127.0.0.1:7555",
+        "resources\\lib\\adb",
         {
             "7号自由港": 3,
             "修格里城": 3,

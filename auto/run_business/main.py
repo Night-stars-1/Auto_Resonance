@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:14:29
-LastEditTime: 2024-04-14 23:11:11
+LastEditTime: 2024-04-15 00:15:34
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -75,7 +75,7 @@ def run(
             )
         else:
             route = get_goods_info_srap(
-                city_book, skill_level, max_goods_num, station_level
+                city_book, skill_level, station_level, max_goods_num
             )
     city_name = get_city()
     if route.city_data[0].sell_city_name == city_name:
@@ -90,7 +90,10 @@ def run(
         click_station(city.buy_city_name).wait()
         go_business("buy")
         buy_business(
-            city.buy_goods + list(city.normal_goods.keys()), 20, max_book=city.book
+            [good_name for good in city.buy_goods for good_name in good]
+            + list(city.normal_goods.keys()),
+            20,
+            max_book=city.book,
         )
         go_home()
         click_station(city.sell_city_name).wait()

@@ -329,8 +329,7 @@ class SHOP:
                     target.buy_price += buy_price * num
                     target.sell_price += sell_price * num
                 else:
-                    target.normal_goods.setdefault(name, 0)
-                    target.normal_goods[name] += all_profit
+                    target.normal_goods.setdefault(name, profit)
         target.tired_profit = round5(target.profit / city_tired)
         target.book_profit = target.book and round5(target.profit / target.book)
         return target
@@ -395,7 +394,7 @@ class SHOP:
             )
         }
         # 根据利润重新排序商品，避免高价值商品因为满载而无法购买
-        optimal_route.city_data[0].buy_goods = sorted(optimal_route.city_data[0].buy_goods, key=lambda item: next(iter(item.values())), reverse=True)
+        # optimal_route.city_data[0].buy_goods = sorted(optimal_route.city_data[0].buy_goods, key=lambda item: next(iter(item.values())), reverse=True)
         optimal_route.city_data[1].normal_goods = {
             k: v
             for k, v in sorted(
@@ -404,5 +403,5 @@ class SHOP:
             )
         }
         # 根据利润重新排序商品，避免高价值商品因为满载而无法购买
-        optimal_route.city_data[1].buy_goods = sorted(optimal_route.city_data[1].buy_goods, key=lambda item: next(iter(item.values())), reverse=True)
+        # optimal_route.city_data[1].buy_goods = sorted(optimal_route.city_data[1].buy_goods, key=lambda item: next(iter(item.values())), reverse=True)
         return optimal_route

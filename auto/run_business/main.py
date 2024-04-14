@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:14:29
-LastEditTime: 2024-04-14 16:16:17
+LastEditTime: 2024-04-14 23:11:11
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -65,7 +65,7 @@ def run(
     if not status:
         logger.error("ADB连接失败")
         return False
-    if route:
+    if not route:
         if type_:
             if uuid == "":
                 logger.info("未设置UUID")

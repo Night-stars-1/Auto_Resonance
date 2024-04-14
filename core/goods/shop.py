@@ -75,7 +75,7 @@ with open("resources/goods/CityData.json", "r", encoding="utf-8") as file:
     city_data = json.load(file)
 
 with open("resources/goods/AttachedToCityData.json", "r", encoding="utf-8") as file:
-    attached_to_city_data: dict = json.load(file)
+    attached_to_city_data: Dict[str, str] = json.load(file)
 
 with open("resources/goods/CityTiredData.json", "r", encoding="utf-8") as file:
     city_tired_data: dict = json.load(file)

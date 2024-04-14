@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-03-20 22:24:35
-LastEditTime: 2024-04-10 13:34:03
+LastEditTime: 2024-04-14 23:11:49
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -31,7 +31,7 @@ def connect(order="127.0.0.1:7555", path="resources\\lib\\adb"):
     global ADBOREDER, ADBPATH, STOP
     ADBOREDER = order
     ADBPATH = path
-    STOP = True
+    STOP = False
     shell = [ADBPATH, "connect", ADBOREDER]
     result = run(shell, shell=True, capture_output=True, check=False)
     status = "already connected" in str(result.stdout) or "connected to" in str(

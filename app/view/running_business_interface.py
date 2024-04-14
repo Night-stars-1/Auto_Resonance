@@ -222,6 +222,8 @@ class RunningBusinessInterface(ScrollArea):
             self.workers = Worker(
                 run,
                 run,
+                order=cfg.adbOrder.value,
+                path=cfg.adbPath.value,
                 city_book=cfg.toDict()["RunningBusiness"],
                 skill_level=cfg.toDict()["SkillLevel"],
                 station_level=cfg.toDict()["StationLevel"],

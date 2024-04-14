@@ -6,3 +6,4 @@ Pillow==10.3.0
 PyQt-Fluent-Widgets==1.5.4
 onnxruntime==1.17.1
 pydantic>=2.6.4
+orjson>=3.10.0

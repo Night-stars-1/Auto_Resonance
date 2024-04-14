@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:14:29
-LastEditTime: 2024-04-14 00:28:42
+LastEditTime: 2024-04-14 16:16:17
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -51,6 +51,8 @@ def go_business(type: Literal["buy", "sell"] = "buy"):
 
 
 def run(
+    order: str,
+    path: str,
     city_book: dict,
     skill_level: dict,
     station_level: dict,
@@ -59,15 +61,22 @@ def run(
     type_: bool = False,
     uuid: str = "",
 ):
-    connect()
+    status = connect(order, path)
+    if not status:
+        logger.error("ADB连接失败")
+        return False
     if route:
         if type_:
             if uuid == "":
                 logger.info("未设置UUID")
                 return False
-            route = get_goods_info_kmou(city_book, skill_level, station_level, max_goods_num, uuid)
+            route = get_goods_info_kmou(
+                city_book, skill_level, station_level, max_goods_num, uuid
+            )
         else:
-            route = get_goods_info_srap(city_book, skill_level, max_goods_num, station_level)
+            route = get_goods_info_srap(
+                city_book, skill_level, max_goods_num, station_level
+            )
     city_name = get_city()
     if route.city_data[0].sell_city_name == city_name:
         route.city_data = [route.city_data[1], route.city_data[0]]

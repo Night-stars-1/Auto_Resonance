@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-08 17:45:06
-LastEditTime: 2024-04-09 22:05:48
+LastEditTime: 2024-04-14 16:36:40
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -61,7 +61,7 @@ class GoodsModel(BaseModel):
             if good.type == "buy":
                 city_good_data = city_goods[good.city][good.name]
                 good.num = city_good_data.num
-                good.isSpeciality= city_good_data.isSpeciality
+                good.isSpeciality = city_good_data.isSpeciality
                 self.buy_goods.setdefault(good.city, {}).setdefault(good.name, good)
                 if city_good_data.isSpeciality:
                     self.speciality_goods.setdefault(good.city, {}).setdefault(

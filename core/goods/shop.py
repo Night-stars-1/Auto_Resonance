@@ -300,6 +300,7 @@ class SHOP:
             target.book += 1
             for name, good in sorted_goods:
                 if name not in self.sell_goods[sell_city_name]:
+                    # logger.error(f"{sell_city_name}没有{name}的数据")
                     continue
                 buy_price, buy_num = self.get_good_buy_price(
                     good.price, good.num, buy_city_name, name

@@ -15,6 +15,7 @@ dependencies = [
     "PyQt-Fluent-Widgets==1.5.4",
     "onnxruntime==1.17.1",
     "pydantic>=2.6.4",
+    "orjson>=3.10.0",
 ]
 requires-python = "==3.11.*"
 readme = "README.md"

@@ -28,9 +28,10 @@ def connect(order="127.0.0.1:7555", path="resources\\lib\\adb"):
     参数:
         :param order: ADB端口
     """
-    global ADBOREDER, ADBPATH
+    global ADBOREDER, ADBPATH, STOP
     ADBOREDER = order
     ADBPATH = path
+    STOP = True
     shell = [ADBPATH, "connect", ADBOREDER]
     result = run(shell, shell=True, capture_output=True, check=False)
     status = "already connected" in str(result.stdout) or "connected to" in str(

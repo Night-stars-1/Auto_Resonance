@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-08 19:51:16
-LastEditTime: 2024-04-10 13:35:02
+LastEditTime: 2024-04-14 00:39:14
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -25,7 +25,7 @@ rsb = config.rsb
 
 
 def join(city: str):
-    click_station(city)
+    click_station(city).wait()
     go_outlets("铁安局")
     wait("railway_safety_bureau/railway_safety_bureau.png", (875, 27), (1093, 158), 10)
     click((903, 313))
@@ -36,7 +36,12 @@ def start():
 
     for n in range(config.rsb.num):
         logger.info(f"开始铁安局 => {rsb.name}:{n+1}")
-        wait("railway_safety_bureau/railway_safety_bureau.png", (174, 444), (294, 547), 10)
+        wait(
+            "railway_safety_bureau/railway_safety_bureau.png",
+            (174, 444),
+            (294, 547),
+            10,
+        )
         click(rsb.levelSerialPos)
         while True:
             if rsb.name == "所有":
@@ -48,7 +53,10 @@ def start():
             break
         click((883, 540))
         click_image(
-            "railway_safety_bureau/start_attack.png", (1133, 128), (1263, 628), trynum=10
+            "railway_safety_bureau/start_attack.png",
+            (1133, 128),
+            (1263, 628),
+            trynum=10,
         )
         wait_fight_end()
         click((1154, 628))

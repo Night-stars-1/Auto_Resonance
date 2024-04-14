@@ -2,22 +2,16 @@
 from loguru import logger
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QLabel, QWidget
+from qfluentwidgets import ExpandLayout
 from qfluentwidgets import FluentIcon as FIF
 from qfluentwidgets import (
-    ExpandLayout,
-    PrimaryPushSettingCard,
     ScrollArea,
     SettingCardGroup,
     SwitchSettingCard,
 )
 
-from core.goods.kmou import get_goods_info as get_goods_info_kmou
-from core.goods.srap import get_goods_info as get_goods_info_srap
-
 from ..common.config import cfg
-from ..common.signal_bus import signalBus
 from ..common.style_sheet import StyleSheet
-from ..common.worker import Worker
 from ..components.settings.line_edit_setting_card import LineEditSettingCard
 
 
@@ -48,9 +42,6 @@ class SettingInterface(ScrollArea):
             "KMou商品请求 UUID",
             parent=self.musicInThisPCGroup,
             isPassword=True,
-        )
-        self.testCard = PrimaryPushSettingCard(
-            "测试", FIF.TAG, "商品请求测试", "商品请求测试", self.musicInThisPCGroup
         )
         self.adbPathCard = LineEditSettingCard(
             cfg.adbPath,
@@ -83,7 +74,6 @@ class SettingInterface(ScrollArea):
 
         # initialize layout
         self.__initLayout()
-        self.__connectSignalToSlot()
 
     def __initLayout(self):
         self.settingLabel.move(36, 30)
@@ -91,7 +81,6 @@ class SettingInterface(ScrollArea):
         # add cards to group
         self.musicInThisPCGroup.addSettingCard(self.goodsTypeCard)
         self.musicInThisPCGroup.addSettingCard(self.uuidCard)
-        self.musicInThisPCGroup.addSettingCard(self.testCard)
         self.musicInThisPCGroup.addSettingCard(self.adbPathCard)
         self.musicInThisPCGroup.addSettingCard(self.adbOrderCard)
 
@@ -99,31 +88,3 @@ class SettingInterface(ScrollArea):
         self.expandLayout.setSpacing(28)
         self.expandLayout.setContentsMargins(36, 10, 36, 0)
         self.expandLayout.addWidget(self.musicInThisPCGroup)
-
-    def __connectSignalToSlot(self):
-        """connect signal to slot"""
-        self.testCard.clicked.connect(self.createSuccessInfoBar)
-
-    def createSuccessInfoBar(self):
-        from auto.run_business import run
-
-        signalBus.switchToCard.emit("LoggerInterface")
-        self.workers = Worker(
-            run,
-            run,
-            city_config=cfg.toDict()["RunningBusiness"],
-            type_=cfg.goodsType.value,
-            uuid=cfg.uuid.value,
-        )
-        self.workers.start()
-        """
-        InfoBar.success(
-            title="成功",
-            content=get_goods_info_kmou(cfg.uuid.value) if cfg.goodsType.value else get_goods_info_srap(),
-            orient=Qt.Horizontal,
-            isClosable=True,
-            position=InfoBarPosition.TOP_RIGHT,
-            duration=2000,
-            parent=self
-        )
-        """

@@ -5,11 +5,9 @@ LastEditTime: 2024-04-10 22:56:06
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
-from loguru import logger
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QLabel, QWidget
 from qfluentwidgets import CheckBox, ExpandLayout
-from qfluentwidgets import FluentIcon as FIF
 from qfluentwidgets import ScrollArea, SettingCardGroup
 
 from ..common.style_sheet import StyleSheet

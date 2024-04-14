@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-06 19:53:49
-LastEditTime: 2024-04-07 13:24:45
+LastEditTime: 2024-04-13 23:11:11
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -13,7 +13,7 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication
 from qfluentwidgets import ComboBox
 from qfluentwidgets import FluentIcon as FIF
-from qfluentwidgets import FluentIconBase, SettingCard, setFont, setTheme, setThemeColor
+from qfluentwidgets import FluentIconBase, SettingCard
 
 
 class ComboBoxTitleCard(SettingCard):

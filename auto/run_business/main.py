@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:14:29
-LastEditTime: 2024-04-13 01:10:51
+LastEditTime: 2024-04-14 00:28:42
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -14,6 +14,7 @@ from core.adb import connect, input_tap, screenshot
 from core.goods.kmou import get_goods_info as get_goods_info_kmou
 from core.goods.srap import get_goods_info as get_goods_info_srap
 from core.image import get_bgr
+from core.models.city_goods import RoutesModel, SkillLevelModel
 from core.presets import click_station, get_city, go_home, go_outlets, wait
 
 from .buy import buy_business
@@ -49,15 +50,24 @@ def go_business(type: Literal["buy", "sell"] = "buy"):
         return False
 
 
-def run(city_config: dict = {}, type_: bool = False, uuid: str = ""):
+def run(
+    city_book: dict,
+    skill_level: dict,
+    station_level: dict,
+    max_goods_num: int,
+    route: RoutesModel = None,
+    type_: bool = False,
+    uuid: str = "",
+):
     connect()
-    if type_:
-        if uuid == "":
-            logger.info("未设置UUID")
-            return False
-        route = get_goods_info_kmou(city_config, uuid)
-    else:
-        route = get_goods_info_srap(city_config)
+    if route:
+        if type_:
+            if uuid == "":
+                logger.info("未设置UUID")
+                return False
+            route = get_goods_info_kmou(city_book, skill_level, station_level, max_goods_num, uuid)
+        else:
+            route = get_goods_info_srap(city_book, skill_level, max_goods_num, station_level)
     city_name = get_city()
     if route.city_data[0].sell_city_name == city_name:
         route.city_data = [route.city_data[1], route.city_data[0]]

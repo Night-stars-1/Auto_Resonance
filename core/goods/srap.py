@@ -13,7 +13,13 @@ from ..models.srap import SrapRequestModel
 from .shop import SHOP
 
 
-def get_goods_info(city_config: Dict[str, int], _=None):
+def get_goods_info(
+    city_book: Dict[str, int],
+    skill_level: Dict[str, int],
+    station_level: Dict[str, int],
+    max_goods_num: int,
+    _=None,
+):
     headers = {
         "accept": "application/json",
         "Content-Type": "application/json",
@@ -28,4 +34,6 @@ def get_goods_info(city_config: Dict[str, int], _=None):
         "https://goda.srap.link/getGoods", headers=headers, json=json_data
     )
     data = SrapRequestModel.model_validate(response.json())
-    return SHOP(data, city_config).get_optimal_route()
+    return SHOP(
+        data, city_book, skill_level, station_level, max_goods_num
+    ).get_optimal_route()

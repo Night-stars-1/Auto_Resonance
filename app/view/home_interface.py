@@ -5,8 +5,6 @@ LastEditTime: 2024-04-12 01:43:08
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
-from typing import Dict
-
 from PyQt5.QtCore import QRectF, Qt
 from PyQt5.QtGui import QBrush, QColor, QLinearGradient, QPainter, QPainterPath, QPixmap
 from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget

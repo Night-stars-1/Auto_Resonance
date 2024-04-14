@@ -1,13 +1,13 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-06 23:52:14
-LastEditTime: 2024-04-13 01:05:56
+LastEditTime: 2024-04-14 14:20:47
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
 from PyQt5.QtCore import QObject, Qt, pyqtSignal
 from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget
-from qfluentwidgets import ExpandLayout, PlainTextEdit, ScrollArea, SettingCardGroup
+from qfluentwidgets import PlainTextEdit, ScrollArea
 
 from core.logger import logger
 

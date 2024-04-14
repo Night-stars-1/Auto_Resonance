@@ -35,6 +35,8 @@ def show(routes: RoutesModel):
     city_tired = route[0].city_tired + route[1].city_tired
     tired_profit = round5(profit / city_tired)
     book_profit = book and round5(profit / book)
+    if book_profit == 0:
+        return "未配置进货书，单书利润为0"
     message = f"""{route[0].buy_city_name}<->{route[0].sell_city_name}:
 {route[0].buy_city_name}:
     商品数量: {to_goods_num}
@@ -363,7 +365,7 @@ class SHOP:
             city_routes.tired_profit = round5(
                 city_routes.profit / city_routes.city_tired
             )
-            city_routes.book_profit = round5(city_routes.profit / city_routes.book)
+            city_routes.book_profit = city_routes.book and round5(city_routes.profit / city_routes.book)
             routes.append(city_routes)
         return routes
 

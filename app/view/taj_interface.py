@@ -1,23 +1,37 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-06 19:32:25
-LastEditTime: 2024-04-10 13:56:53
+LastEditTime: 2024-04-14 16:02:34
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
-from loguru import logger
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QLabel, QWidget
+from PyQt5.QtWidgets import (
+    QFrame,
+    QHBoxLayout,
+    QLabel,
+    QStackedWidget,
+    QVBoxLayout,
+    QWidget,
+)
 from qfluentwidgets import ExpandLayout
 from qfluentwidgets import FluentIcon as FIF
-from qfluentwidgets import ScrollArea, SettingCardGroup
+from qfluentwidgets import (
+    IconWidget,
+    ScrollArea,
+    SettingCardGroup,
+    SubtitleLabel,
+    TabBar,
+    setFont,
+)
 
 from core.models.config import config
 
 from ..common.style_sheet import StyleSheet
-from ..common.utils import debounce, read_json, save_json
+from ..common.utils import debounce
 from ..components.combo_box_title_card import ComboBoxTitleCard
 from ..components.line_edit_card import LineEditCard
+from ..components.tab_widget import TabWidget
 
 CITYDATA = {
     "修格里城": {
@@ -49,7 +63,7 @@ SERIAL_NUMBER2POS = {
 POS2SERIAL_NUMBER = {"[635, 662]": "1", "[890, 663]": "2", "[1150, 663]": "3"}
 
 
-class TajInterface(ScrollArea):
+class TajConfigInterface(ScrollArea):
     """铁安局 interface"""
 
     def __init__(self, parent=None):
@@ -102,6 +116,7 @@ class TajInterface(ScrollArea):
             parent=self.configGroup,
         )
         self.numCard.lineEdit.textChanged.connect(self.save_config)
+
         self.__initWidget()
 
     def __initWidget(self):
@@ -164,3 +179,17 @@ class TajInterface(ScrollArea):
         config.rsb.name = level_value
         config.rsb.num = int(self.numCard.lineEdit.text())
         config.save_config()
+
+
+class TajInterface(TabWidget):
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setObjectName("TajInterface")
+
+        self.tajConfigInterface = TajConfigInterface(self)
+
+        self.__initWidget()
+
+    def __initWidget(self):
+        self.addSubInterface(self.tajConfigInterface, "TajConfigInterface", "铁安局配置1", FIF.LANGUAGE)

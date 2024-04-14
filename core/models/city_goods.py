@@ -84,3 +84,27 @@ class CityDataModel(BaseModel):
     """购买数量"""
     revenue: float = 0.0
     """税率"""
+
+class SkillLevelModel(BaseModel):
+    """技能等级模型"""
+
+    星花: int = 0
+    卡洛琳: int = 0
+    伊尔: int = 0
+    菲妮娅: int = 0
+    叶珏: int = 0
+    黛丝莉: int = 0
+    阿知波: int = 0
+    塞西尔: int = 0
+    瓦伦汀: int = 0
+    魇: int = 0
+    奈弥: int = 0
+    甘雅: int = 0
+    艾略特: int = 0
+    朱利安: int = 0
+    瑞秋: int = 0
+    山岚: int = 0
+    卡莲: int = 0
+    静流: int = 0
+    雷火: int = 0
+    狮鬃: int = 0

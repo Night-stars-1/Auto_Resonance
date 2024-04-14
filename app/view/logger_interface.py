@@ -1,13 +1,13 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-06 23:52:14
-LastEditTime: 2024-04-07 16:21:05
+LastEditTime: 2024-04-14 14:20:47
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
-from PyQt5.QtCore import Qt, pyqtSignal, QObject
-from PyQt5.QtWidgets import QVBoxLayout, QWidget
-from qfluentwidgets import PlainTextEdit, ScrollArea, isDarkTheme
+from PyQt5.QtCore import QObject, Qt, pyqtSignal
+from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget
+from qfluentwidgets import PlainTextEdit, ScrollArea
 
 from core.logger import logger
 
@@ -36,26 +36,35 @@ class LoggerInterface(ScrollArea):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
-        self.log_widget = PlainTextEdit(self)
-        self.view = QWidget(self)
+        self.scrollWidget = QWidget(self)
         self.vBoxLayout = QVBoxLayout(self)
+
+        self.loggerLabel = QLabel("日志", self)
+        self.log_widget = PlainTextEdit(self)
 
         self.__initWidget()
         self.loadLogger()
 
     def __initWidget(self):
-        self.view.setObjectName("view")
-        self.setObjectName("LoggerInterface")
-        StyleSheet.HOME_INTERFACE.apply(self)
-
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.setWidget(self.view)
+        self.setWidget(self.scrollWidget)
         self.setWidgetResizable(True)
+        self.setObjectName("LoggerInterface")
 
-        self.vBoxLayout.setContentsMargins(0, 0, 0, 36)
-        self.vBoxLayout.setSpacing(40)
+        # initialize style sheet
+        self.scrollWidget.setObjectName("scrollWidget")
+        self.loggerLabel.setObjectName("settingLabel")
+        StyleSheet.SETTING_INTERFACE.apply(self)
+
+        # initialize layout
+        self.__initLayout()
+
+    def __initLayout(self):
+        self.loggerLabel.move(36, 30)
+
+        self.vBoxLayout.setContentsMargins(36, 80, 36, 10)
+        self.vBoxLayout.setSpacing(28)
         self.vBoxLayout.addWidget(self.log_widget)
-        self.vBoxLayout.setAlignment(Qt.AlignTop)
 
     def loadLogger(self):
         logger.add(

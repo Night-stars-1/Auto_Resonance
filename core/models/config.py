@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-08 17:45:06
-LastEditTime: 2024-04-12 17:15:19
+LastEditTime: 2024-04-14 02:55:29
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -47,14 +47,6 @@ class RSBModel(BaseModel):
 class RunningBusinessModel(BaseModel):
     """用户模型"""
 
-    class CityLevelModel(BaseModel):
-        """城市声望等级模型"""
-
-        七号自由港: int = Field(0, alias="7号自由港")
-        修格里城: int = 0
-        曼德矿场: int = 0
-        澄明数据中心: int = 0
-
     class GoBackModel(BaseModel):
         """砍抬提价模型"""
 
@@ -71,42 +63,10 @@ class RunningBusinessModel(BaseModel):
         cut_price: RaisePriceModel = RaisePriceModel()
         """砍价"""
 
-    class SkillLevelModel(BaseModel):
-        """技能等级模型"""
-
-        星花: int = 0
-        卡洛琳: int = 0
-        伊尔: int = 0
-        菲妮娅: int = 0
-        叶珏: int = 0
-        黛丝莉: int = 0
-        阿知波: int = 0
-        塞西尔: int = 0
-        瓦伦汀: int = 0
-        魇: int = 0
-        奈弥: int = 0
-        甘雅: int = 0
-        艾略特: int = 0
-        朱利安: int = 0
-        瑞秋: int = 0
-        山岚: int = 0
-        卡莲: int = 0
-        静流: int = 0
-        雷火: int = 0
-        狮鬃: int = 0
-
-    city_level: CityLevelModel = CityLevelModel()
-    """城市等级"""
     go: GoBackModel = GoBackModel()
     """出发配置"""
     back: GoBackModel = GoBackModel()
     """返回配置"""
-    skill_level: SkillLevelModel = SkillLevelModel()
-    """技能等级"""
-    max_goods_num: int = 0
-    """最大商品数量"""
-    max_book: int = 10
-    """单次最大进货书"""
 
 
 class Config(BaseModel):

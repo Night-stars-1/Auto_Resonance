@@ -12,6 +12,7 @@ from core.models.city_goods import (
     CityDataModel,
     RouteModel,
     RoutesModel,
+    SkillLevelModel,
 )
 from ..models.goods import GoodsModel
 from ..models.config import RunningBusinessModel, config as config_model
@@ -34,6 +35,8 @@ def show(routes: RoutesModel):
     city_tired = route[0].city_tired + route[1].city_tired
     tired_profit = round5(profit / city_tired)
     book_profit = book and round5(profit / book)
+    if book_profit == 0:
+        return "未配置进货书，单书利润为0"
     message = f"""{route[0].buy_city_name}<->{route[0].sell_city_name}:
 {route[0].buy_city_name}:
     商品数量: {to_goods_num}
@@ -141,46 +144,20 @@ skill_data = {
     },
 }
 config = config_model.running_business.model_copy()
-goods_addition: dict = {}
-"""商品附加"""
-for role_name, role_level in config.skill_level:
-    role_skill_data = skill_data.get(role_name, [])
-
-    for skill_affect in role_skill_data:
-        if role_level >= int(skill_affect):
-            goods, param = (
-                role_skill_data[skill_affect]["goods"],
-                role_skill_data[skill_affect]["param"],
-            )
-
-            for good_name in goods:
-                if good_name not in goods_addition:
-                    goods_addition[good_name] = param
-                else:
-                    goods_addition[good_name] += param
-
-
-def get_city_data_by_city_level(
-    city_level_: RunningBusinessModel.CityLevelModel,
-) -> Dict[str, CityDataModel]:
-    city_level_data = {}
-    for attached_name, city_name in attached_to_city_data.items():
-        city_level = city_level_.model_dump(by_alias=True)
-        if city_name not in city_level.keys():
-            continue
-        level = city_level[city_name] + 1
-        city_level_data[attached_name] = CityDataModel.model_validate(
-            city_data[city_name][level]
-        )
-    return city_level_data
-
-
-all_city_info: Dict[str, CityDataModel] = get_city_data_by_city_level(config.city_level)
-"""城市税率等声望信息"""
 
 
 class SHOP:
-    def __init__(self, goods_data: GoodsModel, city_config: Dict[str, int]) -> None:
+    def __init__(self, goods_data: GoodsModel, city_book: Dict[str, int], skill_level: Dict[str, int], station_level: Dict[str, int], max_goods_num: int) -> None:
+        """
+        说明:
+            跑商基类
+        参数:
+            :param goods_data: 商品数据
+            :param city_book: 城市最大单次进货书
+            :param skill_level: 角色共振等级
+            :param station_level: 站点声望等级等级
+            :param max_goods_num: 最大商品数量
+        """
         self.goods_data = goods_data
         self.buy_goods = self.goods_data.buy_goods
         """城市可购买的商品信息"""
@@ -188,8 +165,48 @@ class SHOP:
         """城市可出售的商品信息"""
         self.config = config
         """配置信息"""
-        self.city_config = city_config
+        self.city_book = city_book
         """城市最大单次进货书"""
+        self.goods_addition: Dict[str, int] = self.get_goods_addition(skill_level)
+        """商品附加"""
+        self.all_city_info: Dict[str, CityDataModel] = self.get_city_data_by_city_level(station_level)
+        """城市税率等声望信息"""
+        self.max_goods_num = max_goods_num
+        """最大商品数量"""
+
+    def get_goods_addition(self, skill_level: Dict[str, int]) -> Dict[str, int]:
+        goods_addition: dict = {}
+        """商品附加"""
+        for role_name, role_level in skill_level.items():
+            role_skill_data = skill_data.get(role_name, [])
+
+            for skill_affect in role_skill_data:
+                if role_level >= int(skill_affect):
+                    goods, param = (
+                        role_skill_data[skill_affect]["goods"],
+                        role_skill_data[skill_affect]["param"],
+                    )
+
+                    for good_name in goods:
+                        if good_name not in goods_addition:
+                            goods_addition[good_name] = param
+                        else:
+                            goods_addition[good_name] += param
+        return goods_addition
+
+    def get_city_data_by_city_level(
+        self,
+        city_level: Dict[str, int],
+    ) -> Dict[str, CityDataModel]:
+        city_level_data = {}
+        for attached_name, city_name in attached_to_city_data.items():
+            if city_name not in city_level.keys():
+                continue
+            level = city_level[city_name] + 1
+            city_level_data[attached_name] = CityDataModel.model_validate(
+                city_data[city_name][level]
+            )
+        return city_level_data
 
     def get_good_buy_price(self, price, num, city_name, good_name, type_="go"):
         """
@@ -202,12 +219,12 @@ class SHOP:
             :param good_name: 商品名称
             :param type_: 列车方向 go/back
         """
-        buy_num = all_city_info.get(
+        buy_num = self.all_city_info.get(
             city_name, CityDataModel()
         ).buy_num  # 城市声望数量加成
-        skill_num = goods_addition.get(good_name, 0)  # 角色技能增加的数量
+        skill_num = self.goods_addition.get(good_name, 0)  # 角色技能增加的数量
         new_num = round5(num * (1 + buy_num + skill_num))
-        tax_rate = all_city_info[city_name].revenue  # 税率
+        tax_rate = self.all_city_info[city_name].revenue  # 税率
         new_price = round5(
             price  # 砍价前的价格
             * (
@@ -244,7 +261,7 @@ class SHOP:
                 ).raise_price.percentage
             )
         )  # 不带税的售价, 抬价后
-        tax_rate = all_city_info[city_name].revenue  # 税率
+        tax_rate = self.all_city_info[city_name].revenue  # 税率
         no_tax_profit = no_revenue_sell_price - buy_price  # 不带税的利润, 单个商品
         revenue = (no_revenue_sell_price - buy_price) * tax_rate  # 税收
 
@@ -279,17 +296,20 @@ class SHOP:
             city_tired=city_tired,
         )
         while (
-            target.num < config.max_goods_num
-            and target.book < self.city_config[buy_city_name]
+            target.num < self.max_goods_num
+            and target.book < self.city_book[buy_city_name]
         ):  # 直到货仓被装满
             target.book += 1
             for name, good in sorted_goods:
+                if name not in self.sell_goods[sell_city_name]:
+                    # logger.error(f"{sell_city_name}没有{name}的数据")
+                    continue
                 buy_price, buy_num = self.get_good_buy_price(
                     good.price, good.num, buy_city_name, name
                 )
                 num = min(
                     buy_num,
-                    config.max_goods_num - target.num,
+                    self.max_goods_num - target.num,
                 )  # 确保购买数量不超过最大商品数量
                 # print(f"{buy_city_name}:{name}=>{buy_price} {buy_num}")
                 sell_price, profit = self.get_good_sell_price(
@@ -297,7 +317,7 @@ class SHOP:
                 )
                 all_profit = profit * num
                 # print(f"{buy_city_name}<=>{sell_city_name}:{name}=>{sell_price} {rate_price}")
-                if profit >= self.city_config["priceThreshold"] or good.isSpeciality:
+                if profit >= self.city_book["priceThreshold"] or good.isSpeciality:
                     target.buy_goods.append(name)
                     target.goods_data.setdefault(name, RouteModel.GoodsData())
                     target.goods_data[name].num += num
@@ -325,6 +345,8 @@ class SHOP:
         """
         routes: List[RoutesModel] = []
         for city1, city2 in itertools.combinations(set(self.buy_goods.keys()), 2):
+            if city1 not in self.all_city_info or city2 not in self.all_city_info:
+                continue
             city_routes = RoutesModel()
             target1 = self.get_pending_purchase(city1, city2)
             target2 = self.get_pending_purchase(city2, city1)
@@ -343,7 +365,7 @@ class SHOP:
             city_routes.tired_profit = round5(
                 city_routes.profit / city_routes.city_tired
             )
-            city_routes.book_profit = round5(city_routes.profit / city_routes.book)
+            city_routes.book_profit = city_routes.book and round5(city_routes.profit / city_routes.book)
             routes.append(city_routes)
         return routes
 

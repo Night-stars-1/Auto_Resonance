@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-02 19:13:20
-LastEditTime: 2024-04-11 20:59:15
+LastEditTime: 2024-04-14 02:28:42
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -16,13 +16,13 @@ from qfluentwidgets import (
     ConfigSerializer,
     OptionsConfigItem,
     OptionsValidator,
-    QConfig,
     Theme,
     __version__,
     qconfig,
 )
 
 from .running_business_config import RunningBusinessConfig
+
 
 class Language(Enum):
     """Language enumeration"""

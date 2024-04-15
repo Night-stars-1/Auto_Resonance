@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-10 22:54:08
-LastEditTime: 2024-04-14 16:08:08
+LastEditTime: 2024-04-15 13:58:24
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -19,6 +19,7 @@ from ..common.config import cfg
 from ..common.signal_bus import signalBus
 from ..common.style_sheet import StyleSheet
 from ..common.worker import Worker
+from ..components.primary_push_load_card import PrimaryPushLoadCard
 from ..components.settings.spin_box_setting_card import SpinBoxSettingCard
 
 SKILLS = [
@@ -105,7 +106,7 @@ class RunningBusinessInterface(ScrollArea):
             spin_box_max=1000,
             parent=self.scrollWidget,
         )
-        self.testCard = PrimaryPushSettingCard(
+        self.testCard = PrimaryPushLoadCard(
             "测试", FIF.TAG, "跑商测试", "测试跑商功能", self.scrollWidget
         )
         self.bookGroup = ExpandSettingCard(
@@ -146,7 +147,7 @@ class RunningBusinessInterface(ScrollArea):
             self.skillGroup.viewLayout.addWidget(gz)
 
         self.tiredGroup = ExpandSettingCard(
-            FIF.BRUSH, "进货书设置", parent=self.scrollWidget
+            FIF.BRUSH, "砍抬疲劳设置", parent=self.scrollWidget
         )
         for city in CITYS:
             book = SpinBoxSettingCard(
@@ -197,42 +198,65 @@ class RunningBusinessInterface(ScrollArea):
         self.testCard.clicked.connect(self.createSuccessInfoBar)
 
     def createSuccessInfoBar(self):
+
+        def result(route):
+            self.testCard.loading(False)
+            w = Dialog("详细", show(route), self)
+            if w.exec():
+                signalBus.switchToCard.emit("LoggerInterface")
+                self.workers = Worker(
+                    run,
+                    run,
+                    order=cfg.adbOrder.value,
+                    path=cfg.adbPath.value,
+                    city_book=city_book,
+                    skill_level=skill_level,
+                    station_level=station_level,
+                    city_tired=city_tired,
+                    max_goods_num=max_goods_num,
+                    route=route,
+                    type_=cfg.goodsType.value,
+                    uuid=cfg.uuid.value,
+                )
+                self.workers.start()
+
+        self.testCard.loading(True)
         from auto.run_business import run
         from core.goods.shop import show
 
         city_book = cfg.toDict()["RunningBusiness"]
         skill_level = cfg.toDict()["SkillLevel"]
         station_level = cfg.toDict()["StationLevel"]
+        city_tired = cfg.toDict()["CityTired"]
         max_goods_num = cfg.maxGoodsNum.value
         uuid = cfg.uuid.value
         if cfg.goodsType.value:
             if uuid == "":
                 logger.info("未设置UUID")
                 return False
-            route = get_goods_info_kmou(
-                city_book, skill_level, station_level, max_goods_num, uuid
-            )
-        else:
-            route = get_goods_info_srap(
-                city_book, skill_level, station_level, max_goods_num
-            )
-        w = Dialog("详细", show(route), self)
-        if w.exec():
-            signalBus.switchToCard.emit("LoggerInterface")
             self.workers = Worker(
-                run,
-                run,
-                order=cfg.adbOrder.value,
-                path=cfg.adbPath.value,
-                city_book=cfg.toDict()["RunningBusiness"],
-                skill_level=cfg.toDict()["SkillLevel"],
-                station_level=cfg.toDict()["StationLevel"],
+                get_goods_info_kmou,
+                get_goods_info_kmou,
+                city_book=city_book,
+                skill_level=skill_level,
+                station_level=station_level,
+                city_tired=city_tired,
                 max_goods_num=max_goods_num,
-                route=route,
-                type_=cfg.goodsType.value,
-                uuid=cfg.uuid.value,
             )
             self.workers.start()
+            self.workers.result.connect(result)
+        else:
+            self.workers = Worker(
+                get_goods_info_srap,
+                get_goods_info_srap,
+                city_book=city_book,
+                skill_level=skill_level,
+                station_level=station_level,
+                city_tired=city_tired,
+                max_goods_num=max_goods_num,
+            )
+            self.workers.start()
+            self.workers.result.connect(result)
 
         """
         InfoBar.success(

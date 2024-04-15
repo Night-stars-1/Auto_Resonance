@@ -32,10 +32,14 @@ class RouteModel(BaseModel):
     """出售城市"""
     goods_data: Dict[str, GoodsData] = {}
     """商品数据"""
-    buy_goods: List[Dict[str, int]] = []
+    buy_goods: Dict[str, int] = {}
     """待购商品列表"""
     normal_goods: Dict[str, int] = {}
     """低价值商品"""
+    primary_goods: List[str] = []
+    """主要商品"""
+    secondary_goods: List[str] = []
+    """次要商品"""
     buy_price: int = 0
     """总购价"""
     sell_price: int = 0
@@ -84,6 +88,7 @@ class CityDataModel(BaseModel):
     """购买数量"""
     revenue: float = 0.0
     """税率"""
+
 
 class SkillLevelModel(BaseModel):
     """技能等级模型"""

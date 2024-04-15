@@ -44,31 +44,6 @@ class RSBModel(BaseModel):
     """刷取次数"""
 
 
-class RunningBusinessModel(BaseModel):
-    """用户模型"""
-
-    class GoBackModel(BaseModel):
-        """砍抬提价模型"""
-
-        class RaisePriceModel(BaseModel):
-            """往返砍抬模型"""
-
-            percentage: float = 0.0
-            """百分比"""
-            profit: int = 0
-            """利润"""
-
-        raise_price: RaisePriceModel = RaisePriceModel()
-        """抬价"""
-        cut_price: RaisePriceModel = RaisePriceModel()
-        """砍价"""
-
-    go: GoBackModel = GoBackModel()
-    """出发配置"""
-    back: GoBackModel = GoBackModel()
-    """返回配置"""
-
-
 class Config(BaseModel):
     """自动程序配置"""
 
@@ -76,8 +51,6 @@ class Config(BaseModel):
     """版本号"""
     rsb: RSBModel = RSBModel()
     """铁安局配置"""
-    running_business: RunningBusinessModel = RunningBusinessModel()
-    """跑商配置"""
     rest_area: RestAreaModel = RestAreaModel()
     """休息区配置"""
 

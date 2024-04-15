@@ -56,6 +56,7 @@ def run(
     city_book: dict,
     skill_level: dict,
     station_level: dict,
+    city_tired: dict,
     max_goods_num: int,
     route: RoutesModel = None,
     type_: bool = False,
@@ -71,11 +72,11 @@ def run(
                 logger.info("未设置UUID")
                 return False
             route = get_goods_info_kmou(
-                city_book, skill_level, station_level, max_goods_num, uuid
+                city_book, skill_level, station_level, city_tired, max_goods_num, uuid
             )
         else:
             route = get_goods_info_srap(
-                city_book, skill_level, station_level, max_goods_num
+                city_book, skill_level, station_level, city_tired, max_goods_num
             )
     city_name = get_city()
     if route.city_data[0].sell_city_name == city_name:
@@ -90,8 +91,8 @@ def run(
         click_station(city.buy_city_name).wait()
         go_business("buy")
         buy_business(
-            [good_name for good in city.buy_goods for good_name in good]
-            + list(city.normal_goods.keys()),
+            city.primary_goods,
+            city.secondary_goods,
             20,
             max_book=city.book,
         )

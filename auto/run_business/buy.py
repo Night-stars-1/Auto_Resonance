@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-04 17:54:58
-LastEditTime: 2024-04-14 23:25:56
+LastEditTime: 2024-04-15 14:52:29
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -20,7 +20,8 @@ from core.presets import click, find_text, ocr_click
 
 
 def buy_business(
-    goods: List[str],
+    primary_goods: List[str],
+    secondary_goods: List[str],
     num: int = 20,
     max_book: int = 0,
 ):
@@ -28,19 +29,37 @@ def buy_business(
     说明:
         购买商品
     参数:
-        :param goods: 商品列表
+        :param primary_goods: 主要商品列表
+        :param secondary_goods: 次要商品列表
         :param num: 期望议价的价格
         :param max_book: 最大使用进货书量
     """
-    book = 0
-    for good in goods:
-        result, book = buy_good(good, book, max_book)
-        if not result:
-            logger.info(f"商品{good}购买失败")
+
+    def process_goods(book, good):
         if (boatload := get_boatload()) == 0:
             logger.info("已满载")
-            break
+            return True
+        result, book = buy_good(good, book, max_book)
+        if result is None:
+            logger.info(f"进货书已用完")
+        elif not result:
+            logger.info(f"商品{good}购买失败")
         logger.info(f"剩余载货量: {boatload}%")
+        return book
+
+    book = 0
+    done = False
+    for i in range(max_book + 1):
+        if done:
+            break
+        for good in primary_goods:
+            if (book := process_goods(book, good)) is True:
+                done = True
+                break
+    for good in secondary_goods:
+        if (book := process_goods(book, good)) is True:
+            break
+
     click_bargain_button(num)
     click_buy_button()
     time.sleep(0.5)
@@ -69,7 +88,7 @@ def buy_good(good: str, book: int, max_book: int, again: bool = False):
                     book + 1,
                 )
             else:
-                return False, book
+                return None, book
         else:
             click(pos)
             return True, book
@@ -86,7 +105,8 @@ def use_book(pos: Tuple[int, int], book: int):
     click((pos[0] - 215, pos[1]))
     time.sleep(1.0)
     click((959, 541))
-    while get_hsv(screenshot(), pos)[-1] < 80:
+    while (hsv := get_hsv(screenshot(), pos))[-1] < 60:
+        logger.info(f"进货书是否所有成功颜色检查: {hsv}")
         time.sleep(0.5)
 
 

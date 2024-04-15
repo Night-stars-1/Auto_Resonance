@@ -19,6 +19,7 @@ def get_goods_info(
     city_book: Dict[str, int],
     skill_level: Dict[str, int],
     station_level: Dict[str, int],
+    city_tired: Dict[str, int],
     max_goods_num: int,
     uuid: str,
 ):
@@ -26,5 +27,5 @@ def get_goods_info(
     response = requests.get(url, params={"uuid": uuid})
     data = KMouRequestModel.model_validate(response.json())
     return SHOP(
-        data, city_book, skill_level, station_level, max_goods_num
+        data, city_book, skill_level, station_level, city_tired, max_goods_num
     ).get_optimal_route()

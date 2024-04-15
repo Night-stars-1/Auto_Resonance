@@ -23,7 +23,7 @@ from core.goods.srap import get_goods_info as get_goods_info_srap
 
 def test_get_goods_info_srap():
     route = get_goods_info_srap(
-        {
+        city_book={
             "7号自由港": 3,
             "修格里城": 3,
             "曼德矿场": 3,
@@ -35,7 +35,7 @@ def test_get_goods_info_srap():
             "阿妮塔能源研究所": 3,
             "priceThreshold": 500,
         },
-        {
+        skill_level={
             "伊尔": 0,
             "卡洛琳": 0,
             "叶珏": 0,
@@ -57,8 +57,24 @@ def test_get_goods_info_srap():
             "魇": 0,
             "黛丝莉": 0,
         },
-        {"7号自由港": 17, "修格里城": 13, "曼德矿场": 12, "澄明数据中心": 16},
-        625,
+        station_level={
+            "7号自由港": 17,
+            "修格里城": 13,
+            "曼德矿场": 12,
+            "澄明数据中心": 16,
+        },
+        city_tired={
+            "7号自由港": 30,
+            "修格里城": 30,
+            "曼德矿场": 30,
+            "淘金乐园": 30,
+            "澄明数据中心": 30,
+            "荒原站": 30,
+            "铁盟哨站": 30,
+            "阿妮塔战备工厂": 30,
+            "阿妮塔能源研究所": 30,
+        },
+        max_goods_num=625,
     )
     LOGGER.info(route)
     print(show(route))
@@ -67,7 +83,7 @@ def test_get_goods_info_srap():
 
 def test_get_goods_info_kmou():
     route = get_goods_info_kmou(
-        {
+        city_book={
             "7号自由港": 3,
             "修格里城": 3,
             "曼德矿场": 3,
@@ -79,7 +95,7 @@ def test_get_goods_info_kmou():
             "阿妮塔能源研究所": 3,
             "priceThreshold": 500,
         },
-        {
+        skill_level={
             "伊尔": 0,
             "卡洛琳": 0,
             "叶珏": 0,
@@ -101,9 +117,25 @@ def test_get_goods_info_kmou():
             "魇": 0,
             "黛丝莉": 0,
         },
-        {"7号自由港": 17, "修格里城": 13, "曼德矿场": 12, "澄明数据中心": 16},
-        625,
-        cfg.uuid.value,
+        station_level={
+            "7号自由港": 17,
+            "修格里城": 13,
+            "曼德矿场": 12,
+            "澄明数据中心": 16,
+        },
+        city_tired={
+            "7号自由港": 30,
+            "修格里城": 30,
+            "曼德矿场": 30,
+            "淘金乐园": 30,
+            "澄明数据中心": 30,
+            "荒原站": 30,
+            "铁盟哨站": 30,
+            "阿妮塔战备工厂": 30,
+            "阿妮塔能源研究所": 30,
+        },
+        max_goods_num=625,
+        uuid=cfg.uuid.value,
     )
     LOGGER.info(route)
     print(show(route))

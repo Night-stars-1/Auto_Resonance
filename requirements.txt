@@ -1,9 +1,10 @@
+Pillow==10.3.0
+PyQt-Fluent-Widgets==1.5.4
 cnocr==2.3.0.1
 loguru==0.7.2
 numpy==1.26.4
-opencv_python==4.9.0.80
-Pillow==10.3.0
-PyQt-Fluent-Widgets==1.5.4
 onnxruntime==1.17.1
-pydantic>=2.6.4
+opencv-python==4.9.0.80
 orjson>=3.10.0
+pydantic>=2.6.4
+pyqt5-qt5==5.15.2

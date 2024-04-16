@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:14:29
-LastEditTime: 2024-04-15 00:15:34
+LastEditTime: 2024-04-15 22:25:56
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -14,7 +14,7 @@ from core.adb import connect, input_tap, screenshot
 from core.goods.kmou import get_goods_info as get_goods_info_kmou
 from core.goods.srap import get_goods_info as get_goods_info_srap
 from core.image import get_bgr
-from core.models.city_goods import RoutesModel, SkillLevelModel
+from core.models.city_goods import RoutesModel
 from core.presets import click_station, get_city, go_home, go_outlets, wait
 
 from .buy import buy_business

@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-02 19:27:03
-LastEditTime: 2024-04-13 01:07:19
+LastEditTime: 2024-04-17 00:36:55
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -23,7 +23,7 @@ from app.view.daily_task_interface import DailyTaskInterface
 from app.view.running_business_interface import RunningBusinessInterface
 
 from ..common import resource  # 图标数据
-from ..common.config import cfg
+from ..common.config import cfg, VERSION
 from ..common.icon import FluentIconBase
 from ..common.signal_bus import signalBus
 from .home_interface import HomeInterface
@@ -92,7 +92,7 @@ class MainWindow(MSFluentWindow):
         self.resize(960, 780)
         self.setMinimumWidth(760)
         self.setWindowIcon(QIcon("./app/resource/images/logo.ico"))
-        self.setWindowTitle("黑月无人驾驶")
+        self.setWindowTitle(f"黑月无人驾驶 - {VERSION}")
 
         self.setMicaEffectEnabled(cfg.get(cfg.micaEnabled))
         self.setResizeEnabled(False)

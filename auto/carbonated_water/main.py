@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-08 19:51:16
-LastEditTime: 2024-04-10 14:02:16
+LastEditTime: 2024-04-15 22:25:33
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -9,7 +9,7 @@ import time
 from datetime import datetime
 from loguru import logger
 
-from core.models.config import RSBModel, config
+from core.models.config import config
 from core.presets import click, go_home, go_outlets, ocr_click, wait, wait_time
 
 
@@ -35,4 +35,6 @@ def start():
             config.rest_area.huashi.runtime = time.time()
         go_home()
     else:
-        logger.info(f"今天已购买桦石，购买时间: {datetime.fromtimestamp(config.rest_area.huashi.runtime).strftime('%Y-%m-%d %H:%M:%S')}")
+        logger.info(
+            f"今天已购买桦石，购买时间: {datetime.fromtimestamp(config.rest_area.huashi.runtime).strftime('%Y-%m-%d %H:%M:%S')}"
+        )

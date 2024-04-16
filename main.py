@@ -1,14 +1,14 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-03-20 22:24:35
-LastEditTime: 2024-04-10 12:55:39
+LastEditTime: 2024-04-15 22:30:09
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
 from loguru import logger
 
+from auto.huashi.main import start as ra_start
 from auto.railway_safety_bureau.main import start as rsb_start
-from auto.rest_area.main import start as ra_start
 from core.adb import connect
 from core.adb import stop as adb_stop
 from core.analysis_tasks import AnalysisTasks

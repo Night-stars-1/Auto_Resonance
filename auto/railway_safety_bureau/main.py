@@ -5,11 +5,9 @@ LastEditTime: 2024-04-14 00:39:14
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
-import time
-
 from loguru import logger
 
-from core.models.config import RSBModel, config
+from core.models.config import config
 from core.presets import (
     click,
     click_image,

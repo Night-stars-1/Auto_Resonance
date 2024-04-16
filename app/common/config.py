@@ -17,12 +17,11 @@ from qfluentwidgets import (
     OptionsConfigItem,
     OptionsValidator,
     Theme,
-    __version__,
     qconfig,
 )
 
 from .running_business_config import RunningBusinessConfig
-
+from version import __version__
 
 class Language(Enum):
     """Language enumeration"""

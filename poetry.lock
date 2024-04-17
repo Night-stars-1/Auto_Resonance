@@ -4810,13 +4810,13 @@ diagrams = ["jinja2", "railroad-diagrams"]
 
 [[package]]
 name = "pyqt-fluent-widgets"
-version = "1.5.4"
+version = "1.5.5"
 description = "A fluent design widgets library based on PyQt5"
 optional = false
 python-versions = "*"
 files = [
-    {file = "PyQt-Fluent-Widgets-1.5.4.tar.gz", hash = "sha256:b80ce6e819b0514b5b2cfb500d98831b1cf6ef5a0a43cdcad00ed7840f2962ae"},
-    {file = "PyQt_Fluent_Widgets-1.5.4-py3-none-any.whl", hash = "sha256:ac6d6bcb52945a070a16360b82e552685cc39c59e254da74283651fc6a0061f1"},
+    {file = "PyQt-Fluent-Widgets-1.5.5.tar.gz", hash = "sha256:14dee9ae23beec15083b36dafa14aac8bb691c9a05c81acaca81a4a5598551cc"},
+    {file = "PyQt_Fluent_Widgets-1.5.5-py3-none-any.whl", hash = "sha256:56a8acaf64b45770b9c3a665266f4c7ee851fbfca6d3f0467289404319243b08"},
 ]
 
 [package.dependencies]
@@ -5788,4 +5788,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "225e6a3cb0ed6c28578d07351cbd938ea315e7bd89966fe3152ce60eba47ed95"
+content-hash = "0a38e4f19f0b0af72294bf4f332671cf623f61da7e92dd5b31653fba08493472"

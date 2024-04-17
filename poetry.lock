@@ -340,13 +340,13 @@ colorama = {version = "*", markers = "platform_system == \"Windows\""}
 
 [[package]]
 name = "cnocr"
-version = "2.3.0.1"
+version = "2.3.0.2"
 description = "Python3 package for Chinese/English OCR, with small pretrained models"
 optional = false
 python-versions = "*"
 files = [
-    {file = "cnocr-2.3.0.1-py3-none-any.whl", hash = "sha256:edfcce581900facfe113d18272b00d4155d2410ab0ccd8696936a03bba5c3f3c"},
-    {file = "cnocr-2.3.0.1.tar.gz", hash = "sha256:b1cf6b611e3a58d719ab1cdd9b24694a1162681dac38c7a44223e4a2bcbb6404"},
+    {file = "cnocr-2.3.0.2-py3-none-any.whl", hash = "sha256:2cc5c7bd9c8bc82bfa629a924e117d52c9fcd8166c8144a112f79eb6cee01e66"},
+    {file = "cnocr-2.3.0.2.tar.gz", hash = "sha256:916925d90630c2c0944b5d355571be06b9d56471a9720f90b74804ff392ed55a"},
 ]
 
 [package.dependencies]
@@ -5788,4 +5788,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "225e6a3cb0ed6c28578d07351cbd938ea315e7bd89966fe3152ce60eba47ed95"
+content-hash = "43afaeeeb4b7884b83842b94a93ae27fed8987bbd2967ff9c62716eeaf56e708"

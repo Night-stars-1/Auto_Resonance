@@ -60,13 +60,18 @@ class MainWindow(MSFluentWindow):
 
     def initNavigation(self):
         # add navigation items
-        self.addSubInterface(self.homeInterface, FIF.HOME, "Home")
+        self.addSubInterface(self.homeInterface, FIF.HOME, "主页")
         self.addSubInterface(self.tajInterface, FIF.AIRPLANE, "铁安局")
-        self.addSubInterface(self.loggerInterface, FIF.ALIGNMENT, "日志")
         self.addSubInterface(self.daily_task_interface, FIF.CALENDAR, "每日任务")
         self.addSubInterface(self.running_business_interface, FIF.TRAIN, "跑商配置")
 
         # add custom widget to bottom
+        self.addSubInterface(
+            self.loggerInterface,
+            FIF.ALIGNMENT,
+            "日志",
+            position=NavigationItemPosition.BOTTOM,
+        )
         self.addSubInterface(
             self.settingInterface,
             FIF.SETTING,

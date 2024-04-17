@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:24:47
-LastEditTime: 2024-04-14 23:25:19
+LastEditTime: 2024-04-17 16:55:43
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -197,9 +197,7 @@ def go_home():
     """
     logger.info("返回主界面")
 
-    while (
-        match_screenshot(screenshot(), "resources/main_map.png")["max_val"] < 0.95
-    ):
+    while match_screenshot(screenshot(), "resources/main_map.png")["max_val"] < 0.95:
         time.sleep(1)
         input_tap((228, 27))
 
@@ -213,7 +211,14 @@ def wait_fight_end():
     start = time.perf_counter()
     while time.perf_counter() - start < FIGHT_TIME:
         bgrs = get_bgrs(screenshot(), [(1114, 630), (1204, 624), (236, 26)])
-        if [245, 245, 245] <= bgrs[0] <= [255, 255, 255] and [0, 0, 0] <= bgrs[1] <= [
+        logger.debug(f"等待战斗结束颜色检查: {bgrs}")
+        if [198, 200, 200] <= bgrs[0] <= [202, 204, 204] and [183, 185, 185] <= bgrs[
+            1
+        ] <= [187, 189, 189]:
+            logger.info("检测到执照等级提升")
+            input_tap((1151, 626))
+            continue
+        elif [245, 245, 245] <= bgrs[0] <= [255, 255, 255] and [0, 0, 0] <= bgrs[1] <= [
             10,
             10,
             10,

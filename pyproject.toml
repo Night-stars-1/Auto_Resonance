@@ -1,31 +1,25 @@
-[project]
-name = "Auto_Resonance"
+[tool.poetry]
+name = "auto-resonance"
 version = "0.1.0"
-description = "Default template for PDM package"
-authors = [
-    {name = "Night-stars-1", email = "nujj1042633805@gmail.com"},
-]
-dependencies = [
-    "pyqt5-qt5==5.15.2",
-    "cnocr==2.3.0.1",
-    "loguru==0.7.2",
-    "numpy==1.26.4",
-    "opencv-python==4.9.0.80",
-    "Pillow==10.3.0",
-    "PyQt-Fluent-Widgets==1.5.4",
-    "onnxruntime==1.17.1",
-    "pydantic>=2.6.4",
-    "orjson>=3.10.0",
-]
-requires-python = "==3.11.*"
+description = ""
+authors = ["Night-stars-1 <nujj1042633805@gmail.com>"]
 readme = "README.md"
-license = {text = "MIT"}
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pillow = "10.3.0"
+pyqt-fluent-widgets = "1.5.4"
+cnocr = "2.3.0.1"
+loguru = "0.7.2"
+numpy = "1.26.4"
+onnxruntime = "1.17.1"
+opencv-python = "4.9.0.80"
+orjson = ">=3.10.0"
+pydantic = ">=2.6.4"
+pyqt5-qt5 = "5.15.2"
 
 
-[tool.pdm]
-distribution = false
-
-[tool.pdm.dev-dependencies]
-dev = [
-    "pyinstaller>=0.1.4",
-]
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

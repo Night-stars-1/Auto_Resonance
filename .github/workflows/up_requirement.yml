@@ -18,13 +18,13 @@ jobs:
         with:
             python-version: '3.11'
 
-      - name: Install toml-to-requirements
+      - name: Install poetry
         run: |
-          pip install toml-to-requirements
+          pip install poetry
 
       - name: Export requirements.txt
         run: |
-          toml-to-req --toml-file pyproject.toml
+          poetry export -f requirements.txt --output requirements.txt
 
       - name: Upload requirements.txt
         uses: EndBug/add-and-commit@v9.1.3

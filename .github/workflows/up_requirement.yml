@@ -18,9 +18,13 @@ jobs:
         with:
             python-version: '3.11'
 
+      - name: Install poetry
+        run: |
+          pip install poetry
+
       - name: Export requirements.txt
         run: |
-          poetry export --output requirements.txt
+          poetry export -f requirements.txt --output requirements.txt
 
       - name: Upload requirements.txt
         uses: EndBug/add-and-commit@v9.1.3

@@ -14,11 +14,11 @@ changelog:
     - title: 重大更新 Feats
       labels:
         - feat
+        - enhancement
     - title: 日常更新 Chores
       labels:
-        - enhancement
         - chore
         - deploy
-    - title: Other Changes
+    - title: 其他更新 Other Changes
       labels:
         - "*"

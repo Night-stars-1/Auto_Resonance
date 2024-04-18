@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:24:47
-LastEditTime: 2024-04-17 16:55:43
+LastEditTime: 2024-04-17 23:07:11
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -39,10 +39,11 @@ def click_station(name: str):
         logger.info("未检测到主地图界面，返回主地图")
         go_home()
     reslut = predict(screenshot(), cropped_pos1=(1131, 498), cropped_pos2=(1238, 516))
-    logger.info(f"当前站点: {reslut[0]['text']}")
-    if name in [item["text"] for item in reslut]:
-        logger.info("已在目标站点")
-        return STATION(True, is_destine=True)
+    if len(reslut) > 0:
+        logger.info(f"当前站点: {reslut[0]['text']}")
+        if name in [item["text"] for item in reslut]:
+            logger.info("已在目标站点")
+            return STATION(True, is_destine=True)
     logger.info("检测到主地图界面，点击地图")
     input_tap((1201, 666))
     time.sleep(1)
@@ -167,7 +168,7 @@ def go_city():
     说明:
         进入城市界面
     """
-    input_tap((1174, 494))
+    input_tap((1270, 494))
     wait("resources/fame.png", cropped_pos1=[25, 634], cropped_pos2=[99, 707])
 
 

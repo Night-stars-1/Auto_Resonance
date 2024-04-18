@@ -1,5 +1,6 @@
 from PyQt5.QtCore import Qt, pyqtSignal
-from qfluentwidgets import PushSettingCard, IndeterminateProgressRing
+from qfluentwidgets import IndeterminateProgressRing, PushSettingCard
+
 
 class PrimaryPushLoadCard(PushSettingCard):
     """Push setting card with primary color"""
@@ -8,6 +9,7 @@ class PrimaryPushLoadCard(PushSettingCard):
         super().__init__(text, icon, title, content, parent)
         self.text = text
         self.spinner = IndeterminateProgressRing(self.button)
+        self.spinner.setStrokeWidth(2)
         self.spinner.setFixedSize(24, 24)
         self.centerProgressRing()
         self.spinner.hide()
@@ -20,7 +22,7 @@ class PrimaryPushLoadCard(PushSettingCard):
         button_size = self.button.size()
         new_x = (button_size.width() - ring_size.width()) // 2
         new_y = (button_size.height() - ring_size.height()) // 2
-        self.spinner.move(new_x+5, new_y)
+        self.spinner.move(new_x + 5, new_y)
 
     def loading(self, loading=True):
         if loading:

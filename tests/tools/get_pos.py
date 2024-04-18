@@ -16,7 +16,7 @@ import cv2
 
 from core.adb import connect, screenshot
 
-connect()
+connect("127.0.0.1:21523")
 
 
 def click_event(event, x, y, flags, param):

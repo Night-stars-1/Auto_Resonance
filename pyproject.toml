@@ -1,25 +1,30 @@
-[tool.poetry]
-name = "auto-resonance"
+[project]
+name = "Auto_Resonance"
 version = "0.1.0"
-description = ""
-authors = ["Night-stars-1 <nujj1042633805@gmail.com>"]
+description = "Default template for PDM package"
+authors = [
+    {name = "Night-stars-1", email = "nujj1042633805@gmail.com"},
+]
+dependencies = [
+    "Pillow==10.3.0",
+    "PyQt-Fluent-Widgets==1.5.4",
+    "cnocr==2.3.0.1",
+    "loguru==0.7.2",
+    "numpy==1.26.4",
+    "onnxruntime==1.17.1",
+    "opencv-python==4.9.0.80",
+    "orjson>=3.10.0",
+    "pydantic>=2.6.4",
+    "pyqt5-qt5==5.15.2",
+]
+requires-python = ">=3.11"
 readme = "README.md"
-package-mode = false
-
-[tool.poetry.dependencies]
-python = "^3.11"
-pillow = "10.3.0"
-pyqt-fluent-widgets = "1.5.4"
-cnocr = "2.3.0.1"
-loguru = "0.7.2"
-numpy = "1.26.4"
-onnxruntime = "1.17.1"
-opencv-python = "4.9.0.80"
-orjson = ">=3.10.0"
-pydantic = ">=2.6.4"
-pyqt5-qt5 = "5.15.2"
-
+license = {text = "MIT"}
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+
+[tool.pdm]
+distribution = true

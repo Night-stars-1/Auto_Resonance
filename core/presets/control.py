@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-04 18:06:25
-LastEditTime: 2024-04-11 22:38:40
+LastEditTime: 2024-04-17 22:53:40
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -10,9 +10,9 @@ from typing import Tuple
 
 from loguru import logger
 
-from ..adb import input_swipe, input_tap, screenshot
+from ..adb import input_tap, screenshot
 from ..exception_handling import get_excption
-from ..image import get_all_color_pos, match_screenshot
+from ..image import get_bgr, match_screenshot
 from ..ocr import predict
 from .decorator import ensure_resources_prefix
 
@@ -37,6 +37,34 @@ def wait(
     for _ in range(trynum):
         result = match_screenshot(screenshot(), image, cropped_pos1, cropped_pos2)
         if result["max_val"] >= threshold:
+            return True
+        time.sleep(1)
+    logger.info(get_excption())
+    return False
+
+
+def wait_gbr(
+    pos: Tuple[int, int],
+    min_gbr: Tuple[int, int, int],
+    max_gbr: Tuple[int, int, int],
+    cropped_pos1: Tuple[int, int] = (0, 0),
+    cropped_pos2: Tuple[int, int] = (0, 0),
+    trynum=10,
+):
+    """
+    说明:
+        等待指定图片出现
+    参数:
+        :param pos: 坐标
+        :param min_gbr: 最小颜色
+        :param max_gbr: 最大颜色
+        :param cropped_pos1: 裁剪坐标
+        :param cropped_pos2: 裁剪坐标
+        :param trynum: 尝试次数
+    """
+    for _ in range(trynum):
+        gbr = get_bgr(screenshot(), pos, cropped_pos1, cropped_pos2)
+        if min_gbr <= gbr <= max_gbr:
             return True
         time.sleep(1)
     logger.info(get_excption())

@@ -113,6 +113,11 @@ class STATION:
         start = time.perf_counter()
         while time.perf_counter() - start < FIGHT_TIME:
             bgrs = get_bgrs(screenshot(), [(1114, 630), (1204, 624), (236, 26)])
+            if [198, 200, 200] <= bgrs[0] <= [202, 204, 204] and [183, 185, 185] <= bgrs[
+                1
+            ] <= [187, 189, 189]:
+                logger.info("检测到执照等级提升")
+                input_tap((1151, 626))
             if [245, 245, 245] <= bgrs[0] <= [255, 255, 255] and [0, 0, 0] <= bgrs[
                 1
             ] <= [

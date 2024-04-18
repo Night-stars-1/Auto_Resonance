@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-10 22:54:08
-LastEditTime: 2024-04-15 13:58:24
+LastEditTime: 2024-04-17 21:57:14
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -181,7 +181,7 @@ class RunningBusinessInterface(ScrollArea):
         self.tiredGroup._adjustViewSize()
         self.levelGroup._adjustViewSize()
 
-        self.bookGroup.setExpand(True)  # 展开进货书折叠栏
+        # self.bookGroup.setExpand(True)  # 展开进货书折叠栏
 
         # add setting card group to layout
         # self.expandLayout.setSpacing(28)

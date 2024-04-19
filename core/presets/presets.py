@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:24:47
-LastEditTime: 2024-04-17 23:07:11
+LastEditTime: 2024-04-19 14:57:58
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -10,6 +10,7 @@ import time
 from loguru import logger
 
 from core import ocr
+from core.utils import compare_ranges
 
 from ..adb import input_swipe, input_tap, screenshot
 from ..image import get_all_color_pos, get_bgrs, match_screenshot
@@ -213,17 +214,15 @@ def wait_fight_end():
     while time.perf_counter() - start < FIGHT_TIME:
         bgrs = get_bgrs(screenshot(), [(1114, 630), (1204, 624), (236, 26)])
         logger.debug(f"等待战斗结束颜色检查: {bgrs}")
-        if [198, 200, 200] <= bgrs[0] <= [202, 204, 204] and [183, 185, 185] <= bgrs[
-            1
-        ] <= [187, 189, 189]:
+        if compare_ranges([198, 200, 200], bgrs[0], [202, 204, 204]) and compare_ranges(
+            [183, 185, 185], bgrs[1], [187, 189, 189]
+        ):
             logger.info("检测到执照等级提升")
             input_tap((1151, 626))
             continue
-        elif [245, 245, 245] <= bgrs[0] <= [255, 255, 255] and [0, 0, 0] <= bgrs[1] <= [
-            10,
-            10,
-            10,
-        ]:
+        elif compare_ranges(
+            [245, 245, 245], bgrs[0], [255, 255, 255]
+        ) and compare_ranges([0, 0, 0], bgrs[1], [10, 10, 10]):
             logger.info("战斗结束")
             input_tap((1151, 626))
             return True

@@ -12,6 +12,7 @@ from loguru import logger
 from core.adb import input_tap, screenshot
 from core.image import get_bgr, get_bgrs, match_screenshot
 from core.models.config import config
+from core.utils import compare_ranges
 
 FIGHT_TIME = 300
 MAP_WAIT_TIME = 3000
@@ -47,24 +48,24 @@ class STATION:
             )
             logger.debug(f"行车检测: {reach_bgrs}")
             if (
-                [8, 168, 234] <= attack_bgrs[0] <= [9, 171, 245]
-                and [8, 168, 234] <= attack_bgrs[1] <= [9, 171, 245]
-                and [8, 168, 234] <= attack_bgrs[2] <= [9, 171, 245]
+                compare_ranges([8, 168, 234], attack_bgrs[0], [9, 171, 245])
+                and compare_ranges([8, 168, 234], attack_bgrs[1], [9, 171, 245])
+                and compare_ranges([8, 168, 234], attack_bgrs[2], [9, 171, 245])
             ):
                 logger.info("检测到拦截，进行攻击")
                 self.join_wait_fight()
-            elif [20, 20, 20] <= reach_bgrs[0] <= [25, 25, 25] and [
-                250,
-                250,
-                250,
-            ] <= reach_bgrs[1] <= [255, 255, 255]:
+            elif compare_ranges(
+                [20, 20, 20], reach_bgrs[0], [25, 25, 25]
+            ) and compare_ranges([250, 250, 250], reach_bgrs[1], [255, 255, 255]):
                 logger.info("站点到达")
                 input_tap((877, 359))
                 self.wait_home()
                 return True
-            elif reach_bgrs[2] == [251, 253, 253] and not (
-                [235, 235, 250] <= reach_bgrs[2] <= [240, 240, 255]
-            ) and config.global_config.isSpeed:
+            elif (
+                reach_bgrs[2] == [251, 253, 253]
+                and not compare_ranges([235, 235, 250], reach_bgrs[2], [240, 240, 255])
+                and config.global_config.isSpeed
+            ):
                 logger.info("点击加速弹丸")
                 input_tap((1061, 657))
             time.sleep(1)
@@ -114,18 +115,10 @@ class STATION:
         start = time.perf_counter()
         while time.perf_counter() - start < FIGHT_TIME:
             bgrs = get_bgrs(screenshot(), [(1114, 630), (1204, 624), (236, 26)])
-            if [198, 200, 200] <= bgrs[0] <= [202, 204, 204] and [183, 185, 185] <= bgrs[
-                1
-            ] <= [187, 189, 189]:
+            if compare_ranges([198, 200, 200], bgrs[0], [202, 204, 204]) and compare_ranges([183, 185, 185], bgrs[1], [187, 189, 189]):
                 logger.info("检测到执照等级提升")
                 input_tap((1151, 626))
-            if [245, 245, 245] <= bgrs[0] <= [255, 255, 255] and [0, 0, 0] <= bgrs[
-                1
-            ] <= [
-                10,
-                10,
-                10,
-            ]:
+            if compare_ranges([245, 245, 245], bgrs[0], [255, 255, 255]) and compare_ranges([0, 0, 0], bgrs[1], [10, 10, 10]):
                 logger.info("战斗结束")
                 time.sleep(0.5)
                 input_tap((1151, 626))

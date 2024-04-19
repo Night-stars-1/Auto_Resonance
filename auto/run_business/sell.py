@@ -13,6 +13,7 @@ from core.adb import input_tap, screenshot
 from core.exception_handling import get_excption
 from core.image import get_bgr
 from core.ocr import predict
+from core.utils import compare_ranges
 
 
 def sell_business(num=20):
@@ -52,7 +53,7 @@ def click_bargain_button(num=20):
         while time.perf_counter() - start < 5:
             bgr = get_bgr(screenshot(), (1176, 461))
             logger.debug(f"议价界面颜色检查: {bgr}")
-            if [0, 170, 240] <= bgr <= [0, 183, 253]:
+            if compare_ranges([0, 170, 240], bgr, [0, 183, 253]):
                 input_tap((1177, 461))
                 time.sleep(0.5)
             elif bgr == [251, 253, 253]:

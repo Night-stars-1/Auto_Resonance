@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:14:29
-LastEditTime: 2024-04-19 13:30:29
+LastEditTime: 2024-04-19 13:53:57
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -60,7 +60,6 @@ def run(
     station_level: dict,
     city_tired: dict,
     max_goods_num: int,
-    is_speed: bool,
     route: RoutesModel = None,
     type_: bool = False,
     uuid: str = "",

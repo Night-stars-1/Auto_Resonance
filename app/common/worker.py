@@ -1,11 +1,12 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-06 23:29:48
-LastEditTime: 2024-04-12 00:59:07
+LastEditTime: 2024-04-19 13:24:00
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
 from PyQt5.QtCore import QThread, pyqtSignal
+from loguru import logger
 
 from core.exceptions import StopExecution
 
@@ -27,6 +28,8 @@ class Worker(QThread):
             self.result.emit(result)
         except StopExecution:
             pass
+        except Exception:
+            logger.exception("崩溃信息:")
 
     def stop(self):
         self.stop_func()

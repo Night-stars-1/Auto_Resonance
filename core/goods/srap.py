@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-08 22:57:00
-LastEditTime: 2024-04-14 20:47:23
+LastEditTime: 2024-04-19 13:40:48
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -11,7 +11,7 @@ from typing import Dict
 import orjson
 import requests
 
-from ..models.srap import SrapRequestModel, SrapRequestGzipModel
+from ..models.srap import SrapRequestGzipModel, SrapRequestModel
 from .shop import SHOP
 
 

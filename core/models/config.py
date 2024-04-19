@@ -43,6 +43,11 @@ class RSBModel(BaseModel):
     num: int = 1
     """刷取次数"""
 
+class GlobalConfigModel(BaseModel):
+    """全局配置模型"""
+
+    isSpeed: bool = True
+    """是否使用加速弹丸"""
 
 class Config(BaseModel):
     """自动程序配置"""
@@ -53,6 +58,7 @@ class Config(BaseModel):
     """铁安局配置"""
     rest_area: RestAreaModel = RestAreaModel()
     """休息区配置"""
+    global_config: GlobalConfigModel = GlobalConfigModel()
 
     def save_config(self):
         """保存配置"""

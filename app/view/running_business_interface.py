@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-10 22:54:08
-LastEditTime: 2024-04-17 21:57:14
+LastEditTime: 2024-04-19 13:26:59
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -200,7 +200,6 @@ class RunningBusinessInterface(ScrollArea):
     def createSuccessInfoBar(self):
 
         def result(route):
-            self.testCard.loading(False)
             w = Dialog("详细", show(route), self)
             if w.exec():
                 signalBus.switchToCard.emit("LoggerInterface")
@@ -219,6 +218,9 @@ class RunningBusinessInterface(ScrollArea):
                     uuid=cfg.uuid.value,
                 )
                 self.workers.start()
+                self.workers.finished.connect(
+                    lambda: self.on_worker_finished(self.workers)
+                )
 
         self.testCard.loading(True)
         from auto.run_business import run
@@ -244,6 +246,7 @@ class RunningBusinessInterface(ScrollArea):
                 max_goods_num=max_goods_num,
             )
             self.workers.start()
+            self.workers.finished.connect(lambda: self.on_worker_finished(self.workers))
             self.workers.result.connect(result)
         else:
             self.workers = Worker(
@@ -256,6 +259,7 @@ class RunningBusinessInterface(ScrollArea):
                 max_goods_num=max_goods_num,
             )
             self.workers.start()
+            self.workers.finished.connect(lambda: self.on_worker_finished(self.workers))
             self.workers.result.connect(result)
 
         """
@@ -269,3 +273,9 @@ class RunningBusinessInterface(ScrollArea):
             parent=self
         )
         """
+
+    def on_worker_finished(self, worker: Worker):
+        # 线程完成时调用
+        self.testCard.loading(False)
+        worker.deleteLater()  # 安全删除Worker对象
+        self.workers = None

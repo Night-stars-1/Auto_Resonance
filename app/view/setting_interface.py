@@ -1,19 +1,23 @@
+"""
+Author: Night-stars-1 nujj1042633805@gmail.com
+Date: 2024-04-07 23:14:47
+LastEditTime: 2024-04-19 13:31:52
+LastEditors: Night-stars-1 nujj1042633805@gmail.com
+"""
+
 # coding:utf-8
 from loguru import logger
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QLabel, QWidget
 from qfluentwidgets import ExpandLayout
 from qfluentwidgets import FluentIcon as FIF
-from qfluentwidgets import (
-    ScrollArea,
-    SettingCardGroup,
-    SwitchSettingCard,
-)
+from qfluentwidgets import ScrollArea, SettingCardGroup, SwitchSettingCard
 
 from ..common.config import cfg
 from ..common.style_sheet import StyleSheet
 from ..components.settings.line_edit_setting_card import LineEditSettingCard
 
+from core.models.config import config
 
 class SettingInterface(ScrollArea):
     """Setting interface"""
@@ -57,7 +61,19 @@ class SettingInterface(ScrollArea):
             "ADB地址",
             parent=self.musicInThisPCGroup,
         )
+        self.isSpeedCard = SwitchSettingCard(
+            FIF.PALETTE,
+            "是否自动加速",
+            "是否自动使用加速弹丸",
+            parent=self.musicInThisPCGroup,
+        )
+        self.isSpeedCard.setValue(config.global_config.isSpeed)
+        self.isSpeedCard.switchButton.checkedChanged.connect(self.__onCheckedChanged)
         self.__initWidget()
+
+    def __onCheckedChanged(self, isChecked: bool):
+        config.global_config.isSpeed = isChecked
+        config.save_config()
 
     def __initWidget(self):
         self.resize(1000, 800)
@@ -83,6 +99,7 @@ class SettingInterface(ScrollArea):
         self.musicInThisPCGroup.addSettingCard(self.uuidCard)
         self.musicInThisPCGroup.addSettingCard(self.adbPathCard)
         self.musicInThisPCGroup.addSettingCard(self.adbOrderCard)
+        self.musicInThisPCGroup.addSettingCard(self.isSpeedCard)
 
         # add setting card group to layout
         self.expandLayout.setSpacing(28)

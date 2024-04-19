@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:24:47
-LastEditTime: 2024-04-12 21:46:28
+LastEditTime: 2024-04-19 13:39:36
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -11,6 +11,7 @@ from loguru import logger
 
 from core.adb import input_tap, screenshot
 from core.image import get_bgr, get_bgrs, match_screenshot
+from core.models.config import config
 
 FIGHT_TIME = 300
 MAP_WAIT_TIME = 3000
@@ -63,7 +64,7 @@ class STATION:
                 return True
             elif reach_bgrs[2] == [251, 253, 253] and not (
                 [235, 235, 250] <= reach_bgrs[2] <= [240, 240, 255]
-            ):
+            ) and config.global_config.isSpeed:
                 logger.info("点击加速弹丸")
                 input_tap((1061, 657))
             time.sleep(1)

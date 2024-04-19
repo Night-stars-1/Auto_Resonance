@@ -52,6 +52,7 @@ class Config(RunningBusinessConfig):
     # uuid
     uuid = ConfigItem("Global", "uuid", "", None)
     goodsType = ConfigItem("Global", "goodsType", False, BoolValidator())
+    isSpeed = ConfigItem("Global", "isSpeed", True, BoolValidator())
     adbPath = ConfigItem("Global", "adbPath", "resources\\lib\\adb", None)
     adbOrder = ConfigItem("Global", "adbOrder", "127.0.0.1:7555", None)
 

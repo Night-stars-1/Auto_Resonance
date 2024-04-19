@@ -74,7 +74,7 @@ if __name__ == "__main__":
     connect("127.0.0.1:16384")
     # go_business("buy")
     buy_business(
-        ["图形加速卡"],
+        ["火澄石", "负片炮弹", "钛合金"],
         [],
         0,
         max_book=0,

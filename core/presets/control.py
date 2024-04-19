@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-04 18:06:25
-LastEditTime: 2024-04-19 13:13:04
+LastEditTime: 2024-04-19 14:57:32
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -9,6 +9,8 @@ import time
 from typing import Tuple
 
 from loguru import logger
+
+from core.utils import compare_ranges
 
 from ..adb import input_tap, screenshot
 from ..exception_handling import get_excption
@@ -64,7 +66,7 @@ def wait_gbr(
     """
     for _ in range(trynum):
         gbr = get_bgr(screenshot(), pos, cropped_pos1, cropped_pos2)
-        if min_gbr <= gbr <= max_gbr:
+        if compare_ranges(min_gbr, gbr, max_gbr):
             return True
         time.sleep(1)
     logger.info(get_excption())

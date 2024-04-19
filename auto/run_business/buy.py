@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-04 17:54:58
-LastEditTime: 2024-04-19 01:46:12
+LastEditTime: 2024-04-19 15:04:56
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -17,6 +17,7 @@ from core.exception_handling import get_excption
 from core.image import crop_image, get_bgr, get_hsv, show_image
 from core.ocr import predict
 from core.presets import click, find_text, ocr_click
+from core.utils import compare_ranges
 
 
 def buy_business(
@@ -79,8 +80,18 @@ def buy_good(good: str, book: int, max_book: int, again: bool = False):
         pos, image = find_good(good)  # 点击失败查找并点击商品
     if pos:
         hsv = get_hsv(image, (564, 667 if pos[1] + 22 > 720 else pos[1] + 22))
+        """
+        cv.rectangle(
+            image,
+            (564, 667 if pos[1] + 22 > 720 else int(pos[1] + 22)),  # 左上角坐标
+            (564, 667 if pos[1] + 22 > 720 else int(pos[1] + 22)),  # 右下角坐标
+            (0, 255, 0),  # 颜色 (绿色，使用BGR格式)
+            5,  # 线条粗细
+        )
+        show_image(image)
+        """
         logger.debug(f"是否进货检测: {hsv}")
-        if [249, 250, 250] <= hsv <= [254, 255, 255]:
+        if compare_ranges([90, 0, 250], hsv, [100, 10, 255]):
             if book < max_book:
                 use_book(pos, book)
                 return (
@@ -175,7 +186,7 @@ def click_bargain_button(num=20):
             return False
         bgr = get_bgr(screenshot(), (1176, 461))
         logger.debug(f"议价界面颜色检查: {bgr}")
-        if [0, 130, 240] <= bgr <= [2, 133, 253]:
+        if compare_ranges([0, 130, 240], bgr, [2, 133, 253]):
             input_tap((1177, 461))
             time.sleep(0.5)
         elif bgr == [251, 253, 253]:

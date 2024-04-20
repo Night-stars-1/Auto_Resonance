@@ -18,7 +18,7 @@ ROOT_PATH = Path().resolve()
 """项目根目录路径"""
 CONFIG_PATH = ROOT_PATH / "config.json"
 """自动程序配置文件路径"""
-os.path.exists(CONFIG_PATH) or os.makedirs(CONFIG_PATH.parent.absolute())
+os.path.exists(CONFIG_PATH.parent.absolute()) or os.makedirs(CONFIG_PATH.parent.absolute())
 
 class RestAreaModel(BaseModel):
     """休息区模型"""

@@ -8,7 +8,16 @@ LastEditors: Night-stars-1 nujj1042633805@gmail.com
 import platform
 import random
 import time
-from subprocess import DEVNULL, run
+from subprocess import DEVNULL
+from subprocess import run as _run
+
+
+def run(*args, **kwargs):
+    if platform.system() == "Windows":
+        kwargs["shell"] = True
+    else:
+        kwargs["shell"] = False
+    return _run(*args, **kwargs)
 
 import cv2 as cv
 import numpy as np
@@ -34,10 +43,7 @@ def connect(order="127.0.0.1:7555", path="resources\\lib\\adb"):
     ADBPATH = path
     STOP = False
     shell = [ADBPATH, "connect", ADBOREDER]
-    if platform.system() == "Windows":
-        result = run(shell, shell=True, capture_output=True, check=False)
-    else:
-        result = run(shell, capture_output=True, check=False)
+    result = run(shell, shell=True, capture_output=True, check=False)
     status = "already connected" in str(result.stdout) or "connected to" in str(
         result.stdout
     )

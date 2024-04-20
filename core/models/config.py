@@ -6,9 +6,6 @@ LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
 import json
-
-# TODO: 将配置文件的数据模型方块化
-import os
 from pathlib import Path
 from typing import Dict, List
 

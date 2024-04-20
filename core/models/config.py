@@ -1,13 +1,14 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-08 17:45:06
-LastEditTime: 2024-04-14 02:55:29
+LastEditTime: 2024-04-21 02:07:53
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
+import json
+
 # TODO: 将配置文件的数据模型方块化
 import os
-import json
 from pathlib import Path
 from typing import Dict, List
 
@@ -16,9 +17,10 @@ from pydantic import BaseModel, Field
 
 ROOT_PATH = Path().resolve()
 """项目根目录路径"""
-CONFIG_PATH = ROOT_PATH / "config.json"
+CONFIG_PATH = ROOT_PATH / "config" / "config.json"
 """自动程序配置文件路径"""
-os.path.exists(CONFIG_PATH.parent.absolute()) or os.makedirs(CONFIG_PATH.parent.absolute())
+CONFIG_PATH.parent.exists() or CONFIG_PATH.parent.mkdir(parents=True, exist_ok=True)
+
 
 class RestAreaModel(BaseModel):
     """休息区模型"""
@@ -43,11 +45,13 @@ class RSBModel(BaseModel):
     num: int = 1
     """刷取次数"""
 
+
 class GlobalConfigModel(BaseModel):
     """全局配置模型"""
 
     isSpeed: bool = True
     """是否使用加速弹丸"""
+
 
 class Config(BaseModel):
     """自动程序配置"""
@@ -83,7 +87,6 @@ else:
     config = Config()
     try:
         str_data = config.model_dump_json(indent=4)
-        CONFIG_PATH.parent.mkdir(parents=True, exist_ok=True)
         with open(CONFIG_PATH, "w", encoding="utf-8") as f:
             f.write(str_data)
     except (AttributeError, TypeError, ValueError, PermissionError):

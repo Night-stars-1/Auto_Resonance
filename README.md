@@ -25,6 +25,10 @@
 - `python gui.py`
 * ps: 推荐使用**MUMU模拟器**并把画质全调最低，模拟器分辨率调整为1280:720
 
+## 常见问题
+- `ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)`
+  - 如果你使用了新版火绒（≥6.0），请在设置-病毒防护-web扫描中添加本程序为受信任程序，或关闭加密链接扫描功能。
+
 ## 开发指南
 - 施工中
 

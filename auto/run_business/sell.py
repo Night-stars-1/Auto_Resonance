@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 15:17:19
-LastEditTime: 2024-04-12 22:02:20
+LastEditTime: 2024-04-20 23:24:36
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -40,29 +40,27 @@ def is_empty_goods():
 
 
 def click_bargain_button(num=20):
-    for _ in range(5):
+    start = time.perf_counter()
+    while time.perf_counter() - start < 15:
         reslut = predict(screenshot(), (993, 448), (1029, 477))
-        if len(reslut) > 0:
-            bargain = reslut[0]["text"]
-            logger.info(f"抬价幅度: {bargain}")
-            if num == float(bargain[:-1]):
-                return True
+        bargain = reslut[0]["text"][:-1] if len(reslut) > 0 else None
+        logger.info(f"抬价幅度: {bargain}%")
+        if bargain and num <= float(bargain):
+            return True
         if get_excption() == "议价次数不足":
             return False
-        start = time.perf_counter()
-        while time.perf_counter() - start < 5:
-            bgr = get_bgr(screenshot(), (1176, 461))
-            logger.debug(f"议价界面颜色检查: {bgr}")
-            if compare_ranges([0, 170, 240], bgr, [0, 183, 253]):
-                input_tap((1177, 461))
-                time.sleep(0.5)
-            elif bgr == [251, 253, 253]:
-                logger.info("议价次数不足")
-                return True
-            elif bgr == [62, 63, 63]:
-                logger.info("疲劳不足")
-                input_tap((83, 36))
-                return True
+        bgr = get_bgr(screenshot(), (1176, 461))
+        logger.debug(f"抬价界面颜色检查: {bgr}")
+        if compare_ranges([0, 170, 240], bgr, [0, 183, 253]):
+            input_tap((1177, 461))
+            time.sleep(0.5)
+        elif bgr == [251, 253, 253]:
+            logger.info("议价次数不足")
+            return True
+        elif bgr == [62, 63, 63]:
+            logger.info("疲劳不足")
+            input_tap((83, 36))
+            return True
     return False
 
 

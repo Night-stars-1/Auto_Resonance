@@ -20,8 +20,10 @@ from qfluentwidgets import (
     qconfig,
 )
 
-from .running_business_config import RunningBusinessConfig
 from version import __version__
+
+from .running_business_config import RunningBusinessConfig
+
 
 class Language(Enum):
     """Language enumeration"""
@@ -75,4 +77,4 @@ REPO_URL = "https://github.com/Night-stars-1/Auto_Resonance"
 
 cfg = Config()
 cfg.themeMode.value = Theme.AUTO
-qconfig.load("app/config/config.json", cfg)
+qconfig.load("config/app.json", cfg)

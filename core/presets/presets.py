@@ -182,13 +182,13 @@ def go_outlets(name: str):
     """
     go_city()
     logger.info(f"前往 => {name}")
-    if result := blurry_ocr_click(name, excursion_pos=(-2, 30), log=False):
+    if result := blurry_ocr_click(name, excursion_pos=(-2, 50), log=False):
         return result
     input_swipe((969, 369), (457, 340), time=500)
-    if result := blurry_ocr_click(name, excursion_pos=(-2, 30), log=False):
+    if result := blurry_ocr_click(name, excursion_pos=(-2, 50), log=False):
         return result
     input_swipe((641, 246), (637, 615), time=500)
-    if result := blurry_ocr_click(name, excursion_pos=(-2, 30)):
+    if result := blurry_ocr_click(name, excursion_pos=(-2, 50)):
         return result
 
 

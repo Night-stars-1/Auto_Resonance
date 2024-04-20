@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-04 17:56:16
-LastEditTime: 2024-04-19 13:11:27
+LastEditTime: 2024-04-20 19:45:13
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -74,7 +74,7 @@ if __name__ == "__main__":
     connect("127.0.0.1:16384")
     # go_business("buy")
     buy_business(
-        ["火澄石", "负片炮弹", "钛合金"],
+        ["扬声器"],
         [],
         0,
         max_book=0,

@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-02 18:52:36
-LastEditTime: 2024-04-14 16:09:04
+LastEditTime: 2024-04-20 21:30:41
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -32,7 +32,7 @@ app.setAttribute(Qt.AA_DontCreateNativeWidgetSiblings)
 
 # create main window
 w = MainWindow()
-from main import run, stop
+# from main import run, stop
 
 w.show()
 

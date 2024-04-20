@@ -11,8 +11,8 @@ from typing import Literal
 from loguru import logger
 
 from core.adb import connect, input_tap, screenshot
-from core.goods.kmou import get_goods_info as get_goods_info_kmou
-from core.goods.srap import get_goods_info as get_goods_info_srap
+from core.api.kmou import get_goods_info as get_goods_info_kmou
+from core.api.srap import get_goods_info as get_goods_info_srap
 from core.image import get_bgr
 from core.models.city_goods import RoutesModel
 from core.presets import click_station, get_city, go_home, go_outlets, wait_gbr

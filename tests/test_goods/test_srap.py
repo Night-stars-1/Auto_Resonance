@@ -16,9 +16,9 @@ import logging
 
 LOGGER = logging.getLogger(__name__)
 from app.common.config import cfg
-from core.goods.kmou import get_goods_info as get_goods_info_kmou
+from core.api.kmou import get_goods_info as get_goods_info_kmou
 from core.goods.shop import show
-from core.goods.srap import get_goods_info as get_goods_info_srap
+from core.api.srap import get_goods_info as get_goods_info_srap
 
 
 def test_get_goods_info_srap():

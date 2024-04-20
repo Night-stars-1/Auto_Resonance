@@ -1,14 +1,18 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-02 19:12:22
-LastEditTime: 2024-04-12 01:43:08
+LastEditTime: 2024-04-20 23:46:33
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
-from PyQt5.QtCore import QRectF, Qt
+from PyQt5.QtCore import QRectF, Qt, QTimer
 from PyQt5.QtGui import QBrush, QColor, QLinearGradient, QPainter, QPainterPath, QPixmap
 from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget
 from qfluentwidgets import FluentIcon, ScrollArea, isDarkTheme
+from qfluentwidgets.window.stacked_widget import StackedWidget
+
+from app.components.homes.title_brogress_bars_card import TitleProgressBarsCard
+from core.api.srap import get_boss
 
 from ..common.config import REPO_URL, cfg
 from ..common.style_sheet import StyleSheet
@@ -25,21 +29,38 @@ class BannerWidget(QWidget):
         self.setFixedHeight(336)
 
         self.vBoxLayout = QVBoxLayout(self)
-        self.galleryLabel = QLabel("黑月无人驾驶", self)
+        self.titleLabel = QLabel("黑月无人驾驶", self)
         self.banner = QPixmap(":/gallery/images/header1.png")
         self.linkCardView = LinkCardView(self)
 
-        self.galleryLabel.setObjectName("galleryLabel")
+        self.__initWidget()
+        self.loadSamples()
+
+        # 初始化定时器
+        QTimer.singleShot(0, self.updateProgress)  # 手动触发一次
+        self.timer = QTimer(self)
+        self.timer.setInterval(10000)  # 设置定时器周期为10000毫秒（10秒）
+        self.timer.timeout.connect(self.updateProgress)  # 连接定时器信号到槽函数
+        self.timer.start()  # 启动定时器
+
+    def __initWidget(self):
+        self.titleLabel.setObjectName("galleryLabel")
 
         self.vBoxLayout.setSpacing(0)
         self.vBoxLayout.setContentsMargins(0, 20, 0, 0)
-        self.vBoxLayout.addWidget(self.galleryLabel)
+        self.vBoxLayout.addWidget(self.titleLabel)
         self.vBoxLayout.addWidget(self.linkCardView, 1, Qt.AlignBottom)
         self.vBoxLayout.setAlignment(Qt.AlignLeft | Qt.AlignTop)
 
+    def loadSamples(self):
         self.linkCardView.addCard(
             FluentIcon.GITHUB, "GitHub repo", "黑月无人驾驶", REPO_URL
         )
+
+        self.bossCard = TitleProgressBarsCard(
+            "世界BOSS信息", [], self.linkCardView.view
+        )
+        self.linkCardView.hBoxLayout.addWidget(self.bossCard, 0, Qt.AlignLeft)
 
     def paintEvent(self, e):
         super().paintEvent(e)
@@ -72,6 +93,12 @@ class BannerWidget(QWidget):
         # 绘制图片
         pixmap = self.banner.scaled(self.size(), transformMode=Qt.SmoothTransformation)
         painter.fillPath(path, QBrush(pixmap))
+
+    def updateProgress(self):
+        stackedWidget: StackedWidget = self.window().stackedWidget
+        if stackedWidget.currentIndex() == 0:
+            boss_data = get_boss()
+            self.bossCard.setValue(boss_data)
 
 
 class HomeInterface(ScrollArea):

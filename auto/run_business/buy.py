@@ -180,7 +180,7 @@ def click_bargain_button(num=20):
         reslut = predict(screenshot(), (993, 448), (1029, 477))
         bargain = reslut[0]["text"][:-1] if len(reslut) > 0 else None
         logger.info(f"降价幅度: {bargain}%")
-        if bargain and num >= float(bargain):
+        if bargain and num <= float(bargain):
             return True
         if get_excption() == "议价次数不足":
             return False

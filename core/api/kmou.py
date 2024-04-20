@@ -12,7 +12,7 @@ import requests
 from core.models.city_goods import SkillLevelModel
 
 from ..models.kmou import KMouRequestModel
-from .shop import SHOP
+from ..goods.shop import SHOP
 
 
 def get_goods_info(

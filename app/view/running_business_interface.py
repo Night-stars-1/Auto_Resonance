@@ -12,8 +12,8 @@ from qfluentwidgets import Dialog, ExpandLayout, ExpandSettingCard
 from qfluentwidgets import FluentIcon as FIF
 from qfluentwidgets import PrimaryPushSettingCard, ScrollArea
 
-from core.goods.kmou import get_goods_info as get_goods_info_kmou
-from core.goods.srap import get_goods_info as get_goods_info_srap
+from core.api.kmou import get_goods_info as get_goods_info_kmou
+from core.api.srap import get_goods_info as get_goods_info_srap
 
 from ..common.config import cfg
 from ..common.signal_bus import signalBus

@@ -1,14 +1,14 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-04 17:56:16
-LastEditTime: 2024-04-19 13:11:27
+LastEditTime: 2024-04-21 00:05:43
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
 from loguru import logger
 
 from auto.run_business import run
-from auto.run_business.main import buy_business, go_business
+from auto.run_business.main import buy_business, click_station, go_business
 from core.adb import connect
 
 if __name__ == "__main__1":
@@ -73,9 +73,12 @@ if __name__ == "__main__1":
 if __name__ == "__main__":
     connect("127.0.0.1:16384")
     # go_business("buy")
+    """
     buy_business(
-        ["火澄石", "负片炮弹", "钛合金"],
+        ["扬声器"],
         [],
         0,
         max_book=0,
     )
+    """
+    click_station("荒原站")

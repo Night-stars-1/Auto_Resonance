@@ -5,6 +5,7 @@ LastEditTime: 2024-04-14 23:11:49
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
+import platform
 import random
 import time
 from subprocess import DEVNULL, run
@@ -33,7 +34,10 @@ def connect(order="127.0.0.1:7555", path="resources\\lib\\adb"):
     ADBPATH = path
     STOP = False
     shell = [ADBPATH, "connect", ADBOREDER]
-    result = run(shell, shell=True, capture_output=True, check=False)
+    if platform.system() == "Windows":
+        result = run(shell, shell=True, capture_output=True, check=False)
+    else:
+        result = run(shell, capture_output=True, check=False)
     status = "already connected" in str(result.stdout) or "connected to" in str(
         result.stdout
     )

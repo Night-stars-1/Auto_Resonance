@@ -1,9 +1,15 @@
-# coding:utf-8
-from PyQt5.QtCore import Qt, QUrl
-from PyQt5.QtGui import QPixmap, QDesktopServices
-from PyQt5.QtWidgets import QFrame, QLabel, QVBoxLayout, QWidget, QHBoxLayout
+"""
+Author: Night-stars-1 nujj1042633805@gmail.com
+Date: 2024-04-02 19:13:20
+LastEditTime: 2024-04-21 20:06:47
+LastEditors: Night-stars-1 nujj1042633805@gmail.com
+"""
 
-from qfluentwidgets import IconWidget, FluentIcon, TextWrap, SingleDirectionScrollArea
+from PyQt5.QtCore import Qt, QUrl
+from PyQt5.QtGui import QDesktopServices, QPixmap
+from PyQt5.QtWidgets import QFrame, QHBoxLayout, QLabel, QVBoxLayout, QWidget
+from qfluentwidgets import FluentIcon, IconWidget, SingleDirectionScrollArea, TextWrap
+
 from ..common.style_sheet import StyleSheet
 
 
@@ -27,6 +33,7 @@ class LinkCard(QFrame):
         self.urlWidget.setFixedSize(16, 16)
 
         self.vBoxLayout = QVBoxLayout(self)
+
         self.vBoxLayout.setSpacing(0)
         self.vBoxLayout.setContentsMargins(24, 24, 0, 13)
         self.vBoxLayout.addWidget(self.iconWidget)

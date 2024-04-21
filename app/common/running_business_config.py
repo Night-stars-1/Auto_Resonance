@@ -15,7 +15,9 @@ SKILLS = [
     "雷火",
     "黛丝莉",
     "艾略特",
+    "静流",
     "多萝西",
+    "卡莲",
     "星花",
     "瑞秋",
     "菲妮娅",
@@ -27,7 +29,10 @@ SKILLS = [
     "隼",
     "奈弥",
     "伊尔",
+    "甘雅",
+    "妮蔻拉",
     "卡洛琳",
+    "海因里希",
 ]
 
 
@@ -53,7 +58,9 @@ class RunningBusinessConfig(QConfig):
     雷火 = ConfigItem("SkillLevel", "雷火", 0, None)
     黛丝莉 = ConfigItem("SkillLevel", "黛丝莉", 0, None)
     艾略特 = ConfigItem("SkillLevel", "艾略特", 0, None)
+    静流 = ConfigItem("SkillLevel", "静流", 0, None)
     多萝西 = ConfigItem("SkillLevel", "多萝西", 0, None)
+    卡莲 = ConfigItem("SkillLevel", "卡莲", 0, None)
     星花 = ConfigItem("SkillLevel", "星花", 0, None)
     瑞秋 = ConfigItem("SkillLevel", "瑞秋", 0, None)
     菲妮娅 = ConfigItem("SkillLevel", "菲妮娅", 0, None)
@@ -65,7 +72,10 @@ class RunningBusinessConfig(QConfig):
     隼 = ConfigItem("SkillLevel", "隼", 0, None)
     奈弥 = ConfigItem("SkillLevel", "奈弥", 0, None)
     伊尔 = ConfigItem("SkillLevel", "伊尔", 0, None)
+    甘雅 = ConfigItem("SkillLevel", "甘雅", 0, None)
+    妮蔻拉 = ConfigItem("SkillLevel", "妮蔻拉", 0, None)
     卡洛琳 = ConfigItem("SkillLevel", "卡洛琳", 0, None)
+    海因里希 = ConfigItem("SkillLevel", "海因里希", 0, None)
 
     七号自由港砍抬疲劳 = ConfigItem("CityTired", "7号自由港", 30, None)
     澄明数据中心砍抬疲劳 = ConfigItem("CityTired", "澄明数据中心", 30, None)

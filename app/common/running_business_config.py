@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-11 20:58:19
-LastEditTime: 2024-04-14 02:37:43
+LastEditTime: 2024-04-21 21:58:00
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -77,15 +77,17 @@ class RunningBusinessConfig(QConfig):
     卡洛琳 = ConfigItem("SkillLevel", "卡洛琳", 0, None)
     海因里希 = ConfigItem("SkillLevel", "海因里希", 0, None)
 
-    七号自由港砍抬疲劳 = ConfigItem("CityTired", "7号自由港", 30, None)
-    澄明数据中心砍抬疲劳 = ConfigItem("CityTired", "澄明数据中心", 30, None)
-    阿妮塔战备工厂砍抬疲劳 = ConfigItem("CityTired", "阿妮塔战备工厂", 30, None)
-    阿妮塔能源研究所砍抬疲劳 = ConfigItem("CityTired", "阿妮塔能源研究所", 30, None)
-    淘金乐园砍抬疲劳 = ConfigItem("CityTired", "淘金乐园", 30, None)
-    曼德矿场砍抬疲劳 = ConfigItem("CityTired", "曼德矿场", 30, None)
-    荒原站砍抬疲劳 = ConfigItem("CityTired", "荒原站", 30, None)
-    铁盟哨站砍抬疲劳 = ConfigItem("CityTired", "铁盟哨站", 30, None)
-    修格里城砍抬疲劳 = ConfigItem("CityTired", "修格里城", 30, None)
+    七号自由港砍抬次数 = ConfigItem("NegotiatePrice", "7号自由港", 0, None)
+    澄明数据中心砍抬次数 = ConfigItem("NegotiatePrice", "澄明数据中心", 0, None)
+    阿妮塔战备工厂砍抬次数 = ConfigItem("NegotiatePrice", "阿妮塔战备工厂", 0, None)
+    阿妮塔能源研究所砍抬次数 = ConfigItem("NegotiatePrice", "阿妮塔能源研究所", 0, None)
+    淘金乐园砍抬次数 = ConfigItem("NegotiatePrice", "淘金乐园", 0, None)
+    曼德矿场砍抬次数 = ConfigItem("NegotiatePrice", "曼德矿场", 0, None)
+    荒原站砍抬次数 = ConfigItem("NegotiatePrice", "荒原站", 0, None)
+    铁盟哨站砍抬次数 = ConfigItem("NegotiatePrice", "铁盟哨站", 0, None)
+    修格里城砍抬次数 = ConfigItem("NegotiatePrice", "修格里城", 0, None)
+    buyTired = ConfigItem("NegotiatePrice", "buyTired", 8, None)
+    sellTired = ConfigItem("NegotiatePrice", "sellTired", 8, None)
 
     七号自由港声望 = ConfigItem("StationLevel", "7号自由港", 1, None)
     澄明数据中心声望 = ConfigItem("StationLevel", "澄明数据中心", 1, None)

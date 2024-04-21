@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-04 17:54:58
-LastEditTime: 2024-04-19 15:04:56
+LastEditTime: 2024-04-21 23:15:17
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -15,7 +15,7 @@ from loguru import logger
 from core.adb import input_swipe, input_tap, screenshot
 from core.exception_handling import get_excption
 from core.image import crop_image, get_bgr, get_hsv, show_image
-from core.ocr import predict
+from core.ocr import number_predict, predict
 from core.presets import click, find_text, ocr_click
 from core.utils import compare_ranges
 
@@ -23,7 +23,7 @@ from core.utils import compare_ranges
 def buy_business(
     primary_goods: List[str],
     secondary_goods: List[str],
-    num: int = 20,
+    num: int = 0,
     max_book: int = 0,
 ):
     """
@@ -32,7 +32,7 @@ def buy_business(
     参数:
         :param primary_goods: 主要商品列表
         :param secondary_goods: 次要商品列表
-        :param num: 期望议价的价格
+        :param num: 议价的次数
         :param max_book: 最大使用进货书量
     """
 
@@ -168,24 +168,27 @@ def get_boatload():
     return int(boatload * 100)
 
 
-def click_bargain_button(num=20):
+def click_bargain_button(num=0):
     """
     说明:
         点击议价按钮
     参数:
-        :param num: 期望议价的价格
+        :param num: 议价次数
     """
     start = time.perf_counter()
+    old_bargain = 0
     while time.perf_counter() - start < 15:
-        reslut = predict(screenshot(), (993, 448), (1029, 477))
-        bargain = reslut[0]["text"][:-1] if len(reslut) > 0 else None
-        logger.info(f"降价幅度: {bargain}%")
-        if bargain and num <= float(bargain):
+        reslut = number_predict(screenshot(), (988, 450), (1042, 475))
+        bargain = reslut[0]["text"] if len(reslut) > 0 else old_bargain
+        logger.info(f"降价幅度: {bargain}% 剩余次数: {num}")
+        if bargain != old_bargain:
+            num -= 1
+        if num <= 0:
             return True
         if get_excption() == "议价次数不足":
             return False
         bgr = get_bgr(screenshot(), (1176, 461))
-        logger.debug(f"议价界面颜色检查: {bgr}")
+        logger.debug(f"降价界面颜色检查: {bgr}")
         if compare_ranges([0, 130, 240], bgr, [2, 133, 253]):
             input_tap((1177, 461))
             time.sleep(0.5)

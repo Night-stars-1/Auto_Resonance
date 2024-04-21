@@ -63,7 +63,7 @@ def test_get_goods_info_srap():
             "曼德矿场": 12,
             "澄明数据中心": 16,
         },
-        city_tired={
+        negotiate_price={
             "7号自由港": 30,
             "修格里城": 30,
             "曼德矿场": 30,
@@ -123,7 +123,7 @@ def test_get_goods_info_kmou():
             "曼德矿场": 12,
             "澄明数据中心": 16,
         },
-        city_tired={
+        negotiate_price={
             "7号自由港": 30,
             "修格里城": 30,
             "曼德矿场": 30,

@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:1c01e66790abc569b52b366bd1768bff38289f15ca379fe1d7edb9c61a6aa7b1"
+content_hash = "sha256:e975852ad33e1c361c512806f66e1541a7e02e6adb06940b00383404e21650fe"
 
 [[package]]
 name = "aiohttp"
@@ -203,7 +203,7 @@ files = [
 
 [[package]]
 name = "cnocr"
-version = "2.3.0.1"
+version = "2.3.0.2"
 summary = "Python3 package for Chinese/English OCR, with small pretrained models"
 groups = ["default"]
 dependencies = [
@@ -220,8 +220,8 @@ dependencies = [
     "wandb",
 ]
 files = [
-    {file = "cnocr-2.3.0.1-py3-none-any.whl", hash = "sha256:edfcce581900facfe113d18272b00d4155d2410ab0ccd8696936a03bba5c3f3c"},
-    {file = "cnocr-2.3.0.1.tar.gz", hash = "sha256:b1cf6b611e3a58d719ab1cdd9b24694a1162681dac38c7a44223e4a2bcbb6404"},
+    {file = "cnocr-2.3.0.2-py3-none-any.whl", hash = "sha256:2cc5c7bd9c8bc82bfa629a924e117d52c9fcd8166c8144a112f79eb6cee01e66"},
+    {file = "cnocr-2.3.0.2.tar.gz", hash = "sha256:916925d90630c2c0944b5d355571be06b9d56471a9720f90b74804ff392ed55a"},
 ]
 
 [[package]]

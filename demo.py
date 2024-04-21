@@ -9,6 +9,7 @@ from loguru import logger
 
 from auto.run_business import run
 from auto.run_business.main import buy_business, click_station, go_business
+from auto.run_business.sell import sell_business
 from core.adb import connect
 
 if __name__ == "__main__1":
@@ -55,16 +56,18 @@ if __name__ == "__main__1":
             "曼德矿场": 12,
             "澄明数据中心": 16,
         },
-        city_tired={
-            "7号自由港": 30,
-            "修格里城": 30,
-            "曼德矿场": 30,
-            "淘金乐园": 30,
-            "澄明数据中心": 30,
-            "荒原站": 30,
-            "铁盟哨站": 30,
-            "阿妮塔战备工厂": 30,
-            "阿妮塔能源研究所": 30,
+        negotiate_price={
+            "7号自由港": 2,
+            "修格里城": 2,
+            "曼德矿场": 2,
+            "淘金乐园": 2,
+            "澄明数据中心": 2,
+            "荒原站": 2,
+            "铁盟哨站": 2,
+            "阿妮塔战备工厂": 2,
+            "阿妮塔能源研究所": 2,
+            "buyTired": 8,
+            "sellTired": 8,
         },
         max_goods_num=625,
     )
@@ -73,12 +76,7 @@ if __name__ == "__main__1":
 if __name__ == "__main__":
     connect("127.0.0.1:16384")
     # go_business("buy")
-    """
-    buy_business(
-        ["扬声器"],
-        [],
-        0,
-        max_book=0,
-    )
-    """
-    click_station("荒原站")
+
+    sell_business(0)
+
+    # click_station("荒原站")

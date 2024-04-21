@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:14:29
-LastEditTime: 2024-04-19 13:53:57
+LastEditTime: 2024-04-21 23:18:13
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -59,7 +59,7 @@ def run(
     city_book: dict,
     skill_level: dict,
     station_level: dict,
-    city_tired: dict,
+    negotiate_price: dict,
     max_goods_num: int,
     route: RoutesModel = None,
     type_: bool = False,
@@ -75,11 +75,11 @@ def run(
                 logger.info("未设置UUID")
                 return False
             route = get_goods_info_kmou(
-                city_book, skill_level, station_level, city_tired, max_goods_num, uuid
+                city_book, skill_level, station_level, negotiate_price, max_goods_num, uuid
             )
         else:
             route = get_goods_info_srap(
-                city_book, skill_level, station_level, city_tired, max_goods_num
+                city_book, skill_level, station_level, negotiate_price, max_goods_num
             )
     city_name = get_city()
     if route.city_data[0].sell_city_name == city_name:
@@ -96,12 +96,12 @@ def run(
         buy_business(
             city.primary_goods,
             city.secondary_goods,
-            20,
+            city.buy_argaining_times,
             max_book=city.book,
         )
         go_home()
         click_station(city.sell_city_name).wait()
         go_business("sell")
-        sell_business()
+        sell_business(city.sell_argaining_times)
     logger.info("运行完成")
     return True

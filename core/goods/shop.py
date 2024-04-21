@@ -180,7 +180,7 @@ class SHOP:
         city_book: Dict[str, int],
         skill_level: Dict[str, int],
         station_level: Dict[str, int],
-        city_tired: Dict[str, int],
+        negotiate_price: Dict[str, int],
         max_goods_num: int,
     ) -> None:
         """
@@ -191,6 +191,7 @@ class SHOP:
             :param city_book: 城市最大单次进货书
             :param skill_level: 角色共振等级
             :param station_level: 站点声望等级等级
+            :param negotiate_price: 议价次数和单次疲劳
             :param max_goods_num: 最大商品数量
         """
         self.goods_data = goods_data
@@ -206,8 +207,8 @@ class SHOP:
             station_level
         )
         """城市税率等声望信息"""
-        self.city_tired = city_tired
-        """城市砍抬疲劳"""
+        self.negotiate_price = negotiate_price
+        """议价次数和单次疲劳"""
         self.max_goods_num = max_goods_num
         """最大商品数量"""
 
@@ -300,16 +301,20 @@ class SHOP:
         sorted_goods = sorted(
             goods.items(), key=lambda item: item[1].isSpeciality, reverse=True
         )
+        buy_argaining_times = self.negotiate_price.get(buy_city_name, 0)
+        sell_argaining_times = self.negotiate_price.get(sell_city_name, 0)
         # 总疲劳
         city_tired = (
             city_tired_data.get(f"{buy_city_name}-{sell_city_name}", 99999)
-            + self.city_tired.get(buy_city_name, 9999)
-            + self.city_tired.get(sell_city_name, 9999)
+            + buy_argaining_times * self.negotiate_price.get("buyTired", 0)
+            + sell_argaining_times * self.negotiate_price.get("sellTired", 0)
         )
         target: RouteModel = RouteModel(
             buy_city_name=buy_city_name,
             sell_city_name=sell_city_name,
             city_tired=city_tired,
+            buy_argaining_times=buy_argaining_times,
+            sell_argaining_times=sell_argaining_times,
         )
         while (
             target.num < self.max_goods_num

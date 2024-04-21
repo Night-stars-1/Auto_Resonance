@@ -81,7 +81,10 @@ with open("resources/goods/CityTiredData.json", "r", encoding="utf-8") as file:
     city_tired_data: dict = json.load(file)
 
 skill_data = {
-    "朱利安": {1: {"goods": ["斑节虾"], "param": 0.2}},
+    "朱利安": {
+        1: {"goods": ["斑节虾"], "param": 0.2},
+        4: {"goods": ["斑节虾", "人工晶花", "桦石发财树", "石墨烯"], "param": 0.2},
+    },
     "狮鬃": {
         1: {"goods": ["荧光棒"], "param": 0.2},
         4: {"goods": ["扬声器"], "param": 0.2},
@@ -97,10 +100,12 @@ skill_data = {
         5: {"goods": ["毛绒玩具"], "param": 0.1},
     },
     "艾略特": {4: {"goods": ["游戏卡带", "游戏机"], "param": 0.2}},
+    "静流": {4: {"goods": ["珍珠", "学会书籍", "单晶硅", "大龙虾"], "param": 0.2}},
     "多萝西": {
         4: {"goods": ["弹丸加速装置"], "param": 0.2},
         5: {"goods": ["弹丸加速装置"], "param": 0.1},
     },
+    "卡莲": {4: {"goods": ["高端护肤品", "香水", "火腿", "鱼子酱"], "param": 0.2}},
     "星花": {1: {"goods": ["人工晶花"], "param": 0.2}},
     "瑞秋": {4: {"goods": ["医药品"], "param": 0.2}},
     "菲妮娅": {
@@ -125,11 +130,7 @@ skill_data = {
         4: {"goods": ["家用太阳能电池组"], "param": 0.2},
         5: {"goods": ["红茶"], "param": 0.1},
     },
-    "隼": {
-        1: {"goods": ["发动机"], "param": 0.2},
-        4: {"goods": ["弹丸加速装置", "发动机", "沃德烤鸡", "红茶"], "param": -0.005},
-        5: {"goods": ["斑节虾", "人工晶花", "桦石发财树", "石墨烯"], "param": -0.005},
-    },
+    "隼": {1: {"goods": ["发动机"], "param": 0.2}},
     "奈弥": {
         1: {"goods": ["金箔酒"], "param": 0.2},
         5: {"goods": ["金箔酒"], "param": 0.1},
@@ -138,9 +139,37 @@ skill_data = {
         1: {"goods": ["阿妮塔101民用无人机"], "param": 0.2},
         5: {"goods": ["阿妮塔101民用无人机"], "param": 0.1},
     },
+    "甘雅": {
+        4: {"goods": ["图形加速卡", "曼德工具箱"], "param": 0.2},
+        5: {"goods": ["图形加速卡", "曼德工具箱"], "param": 0.1},
+    },
+    "妮蔻拉": {
+        4: {
+            "goods": [
+                "阿妮塔小型桦树发电机",
+                "石墨烯电池",
+                "家用太阳能电池组",
+                "阿妮塔101民用无人机",
+            ],
+            "param": 0.2,
+        },
+        5: {
+            "goods": [
+                "阿妮塔小型桦树发电机",
+                "石墨烯电池",
+                "家用太阳能电池组",
+                "阿妮塔101民用无 人机",
+            ],
+            "param": 0.1,
+        },
+    },
     "卡洛琳": {
         4: {"goods": ["石墨烯"], "param": 0.2},
         5: {"goods": ["石墨烯"], "param": 0.1},
+    },
+    "海因里希": {
+        4: {"goods": ["拼装模型"], "param": 0.2},
+        5: {"goods": ["拼装模型"], "param": 0.1},
     },
 }
 
@@ -237,9 +266,7 @@ class SHOP:
         )  # 砍价后的价格
         return new_price, new_num
 
-    def get_good_sell_price(
-        self, buy_price: int, city_name: str, good_name: str
-    ):
+    def get_good_sell_price(self, buy_price: int, city_name: str, good_name: str):
         """
         说明:
             获取出售商品的价格

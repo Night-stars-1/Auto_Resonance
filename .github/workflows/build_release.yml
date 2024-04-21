@@ -15,10 +15,15 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4.1.1
         with:
-          submodules: "false"
+            fetch-depth: 1
+            fetch-tags: true
+      
+      - name: Generate Changelog
+        id: generate_changelog
+        uses: Night-stars-1/changelog-generator-action@main
 
       - name: Set up python
         uses: actions/setup-python@v4
@@ -59,6 +64,7 @@ jobs:
         uses: softprops/action-gh-release@v2.0.4
         with:
           name: 黑月无人驾驶 ${{ github.ref_name }}
+          body: ${{ steps.generate_changelog.outputs.changelog }}
           files: |
             ./dist/Auto_Resonance_${{ github.ref_name }}.zip
           prerelease: true

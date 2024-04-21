@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-10 22:54:08
-LastEditTime: 2024-04-19 13:26:59
+LastEditTime: 2024-04-21 16:06:01
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -30,7 +30,9 @@ SKILLS = [
     "雷火",
     "黛丝莉",
     "艾略特",
+    "静流",
     "多萝西",
+    "卡莲",
     "星花",
     "瑞秋",
     "菲妮娅",
@@ -42,7 +44,10 @@ SKILLS = [
     "隼",
     "奈弥",
     "伊尔",
+    "甘雅",
+    "妮蔻拉",
     "卡洛琳",
+    "海因里希",
 ]
 CITYS = [
     "七号自由港",

@@ -1,14 +1,14 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-03-20 22:24:35
-LastEditTime: 2024-04-14 23:11:49
+LastEditTime: 2024-04-21 15:56:11
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
 import platform
 import random
-import time
-from subprocess import DEVNULL, run
+from subprocess import DEVNULL
+from subprocess import run as _run, CompletedProcess
 
 import cv2 as cv
 import numpy as np
@@ -20,6 +20,20 @@ ADBPATH = ""
 EXCURSIONX = [-10, 10]
 EXCURSIONY = [-10, 10]
 STOP = False
+
+
+def run(
+    *popenargs, input=None, capture_output=False, timeout=None, check=False, **kwargs
+) -> CompletedProcess:
+    return _run(
+        *popenargs,
+        shell=True if platform.system() == "Windows" else False,
+        input=input,
+        capture_output=capture_output,
+        timeout=timeout,
+        check=check,
+        **kwargs,
+    )
 
 
 def connect(order="127.0.0.1:7555", path="resources\\lib\\adb"):

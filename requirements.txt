@@ -7,4 +7,3 @@ onnxruntime==1.17.1
 opencv-python==4.9.0.80
 orjson>=3.10.0
 pydantic>=2.6.4
-pyqt5-qt5==5.15.2

@@ -1,4 +1,10 @@
-# coding: utf-8
+"""
+Author: Night-stars-1 nujj1042633805@gmail.com
+Date: 2024-04-02 19:13:20
+LastEditTime: 2024-04-21 20:04:32
+LastEditors: Night-stars-1 nujj1042633805@gmail.com
+"""
+
 from enum import Enum
 
 from qfluentwidgets import StyleSheetBase, Theme, isDarkTheme, qconfig

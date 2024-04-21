@@ -35,6 +35,11 @@ LinkCardView {
     border: none;
 }
 
+TitleProgressBarsCard QFrame {
+    background-color: transparent;
+    border: none;
+}
+
 #view {
     background-color: transparent;
 }

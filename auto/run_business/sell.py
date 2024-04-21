@@ -24,9 +24,9 @@ def sell_business(num=20):
         :param num: 期望议价的价格
     """
     logger.info("出售全部货物")
-    input_tap((1187, 103))
     time.sleep(0.5)
     input_tap((1187, 103))
+    time.sleep(0.5)
     if is_empty_goods():
         logger.error("检测到未成功出售物品")
         return False

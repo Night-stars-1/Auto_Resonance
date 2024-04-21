@@ -139,3 +139,4 @@ class STATION:
             match_screenshot(screenshot(), "resources/main_map.png")["max_val"] < 0.95
         ):
             time.sleep(1)
+            input_tap((990, 575))   # 防止因为送客卡住

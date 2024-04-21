@@ -77,6 +77,6 @@ if __name__ == "__main__":
     connect("127.0.0.1:16384")
     # go_business("buy")
 
-    sell_business(0)
+    sell_business(2)
 
     # click_station("荒原站")

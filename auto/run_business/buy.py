@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-04 17:54:58
-LastEditTime: 2024-04-21 23:15:17
+LastEditTime: 2024-04-22 00:34:23
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -168,7 +168,7 @@ def get_boatload():
     return int(boatload * 100)
 
 
-def click_bargain_button(num=0):
+def click_bargain_button_of_num(num=0):
     """
     说明:
         点击议价按钮
@@ -178,13 +178,13 @@ def click_bargain_button(num=0):
     start = time.perf_counter()
     old_bargain = 0
     while time.perf_counter() - start < 15:
-        reslut = number_predict(screenshot(), (988, 450), (1042, 475))
-        bargain = reslut[0]["text"] if len(reslut) > 0 else old_bargain
+        reslut = predict(screenshot(), (988, 450), (1042, 475))
+        bargain = reslut[0]["text"][:-1] if len(reslut) > 0 else old_bargain
         logger.info(f"降价幅度: {bargain}% 剩余次数: {num}")
-        if bargain != old_bargain:
-            num -= 1
         if num <= 0:
             return True
+        if bargain != old_bargain:
+            num -= 1
         if get_excption() == "议价次数不足":
             return False
         bgr = get_bgr(screenshot(), (1176, 461))
@@ -199,6 +199,73 @@ def click_bargain_button(num=0):
             logger.info("疲劳不足")
             input_tap((83, 36))
             return True
+    return False
+
+
+def click_bargain_button_of_num(num=0):
+    """
+    说明:
+        点击议价按钮
+    参数:
+        :param num: 议价次数
+    """
+    start = time.perf_counter()
+    old_bargain = 0
+    while time.perf_counter() - start < 15:
+        reslut = predict(screenshot(), (988, 450), (1042, 475))
+        bargain = reslut[0]["text"][:-1] if len(reslut) > 0 else old_bargain
+        logger.info(f"降价幅度: {bargain}% 剩余次数: {num}")
+        if num <= 0:
+            return True
+        if bargain != old_bargain:
+            num -= 1
+        if get_excption() == "议价次数不足":
+            return False
+        bgr = get_bgr(screenshot(), (1176, 461))
+        logger.debug(f"降价界面颜色检查: {bgr}")
+        if compare_ranges([0, 130, 240], bgr, [2, 133, 253]):
+            input_tap((1177, 461))
+            time.sleep(0.5)
+        elif bgr == [251, 253, 253]:
+            logger.info("议价次数不足")
+            return True
+        elif bgr == [62, 63, 63]:
+            logger.info("疲劳不足")
+            input_tap((83, 36))
+            return True
+    return False
+
+
+def click_bargain_button(num=0):
+    """
+    说明:
+        点击议价按钮
+    参数:
+        :param num: 议价次数
+    """
+    start = time.perf_counter()
+    while time.perf_counter() - start < 15:
+        if num <= 0:
+            return True
+        bgr = get_bgr(screenshot(), (1176, 461))
+        logger.debug(f"降价界面颜色检查: {bgr}")
+        if compare_ranges([0, 130, 240], bgr, [2, 133, 253]):
+            input_tap((1177, 461))
+            time.sleep(1.0)
+        elif bgr == [251, 253, 253]:
+            logger.info("议价次数不足")
+            return True
+        elif bgr == [62, 63, 63]:
+            logger.info("疲劳不足")
+            input_tap((83, 36))
+            return True
+        hsv = get_hsv(screenshot(), (629, 271), (516, 224), (787, 439))
+        logger.info(f"降价是否成功颜色检查(HSV): {num}")
+        if 95 <= hsv[0] <= 105:
+            logger.info("降价成功")
+            num -= 1
+        else:
+            logger.info("降价失败")
     return False
 
 

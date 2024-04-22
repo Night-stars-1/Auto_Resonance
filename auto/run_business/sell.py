@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 15:17:19
-LastEditTime: 2024-04-22 21:34:29
+LastEditTime: 2024-04-22 23:27:51
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -68,7 +68,7 @@ def click_bargain_button(num=0):
             input_tap((83, 36))
             return True
         hsv = get_hsv(screenshot(), (626, 273), (516, 224), (787, 439))
-        logger.info(f"抬价是否成功颜色检查(HSV): {num}")
+        logger.info(f"抬价是否成功颜色检查(HSV): {hsv}")
         if 30 <= hsv[0] <= 40:
             logger.info("抬价成功")
             num -= 1

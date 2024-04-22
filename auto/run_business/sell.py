@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 15:17:19
-LastEditTime: 2024-04-22 00:29:40
+LastEditTime: 2024-04-22 21:34:29
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -23,7 +23,6 @@ def sell_business(num=0):
     参数:
         :param num: 期望议价的价格
     """
-    click_bargain_button(num)
     while (bgr := get_bgr(screenshot(), (1156, 100))) != [0, 0, 102]:
         logger.info(f"出售全部货物 {bgr}")
         input_tap((1187, 103))
@@ -46,6 +45,12 @@ def is_empty_goods():
 
 
 def click_bargain_button(num=0):
+    """
+    说明:
+        点击议价按钮
+    参数:
+        :param num: 议价次数
+    """
     start = time.perf_counter()
     while time.perf_counter() - start < 15:
         if num <= 0:

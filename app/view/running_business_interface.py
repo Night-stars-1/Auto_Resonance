@@ -154,12 +154,30 @@ class RunningBusinessInterface(ScrollArea):
         self.tiredGroup = ExpandSettingCard(
             FIF.BRUSH, "砍抬疲劳设置", parent=self.scrollWidget
         )
-        for city in CITYS:
-            book = SpinBoxSettingCard(
-                getattr(cfg, f"{city}砍抬疲劳"),
+        self.tiredGroup.viewLayout.addWidget(
+            SpinBoxSettingCard(
+                cfg.buyTired,
                 FIF.ACCEPT,
                 city,
-                f"{city}砍抬疲劳",
+                "单次砍价疲劳",
+                parent=self.tiredGroup,
+            )
+        )
+        self.tiredGroup.viewLayout.addWidget(
+            SpinBoxSettingCard(
+                cfg.sellTired,
+                FIF.ACCEPT,
+                city,
+                "单次抬价疲劳",
+                parent=self.tiredGroup,
+            )
+        )
+        for city in CITYS:
+            book = SpinBoxSettingCard(
+                getattr(cfg, f"{city}砍抬次数"),
+                FIF.ACCEPT,
+                city,
+                f"{city}砍抬次数",
                 parent=self.tiredGroup,
             )
             self.tiredGroup.viewLayout.addWidget(book)
@@ -216,7 +234,7 @@ class RunningBusinessInterface(ScrollArea):
                     city_book=city_book,
                     skill_level=skill_level,
                     station_level=station_level,
-                    city_tired=city_tired,
+                    negotiate_price=negotiate_price,
                     max_goods_num=max_goods_num,
                     route=route,
                     type_=cfg.goodsType.value,
@@ -234,7 +252,7 @@ class RunningBusinessInterface(ScrollArea):
         city_book = cfg.toDict()["RunningBusiness"]
         skill_level = cfg.toDict()["SkillLevel"]
         station_level = cfg.toDict()["StationLevel"]
-        city_tired = cfg.toDict()["CityTired"]
+        negotiate_price = cfg.toDict()["NegotiatePrice"]
         max_goods_num = cfg.maxGoodsNum.value
         uuid = cfg.uuid.value
         if cfg.goodsType.value:
@@ -247,7 +265,7 @@ class RunningBusinessInterface(ScrollArea):
                 city_book=city_book,
                 skill_level=skill_level,
                 station_level=station_level,
-                city_tired=city_tired,
+                negotiate_price=negotiate_price,
                 max_goods_num=max_goods_num,
             )
             self.workers.start()
@@ -260,7 +278,7 @@ class RunningBusinessInterface(ScrollArea):
                 city_book=city_book,
                 skill_level=skill_level,
                 station_level=station_level,
-                city_tired=city_tired,
+                negotiate_price=negotiate_price,
                 max_goods_num=max_goods_num,
             )
             self.workers.start()

@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-10 22:45:55
-LastEditTime: 2024-04-14 16:36:15
+LastEditTime: 2024-04-22 22:17:44
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -17,8 +17,8 @@ import logging
 LOGGER = logging.getLogger(__name__)
 from app.common.config import cfg
 from core.api.kmou import get_goods_info as get_goods_info_kmou
-from core.goods.shop import show
 from core.api.srap import get_goods_info as get_goods_info_srap
+from core.goods.shop import show
 
 
 def test_get_goods_info_srap():
@@ -58,21 +58,23 @@ def test_get_goods_info_srap():
             "黛丝莉": 0,
         },
         station_level={
-            "7号自由港": 17,
+            "7号自由港": 19,
             "修格里城": 13,
             "曼德矿场": 12,
-            "澄明数据中心": 16,
+            "澄明数据中心": 18,
         },
-        city_tired={
-            "7号自由港": 30,
-            "修格里城": 30,
-            "曼德矿场": 30,
-            "淘金乐园": 30,
-            "澄明数据中心": 30,
-            "荒原站": 30,
-            "铁盟哨站": 30,
-            "阿妮塔战备工厂": 30,
-            "阿妮塔能源研究所": 30,
+        negotiate_price={
+            "buyTired": 12,
+            "sellTired": 12,
+            "7号自由港": 2,
+            "修格里城": 2,
+            "曼德矿场": 2,
+            "淘金乐园": 2,
+            "澄明数据中心": 2,
+            "荒原站": 2,
+            "铁盟哨站": 2,
+            "阿妮塔战备工厂": 2,
+            "阿妮塔能源研究所": 2
         },
         max_goods_num=625,
     )
@@ -123,7 +125,7 @@ def test_get_goods_info_kmou():
             "曼德矿场": 12,
             "澄明数据中心": 16,
         },
-        city_tired={
+        negotiate_price={
             "7号自由港": 30,
             "修格里城": 30,
             "曼德矿场": 30,
@@ -143,5 +145,5 @@ def test_get_goods_info_kmou():
 
 
 if __name__ == "__main__":
-    test_get_goods_info_kmou()
+    # test_get_goods_info_kmou()
     test_get_goods_info_srap()

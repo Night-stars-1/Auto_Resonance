@@ -28,8 +28,12 @@ class RouteModel(BaseModel):
 
     buy_city_name: str = ""
     """购买城市"""
+    buy_argaining_times: int = 0
+    """购买议价次数"""
     sell_city_name: str = ""
     """出售城市"""
+    sell_argaining_times: int = 0
+    """出售议价次数"""
     goods_data: Dict[str, GoodsData] = {}
     """商品数据"""
     buy_goods: Dict[str, int] = {}

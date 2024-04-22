@@ -8,7 +8,7 @@ authors = [
 dependencies = [
     "Pillow==10.3.0",
     "PyQt-Fluent-Widgets==1.5.4",
-    "cnocr==2.3.0.1",
+    "cnocr==2.3.0.2",
     "loguru==0.7.2",
     "numpy==1.26.4",
     "onnxruntime==1.17.1",

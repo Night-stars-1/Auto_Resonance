@@ -10,7 +10,6 @@ from typing import List, Tuple
 import cv2 as cv
 import numpy as np
 from loguru import logger
-from skimage.metrics import structural_similarity as ssim
 
 
 def crop_image(

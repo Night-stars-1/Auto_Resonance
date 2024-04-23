@@ -7,7 +7,7 @@ LastEditors: Night-stars-1 nujj1042633805@gmail.com
 
 from loguru import logger
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QLabel, QWidget
+from PyQt5.QtWidgets import QLabel, QPushButton, QWidget
 from qfluentwidgets import Dialog, ExpandLayout, ExpandSettingCard
 from qfluentwidgets import FluentIcon as FIF
 from qfluentwidgets import PrimaryPushSettingCard, ScrollArea
@@ -139,6 +139,10 @@ class RunningBusinessInterface(ScrollArea):
         self.skillGroup = ExpandSettingCard(
             FIF.BRUSH, "共振等级", parent=self.scrollWidget
         )
+        # 创建按钮
+        self.autoscanreslevel = QPushButton("自动扫描乘员共振等级", self.skillGroup)
+        self.skillGroup.viewLayout.addWidget(self.autoscanreslevel)
+
         for skill in SKILLS:
             gz = SpinBoxSettingCard(
                 getattr(cfg, skill),
@@ -219,6 +223,7 @@ class RunningBusinessInterface(ScrollArea):
     def __connectSignalToSlot(self):
         """connect signal to slot"""
         self.testCard.clicked.connect(self.createSuccessInfoBar)
+        self.autoscanreslevel.clicked.connect(self.autoscan)
 
     def createSuccessInfoBar(self):
 
@@ -296,6 +301,19 @@ class RunningBusinessInterface(ScrollArea):
             parent=self
         )
         """
+
+    def autoscan(self):
+        signalBus.switchToCard.emit("LoggerInterface")
+        from auto.scan_res_level import run
+        self.workers = Worker(
+            run,
+            run,
+            order=cfg.adbOrder.value,
+            path=cfg.adbPath.value
+        )
+        self.workers.start()
+        self.workers.finished.connect(lambda: self.on_worker_finished(self.workers))
+
 
     def on_worker_finished(self, worker: Worker):
         # 线程完成时调用

@@ -1,7 +1,6 @@
 import re
 import time
 
-import cv2
 from loguru import logger
 from qfluentwidgets import qconfig
 

@@ -237,18 +237,3 @@ def find_icons_coordinates(image, icon_path, threshold=0.8, min_distance=10):
         if not too_close:
             filtered.append(coord)
     return filtered
-
-def get_mse(imageA, imageB):
-    # 将图像转换为浮点数，以防止数据溢出
-    imageA = imageA.astype("float")
-    imageB = imageB.astype("float")
-    # 计算均方误差
-    result = np.sum((imageA - imageB) ** 2)
-    result /= float(imageA.shape[0] * imageA.shape[1])
-    # 返回MSE结果
-    return result
-
-def get_ssim(imageA, imageB):
-    # 计算SSIM
-    s = ssim(imageA, imageB, multichannel=True, channel_axis=-1)
-    return s

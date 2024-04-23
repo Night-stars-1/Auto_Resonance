@@ -19,6 +19,7 @@ from ..components.settings.line_edit_setting_card import LineEditSettingCard
 
 from core.models.config import config
 
+
 class SettingInterface(ScrollArea):
     """Setting interface"""
 

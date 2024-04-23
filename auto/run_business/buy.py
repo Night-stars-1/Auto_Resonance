@@ -223,7 +223,7 @@ def click_bargain_button(num=0):
             input_tap((83, 36))
             return True
         hsv = get_hsv(screenshot(), (629, 271), (516, 224), (787, 439))
-        logger.info(f"降价是否成功颜色检查(HSV): {hsv}")
+        logger.debug(f"降价是否成功颜色检查(HSV): {hsv}")
         if 95 <= hsv[0] <= 105:
             logger.info("降价成功")
             num -= 1

@@ -173,6 +173,7 @@ skill_data = {
     },
 }
 
+
 class SHOP:
     def __init__(
         self,

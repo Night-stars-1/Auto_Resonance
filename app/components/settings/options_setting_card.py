@@ -15,12 +15,21 @@ from app.common.config import cfg
 
 from .spin_box_setting_card import SpinBoxSettingCard
 
+
 class OptionsSettingCard(ExpandSettingCard):
-    """ setting card with a group of options """
+    """setting card with a group of options"""
 
     optionChanged = pyqtSignal(OptionsConfigItem)
 
-    def __init__(self, configItem, icon: Union[str, QIcon, FluentIconBase], title, content=None, texts=None, parent=None):
+    def __init__(
+        self,
+        configItem,
+        icon: Union[str, QIcon, FluentIconBase],
+        title,
+        content=None,
+        texts=None,
+        parent=None,
+    ):
         """
         Parameters
         ----------
@@ -44,7 +53,6 @@ class OptionsSettingCard(ExpandSettingCard):
         """
         super().__init__(icon, title, content, parent)
         self.texts = texts or []
-
 
         self.七号自由港 = SpinBoxSettingCard(
             cfg.七号自由港,

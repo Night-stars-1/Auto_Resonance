@@ -25,6 +25,7 @@ class SrapRequestModel(GoodsModel):
         data["goods"] = list(chain.from_iterable(data["data"].values()))
         super().__init__(**data)
 
+
 class SrapRequestGzipModel(GoodsModel):
     """SRAP请求模型"""
 

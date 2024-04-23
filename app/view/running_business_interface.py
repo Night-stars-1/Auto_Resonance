@@ -300,5 +300,5 @@ class RunningBusinessInterface(ScrollArea):
     def on_worker_finished(self, worker: Worker):
         # 线程完成时调用
         self.testCard.loading(False)
-        worker.deleteLater()  # 安全删除Worker对象
+        worker and worker.deleteLater()  # 安全删除Worker对象
         self.workers = None

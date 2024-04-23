@@ -17,7 +17,7 @@ path_log = os.path.join("logs", "debug.log")
 LEVEL = "DEBUG"
 logger.remove()
 
-if not getattr(sys, 'frozen', False):
+if not getattr(sys, "frozen", False):
     logger.add(
         sys.stdout,
         level=LEVEL,

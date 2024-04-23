@@ -1,0 +1,12 @@
+[MASTER]
+# 项目特定的配置应该在这里设置
+extension-pkg-whitelist=PyQt5
+ignore=tests
+
+[MESSAGES CONTROL]
+# 在这里可以启用或禁用特定的警告和错误
+disable=C0111, E0402
+
+[FORMAT]
+# 指定代码格式化的相关选项
+max-line-length=100

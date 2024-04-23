@@ -75,7 +75,12 @@ def run(
                 logger.info("未设置UUID")
                 return False
             route = get_goods_info_kmou(
-                city_book, skill_level, station_level, negotiate_price, max_goods_num, uuid
+                city_book,
+                skill_level,
+                station_level,
+                negotiate_price,
+                max_goods_num,
+                uuid,
             )
         else:
             route = get_goods_info_srap(

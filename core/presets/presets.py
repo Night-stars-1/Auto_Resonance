@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:24:47
-LastEditTime: 2024-04-21 00:04:09
+LastEditTime: 2024-04-23 19:44:56
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -169,8 +169,17 @@ def go_city():
     说明:
         进入城市界面
     """
-    input_tap((1270, 494))
-    wait("resources/fame.png", cropped_pos1=[25, 634], cropped_pos2=[99, 707])
+    while (
+        match_screenshot(
+            screenshot(),
+            "resources/fame.png",
+            cropped_pos1=[25, 634],
+            cropped_pos2=[99, 707],
+        )["max_val"]
+        < 0.95
+    ):
+        input_tap((1270, 494))
+        time.sleep(2.0)
 
 
 def go_outlets(name: str):

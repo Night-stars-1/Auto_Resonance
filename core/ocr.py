@@ -13,7 +13,12 @@ from cnocr import CnOcr
 from PIL import Image
 
 ocr = CnOcr(rec_root="resources/model/cnocr", det_root="resources/model/cnstd")
-number_ocr = CnOcr("number-densenet_lite_136-fc", rec_root="resources/model/cnocr", det_root="resources/model/cnstd")
+number_ocr = CnOcr(
+    "number-densenet_lite_136-fc",
+    rec_root="resources/model/cnocr",
+    det_root="resources/model/cnstd",
+)
+
 
 def ocrout2result(out, cropped_pos1):
     return [
@@ -42,6 +47,7 @@ def ocrout2result(out, cropped_pos1):
         for predict_data in out
     ]
 
+
 def predict(
     img_fp: Union[str, Path, Image.Image, np.ndarray],
     cropped_pos1: Tuple[int, int] = (0, 0),
@@ -60,6 +66,7 @@ def predict(
         ]
     out = ocr.ocr(img_fp)
     return ocrout2result(out, cropped_pos1)
+
 
 def number_predict(
     img_fp: Union[str, Path, Image.Image, np.ndarray],

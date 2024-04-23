@@ -192,4 +192,6 @@ class TajInterface(TabWidget):
         self.__initWidget()
 
     def __initWidget(self):
-        self.addSubInterface(self.tajConfigInterface, "TajConfigInterface", "铁安局配置1", FIF.LANGUAGE)
+        self.addSubInterface(
+            self.tajConfigInterface, "TajConfigInterface", "铁安局配置1", FIF.LANGUAGE
+        )

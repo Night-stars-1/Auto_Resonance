@@ -12,11 +12,9 @@ from core.adb import connect, screenshot
 # 加载图像
 connect()
 image = screenshot()
-cropped_pos1=(4, 91)
-cropped_pos2=(1276, 714)
-image = image[
-    cropped_pos1[1] : cropped_pos2[1], cropped_pos1[0] : cropped_pos2[0]
-]
+cropped_pos1 = (4, 91)
+cropped_pos2 = (1276, 714)
+image = image[cropped_pos1[1] : cropped_pos2[1], cropped_pos1[0] : cropped_pos2[0]]
 # 将BGR图像转换为HSV颜色空间
 hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
@@ -43,7 +41,14 @@ for x, y in zip(x_coords, y_coords):
 if len(x_coords) > 0 and len(y_coords) > 0:
     cx = np.mean(x_coords).astype(int)
     cy = np.mean(y_coords).astype(int)
-    cv2.drawMarker(image, (cx, cy), color=(0, 255, 0), markerType=cv2.MARKER_CROSS, markerSize=20, thickness=2)
+    cv2.drawMarker(
+        image,
+        (cx, cy),
+        color=(0, 255, 0),
+        markerType=cv2.MARKER_CROSS,
+        markerSize=20,
+        thickness=2,
+    )
 
 window_size = (10, 10)  # 窗口大小，例如50x50像素
 threshold = 2000  # 紫色像素的最小数量阈值
@@ -55,18 +60,20 @@ height, width = mask.shape
 for y in range(0, height - window_size[1] + 1, 10):  # 步长为10，可调整
     for x in range(0, width - window_size[0] + 1, 10):
         # 计算当前窗口内紫色像素的数量
-        window = mask[y:y+window_size[1], x:x+window_size[0]]
+        window = mask[y : y + window_size[1], x : x + window_size[0]]
         purple_count = cv2.countNonZero(window)
-        
+
         # 如果紫色像素的数量达到阈值
         if 20 <= purple_count <= 40:
             # 绘制矩形框，标记这个区域
-            cv2.rectangle(image, (x, y), (x + window_size[0], y + window_size[1]), (0, 255, 0), 2)
+            cv2.rectangle(
+                image, (x, y), (x + window_size[0], y + window_size[1]), (0, 255, 0), 2
+            )
 
 # 显示结果
-cv2.imshow('Original Image', image)
-#cv2.imshow('Mask', mask)
-#cv2.imshow('Purple Area', purple_area)
+cv2.imshow("Original Image", image)
+# cv2.imshow('Mask', mask)
+# cv2.imshow('Purple Area', purple_area)
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()

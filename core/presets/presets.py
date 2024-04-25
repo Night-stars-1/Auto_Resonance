@@ -207,8 +207,7 @@ def go_home():
         返回主界面
     """
     logger.info("返回主界面")
-
-    while match_screenshot(screenshot(), "resources/main_map.png")["max_val"] < 0.95:
+    while match_screenshot(screenshot(), "resources/main_map.png")["max_val"] < 0.96:
         time.sleep(1)
         input_tap((228, 27))
 

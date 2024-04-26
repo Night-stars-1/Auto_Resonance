@@ -5,4 +5,5 @@ LastEditTime: 2024-04-13 01:12:16
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
-from .main import run
+from .buy import buy_business
+from .main import run, go_business

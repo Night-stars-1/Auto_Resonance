@@ -11,6 +11,8 @@ from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QIcon
 from qfluentwidgets import ConfigItem, FluentIconBase, SettingCard, SpinBox, qconfig
 
+from app.common.signal_bus import signalBus
+
 
 class SpinBoxSettingCard(SettingCard):
     """Setting card with a push button"""
@@ -55,6 +57,10 @@ class SpinBoxSettingCard(SettingCard):
         self.spinBox.valueChanged.connect(self.valueChanged)
         self.hBoxLayout.addWidget(self.spinBox, 0, Qt.AlignRight)
         self.hBoxLayout.addSpacing(16)
+        signalBus.skillchanged.connect(self.onskillchanged)
 
     def valueChanged(self, value: int):
         qconfig.set(self.configItem, value)
+
+    def onskillchanged(self):
+        self.spinBox.setValue(self.configItem.value)

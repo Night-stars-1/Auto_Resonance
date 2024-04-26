@@ -23,13 +23,14 @@ from app.view.daily_task_interface import DailyTaskInterface
 from app.view.running_business_interface import RunningBusinessInterface
 
 from ..common import resource  # 图标数据
-from ..common.config import cfg, VERSION
+from ..common.config import VERSION, cfg
 from ..common.icon import FluentIconBase
 from ..common.signal_bus import signalBus
 from .home_interface import HomeInterface
 from .logger_interface import LoggerInterface
 from .setting_interface import SettingInterface
 from .taj_interface import TajInterface
+from .this_road_that_interface import ThisRoadThatInterface
 
 
 class MainWindow(MSFluentWindow):
@@ -47,6 +48,7 @@ class MainWindow(MSFluentWindow):
         self.settingInterface = SettingInterface(self)
         self.daily_task_interface = DailyTaskInterface(self)
         self.running_business_interface = RunningBusinessInterface(self)
+        self.this_road_that_interface = ThisRoadThatInterface(self)
 
         self.connectSignalToSlot()
 
@@ -64,6 +66,7 @@ class MainWindow(MSFluentWindow):
         self.addSubInterface(self.tajInterface, FIF.AIRPLANE, "铁安局")
         self.addSubInterface(self.daily_task_interface, FIF.CALENDAR, "每日任务")
         self.addSubInterface(self.running_business_interface, FIF.TRAIN, "跑商配置")
+        self.addSubInterface(self.this_road_that_interface, FIF.TRAIN, "我建我路")
 
         # add custom widget to bottom
         self.addSubInterface(

@@ -197,3 +197,42 @@ def show_image(screenshot, name="image", time=0):
     cv.imshow(name, screenshot)
     cv.waitKey(time)
     cv.destroyAllWindows()
+
+def find_icons_coordinates(image, icon_path, threshold=0.8, min_distance=10):
+    """
+    说明:
+        在给定图像中找到所有与模板匹配的图标的坐标，并过滤掉过近的坐标。
+    参数:
+        :param image: 要搜索的图像
+        :param icon_path: 要匹配的图标
+        :param threshold: 匹配阈值，介于0和1之间
+        :param min_distance: 最小允许的距离
+        :return: 找到的图标的坐标列表
+    """
+    image = image.copy()
+    img_gray = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
+    template = cv.imread(icon_path)
+    template_gray = cv.cvtColor(template, cv.COLOR_BGR2GRAY)
+    
+    w, h = template_gray.shape[::-1]
+    
+    # 模板匹配
+    res = cv.matchTemplate(img_gray, template_gray, cv.TM_CCOEFF_NORMED)
+    loc = np.where(res >= threshold)
+    
+    coordinates = []
+    for pt in zip(*loc[::-1]):  # Switch columns and rows
+        coordinates.append((pt[0], pt[1]))  # 只添加左上角坐标
+
+    # 过滤过近的匹配
+    filtered = []
+    for coord in coordinates:
+        too_close = False
+        for fcoord in filtered:
+            distance = ((fcoord[0] - coord[0]) ** 2 + (fcoord[1] - coord[1]) ** 2) ** 0.5
+            if distance < min_distance:
+                too_close = True
+                break
+        if not too_close:
+            filtered.append(coord)
+    return filtered

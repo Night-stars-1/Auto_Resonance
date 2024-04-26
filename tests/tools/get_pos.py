@@ -30,8 +30,8 @@ def click_event(event, x, y, flags, param):
         print("Color (HSV): ", color_hsv.tolist())
 
 
-# image = screenshot()
-image = cv2.imread("resources/test/MuMu12-20240422-002758.png")
+image = screenshot()
+# image = cv2.imread("resources/test/MuMu12-20240422-002758.png")
 """
 Clicked at:  (626, 273)
 Color (BGR):  [181, 199, 14]

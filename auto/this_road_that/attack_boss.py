@@ -148,7 +148,10 @@ def attack_five(num: int = 1):
             break
 
 def attack_boss(order: str, path: str, num: int = 1):
-    connect(order, path)
+    status = connect(order, path)
+    if not status:
+        logger.error("ADB连接失败")
+        return False
     click_task()
     click((883, 540))
     attack_one(num)

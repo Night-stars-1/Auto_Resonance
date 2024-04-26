@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-25 23:12:06
-LastEditTime: 2024-04-26 00:57:50
+LastEditTime: 2024-04-26 19:24:05
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -74,7 +74,10 @@ def consign_goods(pos: Tuple[int, int]):
 
 
 def transport_order(order: str, path: str):
-    connect(order, path)
+    status = connect(order, path)
+    if not status:
+        logger.error("ADB连接失败")
+        return False
     go_assistance_center()
     pos = get_consign_pos()
     check_consign_gbr = get_bgr(

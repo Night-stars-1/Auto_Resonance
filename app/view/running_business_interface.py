@@ -1,9 +1,11 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-10 22:54:08
-LastEditTime: 2024-04-26 18:23:05
+LastEditTime: 2024-04-26 19:43:33
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
+
+from typing import Dict
 
 from loguru import logger
 from PyQt5.QtCore import Qt
@@ -73,6 +75,7 @@ class RunningBusinessInterface(ScrollArea):
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
+        self.skillCardData: Dict[str, SpinBoxSettingCard] = {} # 角色技能卡片集合
         self.scrollWidget = QWidget(self)
         self.expandLayout = ExpandLayout(self.scrollWidget)
 
@@ -143,17 +146,18 @@ class RunningBusinessInterface(ScrollArea):
         self.autoscanreslevel = QPushButton("自动扫描乘员共振等级", self.skillGroup)
         self.skillGroup.viewLayout.addWidget(self.autoscanreslevel)
 
-        for skill in SKILLS:
-            gz = SpinBoxSettingCard(
-                getattr(cfg, skill),
+        for role_name in SKILLS:
+            skillCard = SpinBoxSettingCard(
+                getattr(cfg, role_name),
                 FIF.ACCEPT,
-                skill,
-                f"{skill}共振等级",
+                role_name,
+                f"{role_name}共振等级",
                 spin_box_min=0,
                 spin_box_max=5,
                 parent=self.skillGroup,
             )
-            self.skillGroup.viewLayout.addWidget(gz)
+            self.skillCardData[role_name] = skillCard
+            self.skillGroup.viewLayout.addWidget(skillCard)
 
         self.tiredGroup = ExpandSettingCard(
             FIF.BRUSH, "砍抬疲劳设置", parent=self.scrollWidget
@@ -303,6 +307,14 @@ class RunningBusinessInterface(ScrollArea):
         """
 
     def autoscan(self):
+
+        def result(skill_level: Dict[str, int]):
+            for role_name, level in skill_level.items():
+                role_name = role_name.replace("闻笔", "闻笙") # 纠正一些角色名
+                if role_name in self.skillCardData:
+                    #setattr(cfg, skill, level)
+                    self.skillCardData[role_name].spinBox.setValue(level)
+
         signalBus.switchToCard.emit("LoggerInterface")
         from auto.scan_res_level import run
 
@@ -311,6 +323,7 @@ class RunningBusinessInterface(ScrollArea):
         )
         self.workers.start()
         self.workers.finished.connect(lambda: self.on_worker_finished(self.workers))
+        self.workers.result.connect(result)
 
     def on_worker_finished(self, worker: Worker):
         # 线程完成时调用

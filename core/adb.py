@@ -7,8 +7,9 @@ LastEditors: Night-stars-1 nujj1042633805@gmail.com
 
 import platform
 import random
-from subprocess import DEVNULL
-from subprocess import run as _run, CompletedProcess
+from subprocess import DEVNULL, CompletedProcess
+from subprocess import run as _run
+from typing import Tuple
 
 import cv2 as cv
 import numpy as np
@@ -96,7 +97,7 @@ def input_swipe(pos1=(919, 617), pos2=(919, 908), time: int = 100):
     run(shell, check=False)
 
 
-def input_tap(pos=(880, 362)):
+def input_tap(pos: Tuple[int, int] = (880, 362)):
     """
     说明:
         点击坐标

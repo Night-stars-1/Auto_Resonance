@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:24:47
-LastEditTime: 2024-04-23 19:44:56
+LastEditTime: 2024-04-26 13:08:53
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -220,7 +220,7 @@ def wait_fight_end():
     logger.info("等待战斗结束")
     start = time.perf_counter()
     while time.perf_counter() - start < FIGHT_TIME:
-        bgrs = get_bgrs(screenshot(), [(1114, 630), (1204, 624), (236, 26)])
+        bgrs = get_bgrs(screenshot(), [(1114, 630), (1204, 624), (236, 26), (1134, 628)])
         logger.debug(f"等待战斗结束颜色检查: {bgrs}")
         if compare_ranges([198, 200, 200], bgrs[0], [202, 204, 204]) and compare_ranges(
             [183, 185, 185], bgrs[1], [187, 189, 189]
@@ -231,7 +231,13 @@ def wait_fight_end():
         elif compare_ranges(
             [245, 245, 245], bgrs[0], [255, 255, 255]
         ) and compare_ranges([0, 0, 0], bgrs[1], [10, 10, 10]):
-            logger.info("战斗结束")
+            logger.info("战斗胜利")
+            input_tap((1151, 626))
+            return True
+        elif compare_ranges(
+            [245, 245, 245], bgrs[0], [255, 255, 255]
+        ) and compare_ranges([9, 9, 9], bgrs[3], [10, 10, 10]):
+            logger.info("战斗失败")
             input_tap((1151, 626))
             return True
         elif bgrs[2] == [124, 126, 125]:

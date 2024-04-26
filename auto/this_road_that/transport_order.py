@@ -10,9 +10,9 @@ from typing import Tuple
 
 from loguru import logger
 
-from core.adb import input_tap, screenshot
+from core.adb import connect, input_tap, screenshot
 from core.image import get_bgr
-from core.presets.presets import click_station, go_home, go_outlets
+from core.presets import click_station, go_home, go_outlets
 from core.utils import compare_ranges
 
 from ..run_business import buy_business, go_business
@@ -74,6 +74,7 @@ def consign_goods(pos: Tuple[int, int]):
 
 
 def transport_order():
+    connect()
     go_assistance_center()
     pos = get_consign_pos()
     check_consign_gbr = get_bgr(

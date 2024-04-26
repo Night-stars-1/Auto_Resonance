@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-02 19:13:20
-LastEditTime: 2024-04-14 02:28:42
+LastEditTime: 2024-04-26 12:48:42
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -57,6 +57,8 @@ class Config(RunningBusinessConfig):
     isSpeed = ConfigItem("Global", "isSpeed", True, BoolValidator())
     adbPath = ConfigItem("Global", "adbPath", "resources\\lib\\adb", None)
     adbOrder = ConfigItem("Global", "adbOrder", "127.0.0.1:7555", None)
+
+    thisRoadThatBoss = ConfigItem("ThisRoadThat", "boss", 10, None)
 
     # main window
     micaEnabled = ConfigItem("MainWindow", "MicaEnabled", isWin11(), BoolValidator())

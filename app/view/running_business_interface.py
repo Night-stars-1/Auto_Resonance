@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-10 22:54:08
-LastEditTime: 2024-04-21 16:06:01
+LastEditTime: 2024-04-26 18:23:05
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -10,7 +10,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QLabel, QPushButton, QWidget
 from qfluentwidgets import Dialog, ExpandLayout, ExpandSettingCard
 from qfluentwidgets import FluentIcon as FIF
-from qfluentwidgets import PrimaryPushSettingCard, ScrollArea
+from qfluentwidgets import ScrollArea
 
 from core.api.kmou import get_goods_info as get_goods_info_kmou
 from core.api.srap import get_goods_info as get_goods_info_srap
@@ -305,15 +305,12 @@ class RunningBusinessInterface(ScrollArea):
     def autoscan(self):
         signalBus.switchToCard.emit("LoggerInterface")
         from auto.scan_res_level import run
+
         self.workers = Worker(
-            run,
-            run,
-            order=cfg.adbOrder.value,
-            path=cfg.adbPath.value
+            run, run, order=cfg.adbOrder.value, path=cfg.adbPath.value
         )
         self.workers.start()
         self.workers.finished.connect(lambda: self.on_worker_finished(self.workers))
-
 
     def on_worker_finished(self, worker: Worker):
         # 线程完成时调用

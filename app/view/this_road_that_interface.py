@@ -5,15 +5,12 @@ LastEditTime: 2024-04-26 12:51:55
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
-from loguru import logger
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QLabel, QPushButton, QWidget
-from qfluentwidgets import Dialog, ExpandLayout, ExpandSettingCard
+from PyQt5.QtWidgets import QLabel, QWidget
+from qfluentwidgets import ExpandLayout
 from qfluentwidgets import FluentIcon as FIF
-from qfluentwidgets import PrimaryPushSettingCard, ScrollArea
+from qfluentwidgets import ScrollArea
 
-from core.api.kmou import get_goods_info as get_goods_info_kmou
-from core.api.srap import get_goods_info as get_goods_info_srap
 
 from ..common.config import cfg
 from ..common.signal_bus import signalBus
@@ -91,6 +88,8 @@ class ThisRoadThatInterface(ScrollArea):
             attack_boss,
             attack_boss,
             num=cfg.thisRoadThatBoss.value,
+            order=cfg.adbOrder,
+            path=cfg.adbPath
         )
         self.workers.start()
         signalBus.switchToCard.emit("LoggerInterface")
@@ -102,6 +101,8 @@ class ThisRoadThatInterface(ScrollArea):
         self.workers = Worker(
             transport_order,
             transport_order,
+            order=cfg.adbOrder,
+            path=cfg.adbPath
         )
         self.workers.start()
         signalBus.switchToCard.emit("LoggerInterface")

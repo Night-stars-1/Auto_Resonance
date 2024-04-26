@@ -147,8 +147,8 @@ def attack_five(num: int = 1):
             logger.info("攻击次数用完，退出攻击")
             break
 
-def attack_boss(num: int = 1):
-    connect()
+def attack_boss(order: str, path: str, num: int = 1):
+    connect(order, path)
     click_task()
     click((883, 540))
     attack_one(num)

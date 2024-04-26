@@ -226,10 +226,10 @@ class RunningBusinessInterface(ScrollArea):
 
     def __connectSignalToSlot(self):
         """connect signal to slot"""
-        self.testCard.clicked.connect(self.createSuccessInfoBar)
+        self.testCard.clicked.connect(self.runBusiness)
         self.autoscanreslevel.clicked.connect(self.autoscan)
 
-    def createSuccessInfoBar(self):
+    def runBusiness(self):
 
         def result(route):
             w = Dialog("详细", show(route), self)

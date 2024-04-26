@@ -6,7 +6,7 @@ LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
 import time
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Union
 
 from loguru import logger
 
@@ -62,8 +62,8 @@ class AnalysisTasks:
     def judgement_text(
         self,
         text: str,
-        success: Optional[str | List[Dict[str, str]]],
-        fail: Optional[str | List[Dict[str, str]]],
+        success: Union[str, List[Dict[str, str]]],
+        fail: Union[str, List[Dict[str, str]]],
         cropped_pos1: Tuple[int, int] = (0, 0),
         cropped_pos2: Tuple[int, int] = (0, 0),
         must_succeed: bool = False,

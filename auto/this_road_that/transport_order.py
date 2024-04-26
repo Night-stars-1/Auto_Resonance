@@ -73,8 +73,8 @@ def consign_goods(pos: Tuple[int, int]):
     logger.info("交付完成")
 
 
-def transport_order():
-    connect()
+def transport_order(order: str, path: str):
+    connect(order, path)
     go_assistance_center()
     pos = get_consign_pos()
     check_consign_gbr = get_bgr(

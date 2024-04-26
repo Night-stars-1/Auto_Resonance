@@ -11,7 +11,6 @@ from qfluentwidgets import ExpandLayout
 from qfluentwidgets import FluentIcon as FIF
 from qfluentwidgets import ScrollArea
 
-
 from ..common.config import cfg
 from ..common.signal_bus import signalBus
 from ..common.style_sheet import StyleSheet
@@ -88,8 +87,8 @@ class ThisRoadThatInterface(ScrollArea):
             attack_boss,
             attack_boss,
             num=cfg.thisRoadThatBoss.value,
-            order=cfg.adbOrder,
-            path=cfg.adbPath
+            order=cfg.adbOrder.value,
+            path=cfg.adbPath.value,
         )
         self.workers.start()
         signalBus.switchToCard.emit("LoggerInterface")
@@ -101,8 +100,8 @@ class ThisRoadThatInterface(ScrollArea):
         self.workers = Worker(
             transport_order,
             transport_order,
-            order=cfg.adbOrder,
-            path=cfg.adbPath
+            order=cfg.adbOrder.value,
+            path=cfg.adbPath.value,
         )
         self.workers.start()
         signalBus.switchToCard.emit("LoggerInterface")

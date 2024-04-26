@@ -59,3 +59,4 @@ def start():
         wait_fight_end()
         click((1154, 628))
         click((1154, 628))
+    logger.success(f"铁安局 => {rsb.name} 完成")

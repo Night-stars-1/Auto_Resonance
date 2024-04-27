@@ -321,7 +321,6 @@ class SHOP:
         while route_price_data.num < self.max_goods_num:  # 直到货仓被装满
             route_price_data.book += 1
             old_route_price_data = route_price_data.model_copy()
-            route_profit = 0
             for good_name, good in sorted_goods:
                 if good_name not in self.sell_goods[sell_city_name]:
                     # logger.error(f"{sell_city_name}没有{name}的数据")
@@ -351,13 +350,12 @@ class SHOP:
                     route_price_data.goods_data[good_name].profit += good_profit
                     route_price_data.num += num
                     route_price_data.profit += good_profit
-                    route_profit += good_profit
                     route_price_data.buy_price += buy_price * num
                     route_price_data.sell_price += sell_price * num
                 else:
                     route_price_data.normal_goods[good_name] = profit
-            print(route_profit / (route_price_data.book or 1), self.city_book_data["profitThreshold"])
-            if route_price_data.book and route_profit / route_price_data.book < self.city_book_data["profitThreshold"]: # 判断是否小于进货书利润阈值
+
+            if route_price_data.book and route_price_data.profit / route_price_data.book < self.city_book_data["profitThreshold"]: # 判断是否小于进货书利润阈值
                 route_price_data = old_route_price_data # 小于进货书利润阈值，本次计算无效，结束计算
                 break
 

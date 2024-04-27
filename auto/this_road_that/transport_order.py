@@ -74,31 +74,33 @@ def consign_goods(pos: Tuple[int, int]):
     logger.info("交付完成")
 
 
-def transport_order(order: str, path: str):
+def transport_order(order: str, path: str, num: int = 1):
     status = connect(order, path)
     if not status:
         logger.error("ADB连接失败")
         return False
-    go_assistance_center()
-    pos = get_consign_pos()
-    check_consign_gbr = get_bgr(
-        screenshot(), pos, cropped_pos1=(431, 637), cropped_pos2=(924, 694)
-    )
-    is_consign = compare_ranges([0, 170, 240], check_consign_gbr, [1, 182, 250])
-    logger.debug(f"交付坐标: {pos} {check_consign_gbr} {is_consign}")
-    if not is_consign:
-        go_home()
-        click_station("曼德矿场").wait()
-        go_business("buy")
-        buy_business(
-            [],
-            ["砂石", "石材", "建材", "钢筋混凝土轨枕", "轨枕用特种钢材", "铁矿石"],
-            num=0,
-            max_book=0,
-        )
-        go_home()
-        click_station("7号自由港").wait()
+    for n in num:
+        logger.info(f"开始 => {n+1}")
         go_assistance_center()
-        consign_goods((710, 662))
-    else:
-        consign_goods(pos)
+        pos = get_consign_pos()
+        check_consign_gbr = get_bgr(
+            screenshot(), pos, cropped_pos1=(431, 637), cropped_pos2=(924, 694)
+        )
+        is_consign = compare_ranges([0, 170, 240], check_consign_gbr, [1, 182, 250])
+        logger.debug(f"交付坐标: {pos} {check_consign_gbr} {is_consign}")
+        if not is_consign:
+            go_home()
+            click_station("曼德矿场").wait()
+            go_business("buy")
+            buy_business(
+                [],
+                ["砂石", "石材", "建材", "钢筋混凝土轨枕", "轨枕用特种钢材", "铁矿石"],
+                num=0,
+                max_book=0,
+            )
+            go_home()
+            click_station("7号自由港").wait()
+            go_assistance_center()
+            consign_goods((710, 662))
+        else:
+            consign_goods(pos)

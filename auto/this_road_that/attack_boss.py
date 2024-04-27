@@ -127,7 +127,7 @@ def attack_four(num: int = 1):
             break
 
 def attack_five(num: int = 1):
-    input_tap((679, 505))
+    input_tap((405, 317))
     for n in range(num):
         logger.info(f"开始攻击裂首骨龙 => {n+1}")
         time.sleep(0.5)

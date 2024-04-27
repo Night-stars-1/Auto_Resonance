@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-25 23:12:06
-LastEditTime: 2024-04-26 19:24:05
+LastEditTime: 2024-04-27 14:43:32
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -80,7 +80,7 @@ def transport_order(order: str, path: str, num: int = 1):
         logger.error("ADB连接失败")
         return False
     for n in num:
-        logger.info(f"开始 => {n+1}")
+        logger.info(f"开始运输订单 => {n+1}")
         go_assistance_center()
         pos = get_consign_pos()
         check_consign_gbr = get_bgr(

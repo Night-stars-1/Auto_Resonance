@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-25 23:12:06
-LastEditTime: 2024-04-27 14:43:32
+LastEditTime: 2024-04-27 23:49:15
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -21,10 +21,10 @@ from ..run_business import buy_business, go_business
 def go_assistance_center():
     go_home()
     go_outlets("工程援助中心")
-    while bgr := get_bgr(
+    while (bgr := get_bgr(
         screenshot(), (300, 669), cropped_pos1=(289, 640), cropped_pos2=(424, 701)
-    ) != [251, 126, 65]:
-        logger.info(f"是否进入工程援助中心颜色检查: {bgr}")
+    )) != [251, 126, 65]:
+        logger.debug(f"是否进入工程援助中心颜色检查: {bgr}")
         time.sleep(0.5)
     input_tap((844, 408))
     time.sleep(0.5)

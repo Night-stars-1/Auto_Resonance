@@ -13,7 +13,6 @@ from core.models.city_goods import (
     RoutesModel,
 )
 from ..models.goods import GoodsModel
-from ..models.config import config as config_model
 
 
 def round5(x):
@@ -178,7 +177,7 @@ class SHOP:
     def __init__(
         self,
         goods_data: GoodsModel,
-        city_book_data: Dict[str, int],
+        city_book: Dict[str, int],
         skill_level: Dict[str, int],
         station_level: Dict[str, int],
         negotiate_price: Dict[str, int],
@@ -189,7 +188,7 @@ class SHOP:
             跑商基类
         参数:
             :param goods_data: 商品数据
-            :param city_book_data: 城市进货书信息
+            :param city_book: 城市进货书信息
             :param skill_level: 角色共振等级
             :param station_level: 站点声望等级等级
             :param negotiate_price: 议价次数和单次疲劳
@@ -200,7 +199,7 @@ class SHOP:
         """城市可购买的商品信息"""
         self.sell_goods = self.goods_data.sell_goods
         """城市可出售的商品信息"""
-        self.city_book_data = city_book_data
+        self.city_book = city_book
         """城市最大单次进货书"""
         self.goods_addition: Dict[str, int] = self.get_goods_addition(skill_level)
         """商品附加"""
@@ -235,15 +234,15 @@ class SHOP:
 
     def get_city_data_by_city_level(
         self,
-        city_level: Dict[str, int],
+        station_level: Dict[str, int],
     ) -> Dict[str, CityDataModel]:
         city_level_data = {}
-        for attached_name, city_name in attached_to_city_data.items():
-            if city_name not in city_level.keys():
+        for attached_name, station_name in attached_to_city_data.items():
+            if station_name not in station_level.keys():
                 continue
-            level = city_level[city_name] + 1
+            level = station_level[station_name]
             city_level_data[attached_name] = CityDataModel.model_validate(
-                city_data[city_name][level]
+                city_data[station_name][level]
             )
         return city_level_data
 
@@ -290,13 +289,14 @@ class SHOP:
         new_sell_price = round5((no_revenue_sell_price - revenue))
         return new_sell_price, no_tax_profit
 
-    def get_pending_purchase(self, buy_city_name: str, sell_city_name: str):
+    def get_pending_purchase(self, buy_city_name: str, sell_city_name: str, max_book: int = 0):
         """
         说明:
             获取需要购买的物品的信息
         参数:
             :param buy_city_name: 购买城市名称
             :param sell_city_name: 出售城市名称
+            :param max_book: 最大书本数量
         """
         goods = self.buy_goods[buy_city_name] # 购买城市的商品信息
         sorted_goods = sorted(
@@ -318,9 +318,9 @@ class SHOP:
             buy_argaining_num=buy_argaining_num,
             sell_argaining_num=sell_argaining_num,
         )
-        while route_price_data.num < self.max_goods_num:  # 直到货仓被装满
-            route_price_data.book += 1
+        while route_price_data.num < self.max_goods_num and route_price_data.book < max_book:  # 直到货仓被装满
             old_route_price_data = route_price_data.model_copy()
+            route_price_data.book += 1
             for good_name, good in sorted_goods:
                 if good_name not in self.sell_goods[sell_city_name]:
                     # logger.error(f"{sell_city_name}没有{name}的数据")
@@ -338,7 +338,7 @@ class SHOP:
                 )
                 good_profit = profit * num # 商品利润
                 # print(f"{buy_city_name}<=>{sell_city_name}:{good_name}=>{sell_price} {profit * num}")
-                if profit >= self.city_book_data["priceThreshold"] or good.isSpeciality:
+                if profit >= self.city_book["priceThreshold"] or good.isSpeciality:
                     if profit >= 1000:
                         route_price_data.buy_goods[good_name] = profit
                     else:
@@ -355,7 +355,7 @@ class SHOP:
                 else:
                     route_price_data.normal_goods[good_name] = profit
 
-            if route_price_data.book and route_price_data.profit / route_price_data.book < self.city_book_data["profitThreshold"]: # 判断是否小于进货书利润阈值
+            if route_price_data.book and route_price_data.profit / route_price_data.book < self.city_book["profitThreshold"]: # 判断是否小于进货书利润阈值
                 route_price_data = old_route_price_data # 小于进货书利润阈值，本次计算无效，结束计算
                 break
 
@@ -370,32 +370,34 @@ class SHOP:
         返回:
             :return: 路线数据
         """
+        total_max_book = self.city_book["totalMaxBook"]
         routes: List[RoutesModel] = []
         for city1, city2 in itertools.combinations(set(self.buy_goods.keys()), 2):
-            if city1 not in self.all_city_info or city2 not in self.all_city_info:
-                continue
-            city_routes = RoutesModel()
-            target1 = self.get_pending_purchase(city1, city2)
-            target2 = self.get_pending_purchase(city2, city1)
-            city_routes.city_data = [target1, target2]
-            # 总计
-            city_routes.book = (
-                city_routes.city_data[0].book + city_routes.city_data[1].book
-            )
-            city_routes.city_tired = (
-                city_routes.city_data[0].city_tired
-                + city_routes.city_data[1].city_tired
-            )
-            city_routes.profit = (
-                city_routes.city_data[0].profit + city_routes.city_data[1].profit
-            )
-            city_routes.tired_profit = round5(
-                city_routes.profit / city_routes.city_tired
-            )
-            city_routes.book_profit = city_routes.book and round5(
-                city_routes.profit / city_routes.book
-            )
-            routes.append(city_routes)
+            for max_book in range(1, total_max_book+1):
+                if city1 not in self.all_city_info or city2 not in self.all_city_info:
+                    continue
+                city_routes = RoutesModel()
+                target1 = self.get_pending_purchase(city1, city2, max_book)
+                target2 = self.get_pending_purchase(city2, city1, total_max_book-max_book)
+                city_routes.city_data = [target1, target2]
+                # 总计
+                city_routes.book = (
+                    city_routes.city_data[0].book + city_routes.city_data[1].book
+                )
+                city_routes.city_tired = (
+                    city_routes.city_data[0].city_tired
+                    + city_routes.city_data[1].city_tired
+                )
+                city_routes.profit = (
+                    city_routes.city_data[0].profit + city_routes.city_data[1].profit
+                )
+                city_routes.tired_profit = round5(
+                    city_routes.profit / city_routes.city_tired
+                )
+                city_routes.book_profit = city_routes.book and round5(
+                    city_routes.profit / city_routes.book
+                )
+                routes.append(city_routes)
         return routes
 
     def get_optimal_route(self):

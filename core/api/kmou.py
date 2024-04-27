@@ -25,7 +25,7 @@ def get_goods_info(
 ):
     url = "https://reso-data.kmou424.moe/api/fetch/goods_info"
     response = requests.get(url, params={"uuid": uuid})
-    data = KMouRequestModel.model_validate(response.json())
+    goods_data = KMouRequestModel.model_validate(response.json())
     return SHOP(
-        data, city_book, skill_level, station_level, negotiate_price, max_goods_num
+        goods_data, city_book, skill_level, station_level, negotiate_price, max_goods_num
     ).get_optimal_route()

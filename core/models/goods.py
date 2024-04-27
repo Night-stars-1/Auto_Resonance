@@ -1,13 +1,14 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-08 17:45:06
-LastEditTime: 2024-04-14 16:36:40
+LastEditTime: 2024-04-27 19:38:13
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
 from pathlib import Path
 from typing import Any, Dict, List
 
+from loguru import logger
 from pydantic import BaseModel, Field, RootModel
 
 from .city_data import city_goods
@@ -37,6 +38,9 @@ class GoodModel(BaseModel):
         super().__init__(**data)
 
 
+LACK_DATA = []
+
+
 class GoodsModel(BaseModel):
     """商品列表模型"""
 
@@ -57,16 +61,22 @@ class GoodsModel(BaseModel):
         """设置商品"""
         for good in self.goods:
             if good.city not in city_goods:
+                if good.city not in LACK_DATA:
+                    LACK_DATA.append(good.city)
+                    logger.error(f"{good.city} 数据不存在")
                 continue
             if good.type == "buy":
-                city_good_data = city_goods[good.city][good.name]
-                good.num = city_good_data.num
-                good.isSpeciality = city_good_data.isSpeciality
-                self.buy_goods.setdefault(good.city, {}).setdefault(good.name, good)
-                if city_good_data.isSpeciality:
-                    self.speciality_goods.setdefault(good.city, {}).setdefault(
-                        good.name, good
-                    )
+                if good.name in city_goods[good.city]:
+                    city_good_data = city_goods[good.city][good.name]
+                    good.num = city_good_data.num
+                    good.isSpeciality = city_good_data.isSpeciality
+                    self.buy_goods.setdefault(good.city, {}).setdefault(good.name, good)
+                    if city_good_data.isSpeciality:
+                        self.speciality_goods.setdefault(good.city, {}).setdefault(
+                            good.name, good
+                        )
+                else:
+                    logger.error(f"{good.city}不存在{good.name}")
             elif good.type == "sell":
                 self.sell_goods.setdefault(good.city, {}).setdefault(good.name, good)
 

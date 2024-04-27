@@ -40,9 +40,9 @@ def get_goods_info(
     if response.status_code != 200:
         raise Exception(f"请求失败: {response.text}")
     result = gzip.decompress(response.content).decode("utf-8")
-    data = SrapRequestGzipModel.model_validate(orjson.loads(result))
+    goods_data = SrapRequestGzipModel.model_validate(orjson.loads(result))
     return SHOP(
-        data, city_book, skill_level, station_level, negotiate_price, max_goods_num
+        goods_data, city_book, skill_level, station_level, negotiate_price, max_goods_num
     ).get_optimal_route()
 
 

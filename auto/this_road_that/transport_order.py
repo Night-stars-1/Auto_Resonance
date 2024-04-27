@@ -79,7 +79,7 @@ def transport_order(order: str, path: str, num: int = 1):
     if not status:
         logger.error("ADB连接失败")
         return False
-    for n in num:
+    for n in range(num):
         logger.info(f"开始运输订单 => {n+1}")
         go_assistance_center()
         pos = get_consign_pos()

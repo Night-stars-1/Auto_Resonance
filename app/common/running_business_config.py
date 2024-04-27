@@ -11,6 +11,7 @@ from qfluentwidgets import ConfigItem, QConfig
 class RunningBusinessConfig(QConfig):
     """Config of application"""
 
+    totalMaxBook = ConfigItem("RunningBusiness", "totalMaxBook", 4, None)
     profitThreshold = ConfigItem("RunningBusiness", "profitThreshold", 100000, None)
     priceThreshold = ConfigItem("RunningBusiness", "priceThreshold", 500, None)
     maxGoodsNum = ConfigItem("RunningBusiness", "maxGoodsNum", 625, None)

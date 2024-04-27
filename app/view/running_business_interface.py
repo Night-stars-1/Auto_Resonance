@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-10 22:54:08
-LastEditTime: 2024-04-27 14:29:08
+LastEditTime: 2024-04-27 21:51:57
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -61,12 +61,14 @@ CITYS = [
     "荒原站",
     "铁盟哨站",
     "修格里城",
+    "阿妮塔发射中心",
 ]
 STATIONS = [
     "七号自由港",
     "澄明数据中心",
     "曼德矿场",
     "修格里城",
+    "阿妮塔发射中心",
 ]
 
 

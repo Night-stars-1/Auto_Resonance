@@ -1,11 +1,12 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-11 20:58:19
-LastEditTime: 2024-04-21 21:58:00
+LastEditTime: 2024-04-27 21:49:52
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
 from qfluentwidgets import ConfigItem, QConfig
+
 
 class RunningBusinessConfig(QConfig):
     """Config of application"""
@@ -49,10 +50,12 @@ class RunningBusinessConfig(QConfig):
     荒原站砍抬次数 = ConfigItem("NegotiatePrice", "荒原站", 0, None)
     铁盟哨站砍抬次数 = ConfigItem("NegotiatePrice", "铁盟哨站", 0, None)
     修格里城砍抬次数 = ConfigItem("NegotiatePrice", "修格里城", 0, None)
+    阿妮塔发射中心砍抬次数 = ConfigItem("NegotiatePrice", "阿妮塔发射中心", 0, None)
     buyTired = ConfigItem("NegotiatePrice", "buyTired", 8, None)
     sellTired = ConfigItem("NegotiatePrice", "sellTired", 8, None)
 
-    七号自由港声望 = ConfigItem("StationLevel", "7号自由港", 1, None)
-    澄明数据中心声望 = ConfigItem("StationLevel", "澄明数据中心", 1, None)
-    曼德矿场声望 = ConfigItem("StationLevel", "曼德矿场", 1, None)
-    修格里城声望 = ConfigItem("StationLevel", "修格里城", 1, None)
+    七号自由港声望 = ConfigItem("StationLevel", "7号自由港", 0, None)
+    澄明数据中心声望 = ConfigItem("StationLevel", "澄明数据中心", 0, None)
+    曼德矿场声望 = ConfigItem("StationLevel", "曼德矿场", 0, None)
+    修格里城声望 = ConfigItem("StationLevel", "修格里城", 0, None)
+    阿妮塔发射中心声望 = ConfigItem("NegotiatePrice", "阿妮塔发射中心", 0, None)

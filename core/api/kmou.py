@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-08 22:57:00
-LastEditTime: 2024-04-26 22:35:35
+LastEditTime: 2024-04-27 21:47:43
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -25,7 +25,12 @@ def get_goods_info(
 ):
     url = "https://reso-data.kmou424.moe/api/fetch/goods_info"
     response = requests.get(url, params={"uuid": uuid})
-    data = KMouRequestModel.model_validate(response.json())
+    goods_data = KMouRequestModel.model_validate(response.json())
     return SHOP(
-        data, city_book, skill_level, station_level, negotiate_price, max_goods_num
+        goods_data,
+        city_book,
+        skill_level,
+        station_level,
+        negotiate_price,
+        max_goods_num,
     ).get_optimal_route()

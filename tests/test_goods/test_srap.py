@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-10 22:45:55
-LastEditTime: 2024-04-26 22:35:17
+LastEditTime: 2024-04-27 02:23:53
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -24,15 +24,7 @@ from core.goods.shop import show
 def test_get_goods_info_srap():
     route = get_goods_info_srap(
         city_book={
-            "7号自由港": 3,
-            "修格里城": 3,
-            "曼德矿场": 3,
-            "淘金乐园": 3,
-            "澄明数据中心": 3,
-            "荒原站": 3,
-            "铁盟哨站": 3,
-            "阿妮塔战备工厂": 3,
-            "阿妮塔能源研究所": 3,
+            "profitThreshold": 10000,
             "priceThreshold": 500,
         },
         skill_level={
@@ -86,15 +78,7 @@ def test_get_goods_info_srap():
 def test_get_goods_info_kmou():
     route = get_goods_info_kmou(
         city_book={
-            "7号自由港": 3,
-            "修格里城": 3,
-            "曼德矿场": 3,
-            "淘金乐园": 3,
-            "澄明数据中心": 3,
-            "荒原站": 3,
-            "铁盟哨站": 3,
-            "阿妮塔战备工厂": 3,
-            "阿妮塔能源研究所": 3,
+            "profitThreshold": 7000,
             "priceThreshold": 500,
         },
         skill_level={

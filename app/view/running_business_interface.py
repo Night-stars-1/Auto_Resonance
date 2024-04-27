@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-10 22:54:08
-LastEditTime: 2024-04-26 19:43:33
+LastEditTime: 2024-04-27 14:29:08
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -75,7 +75,7 @@ class RunningBusinessInterface(ScrollArea):
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
-        self.skillCardData: Dict[str, SpinBoxSettingCard] = {} # 角色技能卡片集合
+        self.skillCardData: Dict[str, SpinBoxSettingCard] = {}  # 角色技能卡片集合
         self.scrollWidget = QWidget(self)
         self.expandLayout = ExpandLayout(self.scrollWidget)
 
@@ -114,21 +114,21 @@ class RunningBusinessInterface(ScrollArea):
             spin_box_max=1000,
             parent=self.scrollWidget,
         )
-        self.testCard = PrimaryPushLoadCard(
+        self.testRunBusinessCard = PrimaryPushLoadCard(
             "测试", FIF.TAG, "跑商测试", "测试跑商功能", self.scrollWidget
         )
         self.bookGroup = ExpandSettingCard(
             FIF.BRUSH, "进货书设置", parent=self.scrollWidget
         )
-        for city in CITYS:
-            book = SpinBoxSettingCard(
-                getattr(cfg, f"{city}进货书"),
-                FIF.ACCEPT,
-                city,
-                f"{city}单次最大进货书",
-                parent=self.bookGroup,
-            )
-            self.bookGroup.viewLayout.addWidget(book)
+        self.profitThreshold = SpinBoxSettingCard(
+            cfg.profitThreshold,
+            FIF.ACCEPT,
+            "进货书使用阈值",
+            "只有利润高于该值的时候才使用进货书",
+            spin_box_min=100000,
+            spin_box_max=500000,
+            parent=self.bookGroup,
+        )
         self.priceThreshold = SpinBoxSettingCard(
             cfg.priceThreshold,
             FIF.ACCEPT,
@@ -166,7 +166,7 @@ class RunningBusinessInterface(ScrollArea):
             SpinBoxSettingCard(
                 cfg.buyTired,
                 FIF.ACCEPT,
-                city,
+                "单次抬价疲劳",
                 "单次砍价疲劳",
                 parent=self.tiredGroup,
             )
@@ -175,7 +175,7 @@ class RunningBusinessInterface(ScrollArea):
             SpinBoxSettingCard(
                 cfg.sellTired,
                 FIF.ACCEPT,
-                city,
+                "单次抬价疲劳",
                 "单次抬价疲劳",
                 parent=self.tiredGroup,
             )
@@ -206,6 +206,7 @@ class RunningBusinessInterface(ScrollArea):
     def __initLayout(self):
         self.settingLabel.move(36, 30)
 
+        self.bookGroup.viewLayout.addWidget(self.profitThreshold)
         self.bookGroup.viewLayout.addWidget(self.priceThreshold)
         self.bookGroup._adjustViewSize()
         self.skillGroup._adjustViewSize()
@@ -218,7 +219,7 @@ class RunningBusinessInterface(ScrollArea):
         # self.expandLayout.setSpacing(28)
         self.expandLayout.setContentsMargins(36, 0, 36, 0)
         self.expandLayout.addWidget(self.maxGoodsNum)
-        self.expandLayout.addWidget(self.testCard)
+        self.expandLayout.addWidget(self.testRunBusinessCard)
         self.expandLayout.addWidget(self.bookGroup)
         self.expandLayout.addWidget(self.skillGroup)
         self.expandLayout.addWidget(self.tiredGroup)
@@ -226,7 +227,7 @@ class RunningBusinessInterface(ScrollArea):
 
     def __connectSignalToSlot(self):
         """connect signal to slot"""
-        self.testCard.clicked.connect(self.runBusiness)
+        self.testRunBusinessCard.clicked.connect(self.runBusiness)
         self.autoscanreslevel.clicked.connect(self.autoscan)
 
     def runBusiness(self):
@@ -254,7 +255,7 @@ class RunningBusinessInterface(ScrollArea):
                     lambda: self.on_worker_finished(self.workers)
                 )
 
-        self.testCard.loading(True)
+        self.testRunBusinessCard.loading(True)
         from auto.run_business import run
         from core.goods.shop import show
 
@@ -310,9 +311,9 @@ class RunningBusinessInterface(ScrollArea):
 
         def result(skill_level: Dict[str, int]):
             for role_name, level in skill_level.items():
-                role_name = role_name.replace("闻笔", "闻笙") # 纠正一些角色名
+                role_name = role_name.replace("闻笔", "闻笙")  # 纠正一些角色名
                 if role_name in self.skillCardData:
-                    #setattr(cfg, skill, level)
+                    # setattr(cfg, skill, level)
                     self.skillCardData[role_name].spinBox.setValue(level)
 
         signalBus.switchToCard.emit("LoggerInterface")
@@ -327,6 +328,6 @@ class RunningBusinessInterface(ScrollArea):
 
     def on_worker_finished(self, worker: Worker):
         # 线程完成时调用
-        self.testCard.loading(False)
+        self.testRunBusinessCard.loading(False)
         worker and worker.deleteLater()  # 安全删除Worker对象
         self.workers = None

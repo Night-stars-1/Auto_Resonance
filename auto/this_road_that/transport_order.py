@@ -21,9 +21,10 @@ from ..run_business import buy_business, go_business
 def go_assistance_center():
     go_home()
     go_outlets("工程援助中心")
-    while get_bgr(
+    while bgr := get_bgr(
         screenshot(), (300, 669), cropped_pos1=(289, 640), cropped_pos2=(424, 701)
     ) != [251, 126, 65]:
+        logger.info(f"是否进入工程援助中心颜色检查: {bgr}")
         time.sleep(0.5)
     input_tap((844, 408))
     time.sleep(0.5)

@@ -7,47 +7,10 @@ LastEditors: Night-stars-1 nujj1042633805@gmail.com
 
 from qfluentwidgets import ConfigItem, QConfig
 
-SKILLS = [
-    "朱利安",
-    "狮鬃",
-    "魇",
-    "塞西尔",
-    "雷火",
-    "黛丝莉",
-    "艾略特",
-    "静流",
-    "多萝西",
-    "卡莲",
-    "星花",
-    "瑞秋",
-    "菲妮娅",
-    "瓦伦汀",
-    "阿知波",
-    "闻笙",
-    "山岚",
-    "叶珏",
-    "隼",
-    "奈弥",
-    "伊尔",
-    "甘雅",
-    "妮蔻拉",
-    "卡洛琳",
-    "海因里希",
-]
-
-
 class RunningBusinessConfig(QConfig):
     """Config of application"""
 
-    七号自由港进货书 = ConfigItem("RunningBusiness", "7号自由港", 0, None)
-    澄明数据中心进货书 = ConfigItem("RunningBusiness", "澄明数据中心", 0, None)
-    阿妮塔战备工厂进货书 = ConfigItem("RunningBusiness", "阿妮塔战备工厂", 0, None)
-    阿妮塔能源研究所进货书 = ConfigItem("RunningBusiness", "阿妮塔能源研究所", 0, None)
-    淘金乐园进货书 = ConfigItem("RunningBusiness", "淘金乐园", 0, None)
-    曼德矿场进货书 = ConfigItem("RunningBusiness", "曼德矿场", 0, None)
-    荒原站进货书 = ConfigItem("RunningBusiness", "荒原站", 0, None)
-    铁盟哨站进货书 = ConfigItem("RunningBusiness", "铁盟哨站", 0, None)
-    修格里城进货书 = ConfigItem("RunningBusiness", "修格里城", 0, None)
+    profitThreshold = ConfigItem("RunningBusiness", "profitThreshold", 100000, None)
     priceThreshold = ConfigItem("RunningBusiness", "priceThreshold", 500, None)
     maxGoodsNum = ConfigItem("RunningBusiness", "maxGoodsNum", 625, None)
 

@@ -178,7 +178,7 @@ class SHOP:
     def __init__(
         self,
         goods_data: GoodsModel,
-        city_book: Dict[str, int],
+        city_book_data: Dict[str, int],
         skill_level: Dict[str, int],
         station_level: Dict[str, int],
         negotiate_price: Dict[str, int],
@@ -189,7 +189,7 @@ class SHOP:
             跑商基类
         参数:
             :param goods_data: 商品数据
-            :param city_book: 城市最大单次进货书
+            :param city_book_data: 城市进货书信息
             :param skill_level: 角色共振等级
             :param station_level: 站点声望等级等级
             :param negotiate_price: 议价次数和单次疲劳
@@ -200,7 +200,7 @@ class SHOP:
         """城市可购买的商品信息"""
         self.sell_goods = self.goods_data.sell_goods
         """城市可出售的商品信息"""
-        self.city_book = city_book
+        self.city_book_data = city_book_data
         """城市最大单次进货书"""
         self.goods_addition: Dict[str, int] = self.get_goods_addition(skill_level)
         """商品附加"""
@@ -298,66 +298,72 @@ class SHOP:
             :param buy_city_name: 购买城市名称
             :param sell_city_name: 出售城市名称
         """
-        goods = self.buy_goods[buy_city_name]
+        goods = self.buy_goods[buy_city_name] # 购买城市的商品信息
         sorted_goods = sorted(
             goods.items(), key=lambda item: item[1].isSpeciality, reverse=True
-        )
-        buy_argaining_times = self.negotiate_price.get(buy_city_name, 0)
-        sell_argaining_times = self.negotiate_price.get(sell_city_name, 0)
+        ) # 按照是否特产排序
+        buy_argaining_num = self.negotiate_price.get(buy_city_name, 0) # 购买议价次数
+        sell_argaining_num = self.negotiate_price.get(sell_city_name, 0) # 出售议价次数
         # 总疲劳
         city_tired = (
             city_tired_data.get(f"{buy_city_name}-{sell_city_name}", 99999)
-            + buy_argaining_times * self.negotiate_price.get("buyTired", 0)
-            + sell_argaining_times * self.negotiate_price.get("sellTired", 0)
+            + buy_argaining_num * self.negotiate_price.get("buyTired", 0) # 购买总疲劳
+            + sell_argaining_num * self.negotiate_price.get("sellTired", 0) # 出售总疲劳
         )
-        target: RouteModel = RouteModel(
+        # 目标站点的商品价格信息
+        route_price_data: RouteModel = RouteModel(
             buy_city_name=buy_city_name,
             sell_city_name=sell_city_name,
             city_tired=city_tired,
-            buy_argaining_times=buy_argaining_times,
-            sell_argaining_times=sell_argaining_times,
+            buy_argaining_num=buy_argaining_num,
+            sell_argaining_num=sell_argaining_num,
         )
-        while (
-            target.num < self.max_goods_num
-            and target.book < self.city_book[buy_city_name]
-        ):  # 直到货仓被装满
-            target.book += 1
-            for name, good in sorted_goods:
-                if name not in self.sell_goods[sell_city_name]:
+        while route_price_data.num < self.max_goods_num:  # 直到货仓被装满
+            route_price_data.book += 1
+            old_route_price_data = route_price_data.model_copy()
+            route_profit = 0
+            for good_name, good in sorted_goods:
+                if good_name not in self.sell_goods[sell_city_name]:
                     # logger.error(f"{sell_city_name}没有{name}的数据")
                     continue
                 buy_price, buy_num = self.get_good_buy_price(
-                    good.price, good.num, buy_city_name, name
+                    good.price, good.num, buy_city_name, good_name
                 )
                 num = min(
                     buy_num,
-                    self.max_goods_num - target.num,
+                    self.max_goods_num - route_price_data.num,
                 )  # 确保购买数量不超过最大商品数量
                 # print(f"{buy_city_name}:{name}=>{buy_price} {buy_num}")
                 sell_price, profit = self.get_good_sell_price(
-                    buy_price, sell_city_name, name
+                    buy_price, sell_city_name, good_name
                 )
-                all_profit = profit * num
-                # print(f"{buy_city_name}<=>{sell_city_name}:{name}=>{sell_price} {rate_price}")
-                if profit >= self.city_book["priceThreshold"] or good.isSpeciality:
+                good_profit = profit * num # 商品利润
+                # print(f"{buy_city_name}<=>{sell_city_name}:{good_name}=>{sell_price} {profit * num}")
+                if profit >= self.city_book_data["priceThreshold"] or good.isSpeciality:
                     if profit >= 1000:
-                        target.buy_goods[name] = profit
+                        route_price_data.buy_goods[good_name] = profit
                     else:
-                        target.normal_goods[name] = profit
-                    target.goods_data.setdefault(name, RouteModel.GoodsData())
-                    target.goods_data[name].num += num
-                    target.goods_data[name].buy_price += buy_price
-                    target.goods_data[name].sell_price += sell_price
-                    target.goods_data[name].profit += all_profit
-                    target.num += num
-                    target.profit += all_profit
-                    target.buy_price += buy_price * num
-                    target.sell_price += sell_price * num
+                        route_price_data.normal_goods[good_name] = profit
+                    route_price_data.goods_data.setdefault(good_name, RouteModel.GoodsData())
+                    route_price_data.goods_data[good_name].num += num
+                    route_price_data.goods_data[good_name].buy_price += buy_price
+                    route_price_data.goods_data[good_name].sell_price += sell_price
+                    route_price_data.goods_data[good_name].profit += good_profit
+                    route_price_data.num += num
+                    route_price_data.profit += good_profit
+                    route_profit += good_profit
+                    route_price_data.buy_price += buy_price * num
+                    route_price_data.sell_price += sell_price * num
                 else:
-                    target.normal_goods[name] = profit
-        target.tired_profit = round5(target.profit / city_tired)
-        target.book_profit = target.book and round5(target.profit / target.book)
-        return target
+                    route_price_data.normal_goods[good_name] = profit
+            print(route_profit / (route_price_data.book or 1), self.city_book_data["profitThreshold"])
+            if route_price_data.book and route_profit / route_price_data.book < self.city_book_data["profitThreshold"]: # 判断是否小于进货书利润阈值
+                route_price_data = old_route_price_data # 小于进货书利润阈值，本次计算无效，结束计算
+                break
+
+        route_price_data.tired_profit = round5(route_price_data.profit / city_tired)
+        route_price_data.book_profit = route_price_data.book and round5(route_price_data.profit / route_price_data.book)
+        return route_price_data
 
     def get_route_profit(self):
         """
@@ -412,6 +418,7 @@ class SHOP:
         for good in routes:
             logger.info(show(good))
         """
+        # 根据利润排序低价值商品
         optimal_route.city_data[0].normal_goods = {
             k: v
             for k, v in sorted(
@@ -437,6 +444,7 @@ class SHOP:
             )
         ]
 
+        # 根据利润排序低价值商品
         optimal_route.city_data[1].normal_goods = {
             k: v
             for k, v in sorted(

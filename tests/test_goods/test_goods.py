@@ -1,12 +1,14 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-10 22:45:55
-LastEditTime: 2024-04-27 02:23:53
+LastEditTime: 2024-04-28 00:32:53
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
 import sys
 from pathlib import Path
+
+from core.models.goods import GoodsModel
 
 # 添加项目根目录到 sys.path
 project_root = Path(__file__).resolve().parent.parent.parent
@@ -18,13 +20,14 @@ LOGGER = logging.getLogger(__name__)
 from app.common.config import cfg
 from core.api.kmou import get_goods_info as get_goods_info_kmou
 from core.api.srap import get_goods_info as get_goods_info_srap
-from core.goods.shop import show
+from core.goods.shop import SHOP, show
 
 
 def test_get_goods_info_srap():
     route = get_goods_info_srap(
         city_book={
-            "profitThreshold": 10000,
+            "totalMaxBook": 4,
+            "profitThreshold": 300000,
             "priceThreshold": 500,
         },
         skill_level={
@@ -78,6 +81,7 @@ def test_get_goods_info_srap():
 def test_get_goods_info_kmou():
     route = get_goods_info_kmou(
         city_book={
+            "totalMaxBook": 4,
             "profitThreshold": 7000,
             "priceThreshold": 500,
         },
@@ -130,6 +134,26 @@ def test_get_goods_info_kmou():
     assert route.city_data[0].profit != 0 and route.city_data[1].profit != 0
 
 
+def test_get_city_data_by_city_level():
+    station_level = {
+        "7号自由港": 19,
+        "修格里城": 13,
+        "曼德矿场": 12,
+        "澄明数据中心": 18,
+    }
+    result = SHOP(
+        goods_data=GoodsModel(goods=[]),
+        city_book={},
+        skill_level={},
+        station_level=station_level,
+        negotiate_price={},
+        max_goods_num=625,
+    ).get_city_data_by_city_level(station_level=station_level)
+    print(result)
+    assert result["7号自由港"].buy_num != 0.0
+
+
 if __name__ == "__main__":
     # test_get_goods_info_kmou()
     test_get_goods_info_srap()
+    # test_get_city_data_by_city_level()

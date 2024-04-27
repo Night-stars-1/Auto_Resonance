@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-10 22:54:08
-LastEditTime: 2024-04-27 21:51:57
+LastEditTime: 2024-04-28 00:58:12
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -107,7 +107,7 @@ class RunningBusinessInterface(ScrollArea):
     def loadSamples(self):
         """load samples"""
 
-        self.maxGoodsNum = SpinBoxSettingCard(
+        self.maxGoodsNumCard = SpinBoxSettingCard(
             cfg.maxGoodsNum,
             FIF.ACCEPT,
             "最大商品数量",
@@ -122,7 +122,16 @@ class RunningBusinessInterface(ScrollArea):
         self.bookGroup = ExpandSettingCard(
             FIF.BRUSH, "进货书设置", parent=self.scrollWidget
         )
-        self.profitThreshold = SpinBoxSettingCard(
+        self.totalMaxBookCard = SpinBoxSettingCard(
+            cfg.totalMaxBook,
+            FIF.ACCEPT,
+            "进货书最大使用量",
+            "进货书最大使用总量，超过该值不再使用进货书",
+            spin_box_min=1,
+            spin_box_max=10,
+            parent=self.bookGroup,
+        )
+        self.profitThresholdCard = SpinBoxSettingCard(
             cfg.profitThreshold,
             FIF.ACCEPT,
             "进货书使用阈值",
@@ -131,7 +140,7 @@ class RunningBusinessInterface(ScrollArea):
             spin_box_max=500000,
             parent=self.bookGroup,
         )
-        self.priceThreshold = SpinBoxSettingCard(
+        self.priceThresholdCard = SpinBoxSettingCard(
             cfg.priceThreshold,
             FIF.ACCEPT,
             "价格阈值",
@@ -183,33 +192,34 @@ class RunningBusinessInterface(ScrollArea):
             )
         )
         for city in CITYS:
-            book = SpinBoxSettingCard(
+            bookCard = SpinBoxSettingCard(
                 getattr(cfg, f"{city}砍抬次数"),
                 FIF.ACCEPT,
                 city,
                 f"{city}砍抬次数",
                 parent=self.tiredGroup,
             )
-            self.tiredGroup.viewLayout.addWidget(book)
+            self.tiredGroup.viewLayout.addWidget(bookCard)
 
         self.levelGroup = ExpandSettingCard(
             FIF.BRUSH, "声望设置设置", parent=self.scrollWidget
         )
         for station in STATIONS:
-            book = SpinBoxSettingCard(
+            bookCard = SpinBoxSettingCard(
                 getattr(cfg, f"{station}声望"),
                 FIF.ACCEPT,
                 station,
                 f"{station}声望",
                 parent=self.levelGroup,
             )
-            self.levelGroup.viewLayout.addWidget(book)
+            self.levelGroup.viewLayout.addWidget(bookCard)
 
     def __initLayout(self):
         self.settingLabel.move(36, 30)
 
-        self.bookGroup.viewLayout.addWidget(self.profitThreshold)
-        self.bookGroup.viewLayout.addWidget(self.priceThreshold)
+        self.bookGroup.viewLayout.addWidget(self.totalMaxBookCard)
+        self.bookGroup.viewLayout.addWidget(self.profitThresholdCard)
+        self.bookGroup.viewLayout.addWidget(self.priceThresholdCard)
         self.bookGroup._adjustViewSize()
         self.skillGroup._adjustViewSize()
         self.tiredGroup._adjustViewSize()
@@ -220,7 +230,7 @@ class RunningBusinessInterface(ScrollArea):
         # add setting card group to layout
         # self.expandLayout.setSpacing(28)
         self.expandLayout.setContentsMargins(36, 0, 36, 0)
-        self.expandLayout.addWidget(self.maxGoodsNum)
+        self.expandLayout.addWidget(self.maxGoodsNumCard)
         self.expandLayout.addWidget(self.testRunBusinessCard)
         self.expandLayout.addWidget(self.bookGroup)
         self.expandLayout.addWidget(self.skillGroup)

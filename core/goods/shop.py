@@ -502,8 +502,8 @@ class SHOP:
         """
 
         # TODO: 修改来源, 用户设置或者什么方式计算出来的后验值
-        prior_fatiue_price = 20000
-        prior_book_price = 300000
+        prior_fatiue_price = self.city_book["fatiguePriorPrice"]
+        prior_book_price = self.city_book["bookPriorPrice"]
 
         routes = self.get_route_profit()
 

@@ -149,6 +149,24 @@ class RunningBusinessInterface(ScrollArea):
             spin_box_max=1000,
             parent=self.bookGroup,
         )
+        self.bookPriorPriceCard = SpinBoxSettingCard(
+            cfg.bookPriorPrice,
+            FIF.ACCEPT,
+            "进货书估价",
+            "进货书的先验价格",
+            spin_box_min=0,
+            spin_box_max=1000000,
+            parent=self.bookGroup,
+        )
+        self.fatiguePriorPriceCard = SpinBoxSettingCard(
+            cfg.fatiguePriorPrice,
+            FIF.ACCEPT,
+            "疲劳估价",
+            "疲劳的先验价格",
+            spin_box_min=0,
+            spin_box_max=100000,
+            parent=self.bookGroup,
+        )
 
         self.skillGroup = ExpandSettingCard(
             FIF.BRUSH, "共振等级", parent=self.scrollWidget
@@ -220,6 +238,8 @@ class RunningBusinessInterface(ScrollArea):
         self.bookGroup.viewLayout.addWidget(self.totalMaxBookCard)
         self.bookGroup.viewLayout.addWidget(self.profitThresholdCard)
         self.bookGroup.viewLayout.addWidget(self.priceThresholdCard)
+        self.bookGroup.viewLayout.addWidget(self.bookPriorPriceCard)
+        self.bookGroup.viewLayout.addWidget(self.fatiguePriorPriceCard)
         self.bookGroup._adjustViewSize()
         self.skillGroup._adjustViewSize()
         self.tiredGroup._adjustViewSize()

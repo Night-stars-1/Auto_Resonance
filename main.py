@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-03-20 22:24:35
-LastEditTime: 2024-04-15 22:30:09
+LastEditTime: 2024-04-27 14:54:08
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -64,4 +64,4 @@ def run():
 
 
 if __name__ == "__main__":
-    main()
+    run()

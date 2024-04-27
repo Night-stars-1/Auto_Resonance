@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-10 22:54:08
-LastEditTime: 2024-04-26 12:51:55
+LastEditTime: 2024-04-27 14:46:18
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -66,6 +66,13 @@ class ThisRoadThatInterface(ScrollArea):
         self.transportOrderCard = PrimaryPushLoadCard(
             "运行物质任务", FIF.TAG, "物质任务", "物质任务", self.scrollWidget
         )
+        self.thisRoadThatTransportOrderCard = SpinBoxSettingCard(
+            cfg.thisRoadThatTransportOrder,
+            FIF.ACCEPT,
+            "物质运输次数",
+            "物质运输次数",
+            parent=self.scrollWidget,
+        )
 
     def __initLayout(self):
         self.settingLabel.move(36, 30)
@@ -74,6 +81,7 @@ class ThisRoadThatInterface(ScrollArea):
         self.expandLayout.addWidget(self.attackBossCard)
         self.expandLayout.addWidget(self.thisRoadThatBossCard)
         self.expandLayout.addWidget(self.transportOrderCard)
+        self.expandLayout.addWidget(self.thisRoadThatTransportOrderCard)
 
     def __connectSignalToSlot(self):
         """connect signal to slot"""
@@ -86,9 +94,9 @@ class ThisRoadThatInterface(ScrollArea):
         self.workers = Worker(
             attack_boss,
             attack_boss,
-            num=cfg.thisRoadThatBoss.value,
             order=cfg.adbOrder.value,
             path=cfg.adbPath.value,
+            num=cfg.thisRoadThatBoss.value,
         )
         self.workers.start()
         signalBus.switchToCard.emit("LoggerInterface")
@@ -102,6 +110,7 @@ class ThisRoadThatInterface(ScrollArea):
             transport_order,
             order=cfg.adbOrder.value,
             path=cfg.adbPath.value,
+            num=cfg.thisRoadThatTransportOrder.value,
         )
         self.workers.start()
         signalBus.switchToCard.emit("LoggerInterface")

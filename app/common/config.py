@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-02 19:13:20
-LastEditTime: 2024-04-26 12:48:42
+LastEditTime: 2024-04-27 14:44:17
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -59,6 +59,7 @@ class Config(RunningBusinessConfig):
     adbOrder = ConfigItem("Global", "adbOrder", "127.0.0.1:7555", None)
 
     thisRoadThatBoss = ConfigItem("ThisRoadThat", "boss", 10, None)
+    thisRoadThatTransportOrder = ConfigItem("ThisRoadThat", "thisRoadThat", 1, None)
 
     # main window
     micaEnabled = ConfigItem("MainWindow", "MicaEnabled", isWin11(), BoolValidator())

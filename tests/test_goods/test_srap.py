@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-10 22:45:55
-LastEditTime: 2024-04-22 22:17:44
+LastEditTime: 2024-04-27 02:23:53
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -24,15 +24,7 @@ from core.goods.shop import show
 def test_get_goods_info_srap():
     route = get_goods_info_srap(
         city_book={
-            "7号自由港": 3,
-            "修格里城": 3,
-            "曼德矿场": 3,
-            "淘金乐园": 3,
-            "澄明数据中心": 3,
-            "荒原站": 3,
-            "铁盟哨站": 3,
-            "阿妮塔战备工厂": 3,
-            "阿妮塔能源研究所": 3,
+            "profitThreshold": 10000,
             "priceThreshold": 500,
         },
         skill_level={
@@ -86,15 +78,7 @@ def test_get_goods_info_srap():
 def test_get_goods_info_kmou():
     route = get_goods_info_kmou(
         city_book={
-            "7号自由港": 3,
-            "修格里城": 3,
-            "曼德矿场": 3,
-            "淘金乐园": 3,
-            "澄明数据中心": 3,
-            "荒原站": 3,
-            "铁盟哨站": 3,
-            "阿妮塔战备工厂": 3,
-            "阿妮塔能源研究所": 3,
+            "profitThreshold": 7000,
             "priceThreshold": 500,
         },
         skill_level={
@@ -120,21 +104,23 @@ def test_get_goods_info_kmou():
             "黛丝莉": 0,
         },
         station_level={
-            "7号自由港": 17,
+            "7号自由港": 19,
             "修格里城": 13,
             "曼德矿场": 12,
-            "澄明数据中心": 16,
+            "澄明数据中心": 18,
         },
         negotiate_price={
-            "7号自由港": 30,
-            "修格里城": 30,
-            "曼德矿场": 30,
-            "淘金乐园": 30,
-            "澄明数据中心": 30,
-            "荒原站": 30,
-            "铁盟哨站": 30,
-            "阿妮塔战备工厂": 30,
-            "阿妮塔能源研究所": 30,
+            "buyTired": 12,
+            "sellTired": 12,
+            "7号自由港": 2,
+            "修格里城": 2,
+            "曼德矿场": 2,
+            "淘金乐园": 2,
+            "澄明数据中心": 2,
+            "荒原站": 2,
+            "铁盟哨站": 2,
+            "阿妮塔战备工厂": 2,
+            "阿妮塔能源研究所": 2,
         },
         max_goods_num=625,
         uuid=cfg.uuid.value,

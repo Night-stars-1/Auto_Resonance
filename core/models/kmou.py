@@ -5,7 +5,7 @@ LastEditTime: 2024-04-10 00:42:00
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
-from typing import Any
+from typing import Any, Dict, Optional
 
 from .goods import GoodsModel
 
@@ -19,9 +19,9 @@ class KMouRequestModel(GoodsModel):
     def model_validate(
         self,
         obj: Any,
-        strict: bool | None = None,
-        from_attributes: bool | None = None,
-        context: dict[str, Any] | None = None,
+        strict: Optional[bool] = None,
+        from_attributes: Optional[bool] = None,
+        context: Optional[Dict[str, Any]] = None,
     ) -> GoodsModel:
         new_obj = []
         for good in obj:

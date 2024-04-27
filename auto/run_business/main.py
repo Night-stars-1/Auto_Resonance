@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:14:29
-LastEditTime: 2024-04-21 23:18:13
+LastEditTime: 2024-04-27 16:18:01
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -101,12 +101,12 @@ def run(
         buy_business(
             city.primary_goods,
             city.secondary_goods,
-            city.buy_argaining_times,
+            city.buy_argaining_num,
             max_book=city.book,
         )
         go_home()
         click_station(city.sell_city_name).wait()
         go_business("sell")
-        sell_business(city.sell_argaining_times)
+        sell_business(city.sell_argaining_num)
     logger.info("运行完成")
     return True

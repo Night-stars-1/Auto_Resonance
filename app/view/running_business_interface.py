@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-10 22:54:08
-LastEditTime: 2024-04-28 00:58:12
+LastEditTime: 2024-04-28 21:01:23
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -136,7 +136,7 @@ class RunningBusinessInterface(ScrollArea):
             FIF.ACCEPT,
             "进货书使用阈值",
             "只有利润高于该值的时候才使用进货书",
-            spin_box_min=100000,
+            spin_box_min=0,
             spin_box_max=500000,
             parent=self.bookGroup,
         )

@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-10 22:45:55
-LastEditTime: 2024-04-28 00:32:53
+LastEditTime: 2024-04-28 19:58:17
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -20,14 +20,14 @@ LOGGER = logging.getLogger(__name__)
 from app.common.config import cfg
 from core.api.kmou import get_goods_info as get_goods_info_kmou
 from core.api.srap import get_goods_info as get_goods_info_srap
-from core.goods.shop import SHOP, show
+from core.goods import SHOP, show
 
 
 def test_get_goods_info_srap():
     route = get_goods_info_srap(
         city_book={
             "totalMaxBook": 4,
-            "profitThreshold": 300000,
+            "profitThreshold": 16000,
             "priceThreshold": 500,
         },
         skill_level={

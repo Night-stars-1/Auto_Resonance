@@ -11,8 +11,8 @@ from typing import Dict, Union
 import orjson
 import requests
 
-from ..goods.shop import SHOP
-from ..models.srap import SrapRequestGzipModel, SrapRequestModel
+from ..goods import SHOP
+from ..models.srap import SrapRequestGzipModel
 
 
 def get_goods_info(

@@ -1,13 +1,13 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-06 22:03:56
-LastEditTime: 2024-04-07 21:05:48
+LastEditTime: 2024-04-28 23:05:29
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
 # coding:utf-8
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QFrame, QHBoxLayout, QLabel, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QHBoxLayout, QLabel, QLayout, QVBoxLayout, QWidget
 from qfluentwidgets import CardWidget, FlowLayout, IconWidget, TextWrap
 
 from ..common.signal_bus import signalBus
@@ -60,7 +60,7 @@ class SampleCard(CardWidget):
 class ButtonCardView(QWidget):
     """Sample card view"""
 
-    def __init__(self, title: str, parent=None):
+    def __init__(self, title: str, header: QWidget = None, parent=None):
         super().__init__(parent=parent)
         self.titleLabel = QLabel(title, self)
         self.vBoxLayout = QVBoxLayout(self)
@@ -73,6 +73,7 @@ class ButtonCardView(QWidget):
         self.flowLayout.setVerticalSpacing(12)
 
         self.vBoxLayout.addWidget(self.titleLabel)
+        self.vBoxLayout.addWidget(header)
         self.vBoxLayout.addLayout(self.flowLayout, 1)
 
         self.titleLabel.setObjectName("viewTitleLabel")

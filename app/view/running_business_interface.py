@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-10 22:54:08
-LastEditTime: 2024-04-28 00:58:12
+LastEditTime: 2024-04-28 21:01:23
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -136,7 +136,7 @@ class RunningBusinessInterface(ScrollArea):
             FIF.ACCEPT,
             "进货书使用阈值",
             "只有利润高于该值的时候才使用进货书",
-            spin_box_min=100000,
+            spin_box_min=0,
             spin_box_max=500000,
             parent=self.bookGroup,
         )
@@ -243,9 +243,11 @@ class RunningBusinessInterface(ScrollArea):
         self.autoscanreslevel.clicked.connect(self.autoscan)
 
     def runBusiness(self):
+        from auto.run_business import run
+        from core.goods import show
 
         def result(route):
-            w = Dialog("详细", show(route), self)
+            w = Dialog("路线详细", show(route), self)
             if w.exec():
                 signalBus.switchToCard.emit("LoggerInterface")
                 self.workers = Worker(
@@ -253,14 +255,7 @@ class RunningBusinessInterface(ScrollArea):
                     run,
                     order=cfg.adbOrder.value,
                     path=cfg.adbPath.value,
-                    city_book=city_book,
-                    skill_level=skill_level,
-                    station_level=station_level,
-                    negotiate_price=negotiate_price,
-                    max_goods_num=max_goods_num,
                     route=route,
-                    type_=cfg.goodsType.value,
-                    uuid=cfg.uuid.value,
                 )
                 self.workers.start()
                 self.workers.finished.connect(
@@ -268,8 +263,6 @@ class RunningBusinessInterface(ScrollArea):
                 )
 
         self.testRunBusinessCard.loading(True)
-        from auto.run_business import run
-        from core.goods.shop import show
 
         city_book = cfg.toDict()["RunningBusiness"]
         skill_level = cfg.toDict()["SkillLevel"]

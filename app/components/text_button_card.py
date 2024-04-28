@@ -1,13 +1,13 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-06 22:03:56
-LastEditTime: 2024-04-07 23:07:35
+LastEditTime: 2024-04-28 22:09:21
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
 # coding:utf-8
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QFrame, QHBoxLayout, QLabel, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QLayout, QHBoxLayout, QLabel, QVBoxLayout, QWidget
 from qfluentwidgets import CaptionLabel, CardWidget, FlowLayout, IconWidget, TextWrap
 
 from ..common.signal_bus import signalBus
@@ -62,7 +62,7 @@ class TextButtonCardView(QWidget):
     在按钮侧边显示文本的卡片视图
     """
 
-    def __init__(self, title: str, parent=None):
+    def __init__(self, title: str, header: QLayout=None, parent=None):
         super().__init__(parent=parent)
         self.titleLabel = QLabel(title, self)
         self.vBoxLayout = QVBoxLayout(self)
@@ -75,12 +75,13 @@ class TextButtonCardView(QWidget):
         self.flowLayout.setVerticalSpacing(12)
 
         self.vBoxLayout.addWidget(self.titleLabel)
+        self.vBoxLayout.addLayout(header)
         self.vBoxLayout.addLayout(self.flowLayout, 1)
 
         self.titleLabel.setObjectName("viewTitleLabel")
         StyleSheet.SAMPLE_CARD.apply(self)
 
-    def addSampleCard(self, icon, title, text, content, func, routekey=None):
+    def addSampleCard(self, icon: str, title: str, text: str, content: str, func, routekey=None):
         """add sample card"""
         card = SampleCard(icon, title, content, func, routekey, self)
         text = CaptionLabel(text=text)

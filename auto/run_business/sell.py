@@ -23,10 +23,15 @@ def sell_business(num=0):
     参数:
         :param num: 期望议价的价格
     """
-    while (bgr := get_bgr(screenshot(), (1156, 100))) != [0, 0, 102]:
-        logger.info(f"出售全部货物 {bgr}")
-        input_tap((1187, 103))
-        time.sleep(0.5)
+    start_time = time.perf_counter()
+    while time.perf_counter() - start_time < 15:
+        bgr = get_bgr(screenshot(), (1156, 100))
+        logger.debug(f"是否出售货物颜色检查 {bgr}")
+        if not compare_ranges([0, 0, 90], bgr, [0, 0, 110]):
+            logger.info(f"出售全部货物 {bgr}")
+            input_tap((1187, 103))
+            time.sleep(0.5)
+            break
     if is_empty_goods():
         logger.error("检测到未成功出售物品")
         return False

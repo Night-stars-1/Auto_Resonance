@@ -1,14 +1,15 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-03-20 22:24:35
-LastEditTime: 2024-04-27 14:54:08
+LastEditTime: 2024-04-28 22:38:00
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
+from typing import Dict, List
+
 from loguru import logger
 
-from auto.huashi.main import start as ra_start
-from auto.railway_safety_bureau.main import start as rsb_start
+import auto
 from core.adb import connect
 from core.adb import stop as adb_stop
 from core.analysis_tasks import AnalysisTasks
@@ -25,11 +26,16 @@ def stop():
     adb_stop()
 
 
-def main(order, path):
+def main(order, path, tasks: Dict[str, str]):
     status = connect(order, path)
     if status:
-        ra_start()
-        rsb_start()
+        for description, task in tasks.items():
+            logger.info(f"开始运行{description}")
+            try:
+                start = getattr(auto, task).start
+                start()
+            except AttributeError:
+                logger.error(f"找不到{task}的start函数")
     else:
         logger.error("ADB连接失败")
     return status

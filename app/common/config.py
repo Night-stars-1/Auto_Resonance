@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-02 19:13:20
-LastEditTime: 2024-04-27 14:44:17
+LastEditTime: 2024-04-28 22:02:38
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -60,6 +60,13 @@ class Config(RunningBusinessConfig):
 
     thisRoadThatBoss = ConfigItem("ThisRoadThat", "boss", 10, None)
     thisRoadThatTransportOrder = ConfigItem("ThisRoadThat", "thisRoadThat", 1, None)
+
+    # task
+    huashi = ConfigItem("Task", "huashi", False, BoolValidator())  # 购买桦石
+    railwaySafetyBureau = ConfigItem(
+        "Task", "railway_safety_bureau", False, BoolValidator()
+    )  # 铁安局
+    runBusiness = ConfigItem("Task", "run_business", False, BoolValidator())  # 自动跑商
 
     # main window
     micaEnabled = ConfigItem("MainWindow", "MicaEnabled", isWin11(), BoolValidator())

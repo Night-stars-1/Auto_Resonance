@@ -1,33 +1,25 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-02 19:12:22
-LastEditTime: 2024-04-28 22:19:56
+LastEditTime: 2024-04-28 23:24:42
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
-from typing import List
-
 from PyQt5.QtCore import QRectF, Qt, QTimer
 from PyQt5.QtGui import QBrush, QColor, QLinearGradient, QPainter, QPainterPath, QPixmap
-from PyQt5.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
-from qfluentwidgets import (
-    CheckBox,
-    ConfigItem,
-    FluentIcon,
-    ScrollArea,
-    isDarkTheme,
-    qconfig,
-)
+from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget
+from qfluentwidgets import FluentIcon, ScrollArea, isDarkTheme
 from qfluentwidgets.window.stacked_widget import StackedWidget
 
-from app.components.homes.title_brogress_bars_card import TitleProgressBarsCard
 from core.api.srap import get_boss
 
 from ..common.config import REPO_URL, cfg
 from ..common.style_sheet import StyleSheet
 from ..common.worker import Worker
 from ..components.button_card import ButtonCardView
+from ..components.homes.title_brogress_bars_card import TitleProgressBarsCard
 from ..components.link_card import LinkCardView
+from ..components.settings.checkbox_group_card import CheckboxGroup
 
 
 class BannerWidget(QWidget):
@@ -45,11 +37,14 @@ class BannerWidget(QWidget):
         self.__initWidget()
         self.loadSamples()
 
+        self.worker = Worker(get_boss, get_boss)
+        self.worker.result.connect(self.updateProgress)
+
         # 初始化定时器
-        QTimer.singleShot(0, self.updateProgress)  # 手动触发一次
+        QTimer.singleShot(0, self.startUpdatingProgress)  # 手动触发一次
         self.timer = QTimer(self)
         self.timer.setInterval(10000)  # 设置定时器周期为10000毫秒（10秒）
-        self.timer.timeout.connect(self.updateProgress)  # 连接定时器信号到槽函数
+        self.timer.timeout.connect(self.startUpdatingProgress)  # 连接定时器信号到槽函数
         self.timer.start()  # 启动定时器
 
     def __initWidget(self):
@@ -103,40 +98,14 @@ class BannerWidget(QWidget):
         pixmap = self.banner.scaled(self.size(), transformMode=Qt.SmoothTransformation)
         painter.fillPath(path, QBrush(pixmap))
 
-    def updateProgress(self):
+    def startUpdatingProgress(self):
+        if not self.worker.isRunning():  # 如果Worker线程未运行，则启动它
+            self.worker.start()
+
+    def updateProgress(self, boss_data):
         stackedWidget: StackedWidget = self.window().stackedWidget
         if stackedWidget.currentIndex() == 0:
-            boss_data = get_boss()
             self.bossCard.setValue(boss_data)
-
-
-class TaskCheckbox(QHBoxLayout):
-    """任务水平复选框"""
-
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.checkConfigItems: List[ConfigItem] = []
-        self.setContentsMargins(0, 0, 0, 0)
-        self.setSpacing(5)
-        self.setAlignment(Qt.AlignLeft)
-
-    def addCheckbox(self, text: str, configItem: ConfigItem = None, parent=None):
-        checkbox = CheckBox(text=text, parent=parent)
-        self.addWidget(checkbox)
-
-        self.checkConfigItems.append(configItem)
-        checkbox.setChecked(configItem.value)
-        checkbox.stateChanged.connect(
-            lambda: self.onCheckStateChanged(checkbox, configItem)
-        )
-
-    def onCheckStateChanged(self, checkbox: CheckBox, configItem: ConfigItem):
-        qconfig.set(configItem, checkbox.isChecked())
-
-    def getAllAccept(self):
-        return [
-            configItem.name for configItem in self.checkConfigItems if configItem.value
-        ]
 
 
 class HomeInterface(ScrollArea):
@@ -149,7 +118,7 @@ class HomeInterface(ScrollArea):
         self.banner = BannerWidget(self)
         self.view = QWidget(self)
         self.vBoxLayout = QVBoxLayout(self.view)
-        self.taskBoxLayout = TaskCheckbox()
+        self.taskCheckboxGroup = CheckboxGroup(self.view)
         self.__initWidget()
         self.loadSamples()
 
@@ -171,11 +140,11 @@ class HomeInterface(ScrollArea):
         """load samples"""
         # basic input samples
         basicInputView = ButtonCardView(
-            "开始运行", header=self.taskBoxLayout, parent=self.view
+            "开始运行", header=self.taskCheckboxGroup, parent=self.view
         )
 
-        self.taskBoxLayout.addCheckbox("购买桦石", cfg.huashi)
-        self.taskBoxLayout.addCheckbox("刷铁安局", cfg.railwaySafetyBureau)
+        self.taskCheckboxGroup.addCheckbox("购买桦石", cfg.huashi)
+        self.taskCheckboxGroup.addCheckbox("刷铁安局", cfg.railwaySafetyBureau)
 
         self.run = basicInputView.addSampleCard(
             icon=":/gallery/images/controls/Button.png",

@@ -58,7 +58,13 @@ class Config(RunningBusinessConfig):
     adbPath = ConfigItem("Global", "adbPath", "resources\\lib\\adb", None)
     adbOrder = ConfigItem("Global", "adbOrder", "127.0.0.1:7555", None)
 
+    # 我建我路
     thisRoadThatBoss = ConfigItem("ThisRoadThat", "boss", 10, None)
+    thisRoadThatAttackOne = ConfigItem("ThisRoadThat", "attack_one", False, BoolValidator())
+    thisRoadThatAttackTwo = ConfigItem("ThisRoadThat", "attack_two", False, BoolValidator())
+    thisRoadThatAttackThree = ConfigItem("ThisRoadThat", "attack_three", False, BoolValidator())
+    thisRoadThatAttackFour = ConfigItem("ThisRoadThat", "attack_four", False, BoolValidator())
+    thisRoadThatAttackFive = ConfigItem("ThisRoadThat", "attack_five", False, BoolValidator())
     thisRoadThatTransportOrder = ConfigItem("ThisRoadThat", "thisRoadThat", 1, None)
 
     # task

@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-10 22:54:08
-LastEditTime: 2024-04-27 14:46:18
+LastEditTime: 2024-04-28 23:09:45
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -16,6 +16,7 @@ from ..common.signal_bus import signalBus
 from ..common.style_sheet import StyleSheet
 from ..common.worker import Worker
 from ..components.primary_push_load_card import PrimaryPushLoadCard
+from ..components.settings.checkbox_group_card import CheckboxGroupCard
 from ..components.settings.spin_box_setting_card import SpinBoxSettingCard
 
 
@@ -54,8 +55,17 @@ class ThisRoadThatInterface(ScrollArea):
         """load samples"""
 
         self.attackBossCard = PrimaryPushLoadCard(
-            "刷取BOSS", FIF.TAG, "BOSS", "清缴任务", self.scrollWidget
+            "刷取BOSS", FIF.TAG, "BOSS", "清缴任务", parent=self.scrollWidget
         )
+        self.bossListGroup = CheckboxGroupCard(
+            FIF.TAG, "清缴的BOSS", parent=self.scrollWidget
+        )
+        self.bossListGroup.addCheckbox("寒潮浮囊体", cfg.thisRoadThatAttackOne)
+        self.bossListGroup.addCheckbox("昏恶巨象", cfg.thisRoadThatAttackTwo)
+        self.bossListGroup.addCheckbox("尘鸣游磷", cfg.thisRoadThatAttackThree)
+        self.bossListGroup.addCheckbox("劫掠者-执桔", cfg.thisRoadThatAttackFour)
+        self.bossListGroup.addCheckbox("裂首骨龙", cfg.thisRoadThatAttackFive)
+
         self.thisRoadThatBossCard = SpinBoxSettingCard(
             cfg.thisRoadThatBoss,
             FIF.ACCEPT,
@@ -79,6 +89,7 @@ class ThisRoadThatInterface(ScrollArea):
 
         self.expandLayout.setContentsMargins(36, 0, 36, 0)
         self.expandLayout.addWidget(self.attackBossCard)
+        self.expandLayout.addWidget(self.bossListGroup)
         self.expandLayout.addWidget(self.thisRoadThatBossCard)
         self.expandLayout.addWidget(self.transportOrderCard)
         self.expandLayout.addWidget(self.thisRoadThatTransportOrderCard)
@@ -97,6 +108,7 @@ class ThisRoadThatInterface(ScrollArea):
             order=cfg.adbOrder.value,
             path=cfg.adbPath.value,
             num=cfg.thisRoadThatBoss.value,
+            bossList=self.bossListGroup.getAllAccept(),
         )
         self.workers.start()
         signalBus.switchToCard.emit("LoggerInterface")

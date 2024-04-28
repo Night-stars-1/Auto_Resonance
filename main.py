@@ -1,11 +1,11 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-03-20 22:24:35
-LastEditTime: 2024-04-28 22:24:12
+LastEditTime: 2024-04-28 22:38:00
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
-from typing import List
+from typing import Dict, List
 
 from loguru import logger
 
@@ -26,14 +26,13 @@ def stop():
     adb_stop()
 
 
-def main(order, path, tasks: List[str]):
-    print(tasks)
-    print(getattr(auto, tasks[0]))
+def main(order, path, tasks: Dict[str, str]):
     status = connect(order, path)
     if status:
-        for task in tasks:
+        for description, task in tasks.items():
+            logger.info(f"开始运行{description}")
             try:
-                start = getattr(auto, task).main.start
+                start = getattr(auto, task).start
                 start()
             except AttributeError:
                 logger.error(f"找不到{task}的start函数")

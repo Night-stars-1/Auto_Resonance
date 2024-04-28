@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-06 22:03:56
-LastEditTime: 2024-04-28 22:15:09
+LastEditTime: 2024-04-28 23:05:29
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -60,7 +60,7 @@ class SampleCard(CardWidget):
 class ButtonCardView(QWidget):
     """Sample card view"""
 
-    def __init__(self, title: str, header: QLayout = None, parent=None):
+    def __init__(self, title: str, header: QWidget = None, parent=None):
         super().__init__(parent=parent)
         self.titleLabel = QLabel(title, self)
         self.vBoxLayout = QVBoxLayout(self)
@@ -73,7 +73,7 @@ class ButtonCardView(QWidget):
         self.flowLayout.setVerticalSpacing(12)
 
         self.vBoxLayout.addWidget(self.titleLabel)
-        self.vBoxLayout.addLayout(header, 1)
+        self.vBoxLayout.addWidget(header)
         self.vBoxLayout.addLayout(self.flowLayout, 1)
 
         self.titleLabel.setObjectName("viewTitleLabel")

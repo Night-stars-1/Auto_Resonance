@@ -1,4 +1,5 @@
 import time
+from typing import Dict
 
 from loguru import logger
 
@@ -147,15 +148,15 @@ def attack_five(num: int = 1):
             logger.info("攻击次数用完，退出攻击")
             break
 
-def attack_boss(order: str, path: str, num: int = 1):
+def attack_boss(order: str, path: str, num: int = 1, bossList: Dict[str, str] = {}):
     status = connect(order, path)
     if not status:
         logger.error("ADB连接失败")
         return False
     click_task()
     click((883, 540))
-    attack_one(num)
-    attack_two(num)
-    attack_three(num)
-    attack_four(num)
-    attack_five(num)
+    for boss_name, boss in bossList.items():
+        try:
+            globals().get(boss)(num)
+        except AttributeError:
+            logger.error(f"未找到对应的BOSS: {boss_name}")

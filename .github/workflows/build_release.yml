@@ -67,4 +67,4 @@ jobs:
           body: ${{ steps.generate_changelog.outputs.changelog }}
           files: |
             ./dist/Auto_Resonance_${{ github.ref_name }}.zip
-          prerelease: true
+          make_latest: true

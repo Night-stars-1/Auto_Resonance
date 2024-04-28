@@ -269,7 +269,7 @@ class RunningBusinessInterface(ScrollArea):
 
         self.testRunBusinessCard.loading(True)
         from auto.run_business import run
-        from core.goods.shop import show
+        from core.goods import show
 
         city_book = cfg.toDict()["RunningBusiness"]
         skill_level = cfg.toDict()["SkillLevel"]

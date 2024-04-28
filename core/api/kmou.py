@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-08 22:57:00
-LastEditTime: 2024-04-27 21:47:43
+LastEditTime: 2024-04-28 19:28:15
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -9,9 +9,7 @@ from typing import Dict
 
 import requests
 
-from core.models.city_goods import SkillLevelModel
-
-from ..goods.shop import SHOP
+from ..goods import SHOP
 from ..models.kmou import KMouRequestModel
 
 

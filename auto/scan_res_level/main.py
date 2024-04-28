@@ -1,6 +1,13 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-25 23:03:02
+LastEditTime: 2024-04-28 13:29:04
+LastEditors: Night-stars-1 nujj1042633805@gmail.com
+"""
+
+"""
+Author: Night-stars-1 nujj1042633805@gmail.com
+Date: 2024-04-25 23:03:02
 LastEditTime: 2024-04-27 01:37:11
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
@@ -60,7 +67,7 @@ def get_skill_level():
                 logger.info(f"发现重复角色可能已经识别完成，停止识别")
                 return skill_level
             logger.info(f"{role_name}: {len(levels)}")
-        input_swipe((739, 358), (85, 361), time=500)
+        input_swipe((658, 359), (116, 374), time=500)
         time.sleep(0.5)
     return {}
 

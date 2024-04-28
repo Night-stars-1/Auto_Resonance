@@ -37,7 +37,7 @@ def show(routes: RoutesModel):
     message = f"""{route[0].buy_city_name}<->{route[0].sell_city_name}:
 {route[0].buy_city_name}:
     商品数量: {to_goods_num}
-    商品顺序: {"->".join(route[0].primary_goods)+"->".join(route[0].secondary_goods)}
+    商品顺序: {"->".join(route[0].primary_goods)+"=>"+"->".join(route[0].secondary_goods)}
     商品总量: {route[0].num}
     购买价格: {route[0].buy_price}
     出售价格: {route[0].sell_price}
@@ -48,7 +48,7 @@ def show(routes: RoutesModel):
     书本数量: {route[0].book}
 {route[0].sell_city_name}:
     商品数量: {back_goods_num}
-    商品顺序: {"->".join(route[1].primary_goods)+"->".join(route[1].secondary_goods)}
+    商品顺序: {"->".join(route[1].primary_goods)+"=>"+"->".join(route[1].secondary_goods)}
     商品总量: {route[1].num}
     购买价格: {route[1].buy_price}
     出售价格: {route[1].sell_price}
@@ -306,6 +306,7 @@ class SHOP:
         sorted_goods = sorted(
             goods.items(), key=lambda item: item[1].isSpeciality, reverse=True
         )  # 按照是否特产排序
+        speciality_num = len([good for good in goods.values() if good.isSpeciality])
         buy_argaining_num = self.negotiate_price.get(buy_city_name, 0)  # 购买议价次数
         sell_argaining_num = self.negotiate_price.get(sell_city_name, 0)  # 出售议价次数
         # 总疲劳
@@ -340,7 +341,10 @@ class SHOP:
             )
             good_profit = profit * num  # 商品利润
             if profit >= self.city_book["priceThreshold"] or good.isSpeciality:
-                if profit >= 1000:
+                if (
+                    profit >= 1000
+                    and buy_num < self.max_goods_num / (book + 1) / speciality_num
+                ):  # 高价值商品数量下于100并且利润大于1000时，计入优先购买列表
                     route_price_data.buy_goods[good_name] = profit
                 else:
                     route_price_data.normal_goods[good_name] = profit
@@ -370,7 +374,10 @@ class SHOP:
             else self.cache_route_data[f"{buy_city_name}-{sell_city_name}-{book-1}"]
         )
         route_price_data.book_profit = route_price_data.profit - last_profit
-        if route_price_data.book_profit < self.city_book["profitThreshold"] and book != 0:
+        if (
+            route_price_data.book_profit < self.city_book["profitThreshold"]
+            and book != 0
+        ):
             # 当单书利润小于阈值时，过滤该路线
             return None
         return route_price_data
@@ -395,7 +402,7 @@ class SHOP:
                         for book in range(max_book + 1)
                         if (route := self.get_need_buy_use_first(city1, city2, book))
                     ),
-                    key=lambda route: route.tired_profit
+                    key=lambda route: route.tired_profit,
                 )
                 target2 = max(
                     (
@@ -403,7 +410,7 @@ class SHOP:
                         for book in range(total_max_book - max_book + 1)
                         if (route := self.get_need_buy_use_first(city2, city1, book))
                     ),
-                    key=lambda route: route.tired_profit
+                    key=lambda route: route.tired_profit,
                 )
                 city_routes.city_data = [target1, target2]
                 # 总计
@@ -457,6 +464,9 @@ class SHOP:
                 key=lambda item: item[1],
             )
         }
+        if len(optimal_route.city_data[0].buy_goods) == 0:
+            nomal_good = optimal_route.city_data[0].normal_goods.popitem()
+            optimal_route.city_data[0].buy_goods = {nomal_good[0]: nomal_good[1]}
         # 根据利润重新排序商品，避免高价值商品因为满载而无法购买
         optimal_route.city_data[0].primary_goods = [
             good[0]
@@ -483,6 +493,9 @@ class SHOP:
                 key=lambda item: item[1],
             )
         }
+        if len(optimal_route.city_data[1].buy_goods) == 0:
+            nomal_good = optimal_route.city_data[1].normal_goods.popitem()
+            optimal_route.city_data[1].buy_goods = {nomal_good[0]: nomal_good[1]}
         # 根据利润重新排序商品，避免高价值商品因为满载而无法购买
         optimal_route.city_data[1].primary_goods = [
             good[0]

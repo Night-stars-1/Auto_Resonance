@@ -152,7 +152,7 @@ def get_boatload():
         获取载货量百分比
     """
     image = screenshot()
-    lower_color_bound = np.array([36, 36, 36])
+    lower_color_bound = np.array([35, 35, 35])
     upper_color_bound = np.array([36, 36, 36])
 
     y = 418

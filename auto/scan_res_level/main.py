@@ -35,7 +35,7 @@ def get_skill_level_list():
     )
     logger.debug(f"角色共振等级颜色检测: {bgrs}")
     for bgr in bgrs:
-        if bgr[-1] > 200:
+        if bgr.r > 200:
             levels.append(True)
     return levels
 

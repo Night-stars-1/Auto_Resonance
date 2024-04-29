@@ -28,7 +28,7 @@ def sell_business(num=0):
         bgr = get_bgr(screenshot(), (1156, 100))
         logger.debug(f"是否出售货物颜色检查 {bgr}")
         if not (bgr.b == 0 and bgr.g == 0 and 90 <= bgr.r <= 100):
-            logger.info(f"出售全部货物 {bgr}")
+            logger.debug(f"出售全部货物颜色检查 {bgr}")
             input_tap((1187, 103))
             time.sleep(0.5)
             break

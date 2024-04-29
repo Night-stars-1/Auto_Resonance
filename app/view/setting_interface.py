@@ -5,8 +5,6 @@ LastEditTime: 2024-04-19 13:31:52
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
-# coding:utf-8
-from loguru import logger
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QLabel, QWidget
 from qfluentwidgets import ExpandLayout

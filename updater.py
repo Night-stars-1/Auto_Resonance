@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-29 12:51:19
-LastEditTime: 2024-04-29 19:02:44
+LastEditTime: 2024-04-29 22:25:16
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -227,16 +227,26 @@ class Updater:
                     # 创建目标子目录
                     target.mkdir(parents=True, exist_ok=True)
 
+    async def is_last(self):
+        """
+        说明:
+            检查是否是最新版本
+        参数:
+            :param version 版本号
+        """
+        result, url = await self.get_first_valid_response()
+        version = result["tag_name"]
+        url = result["assets"][0]["browser_download_url"]
+        self.unzip_dir = TEMP_PATH / f"Auto_Resonance_{version}"
+        return parse(version) <= parse(__version__), url
+
     async def run(self):
         """
         说明:
             运行更新流程
         """
-        result, url = await self.get_first_valid_response()
-        value = result["tag_name"]
-        self.unzip_dir = TEMP_PATH / f"Auto_Resonance_{value}"
-        if parse(value) > parse(__version__):
-            url = result["assets"][0]["browser_download_url"]
+        is_last_version, url = await self.is_last()
+        if not is_last_version:
             self.mirror_urls = await self.find_fastest_mirror(url)
             await self.download_file_with_progress(self.mirror_urls)
             self.unzip_with_progress(HEIYUE_FILE_PATH, TEMP_PATH)

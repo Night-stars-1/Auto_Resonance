@@ -112,3 +112,5 @@ gui/
 examples/
 test.*
 config*
+temp/
+.pdm-build/

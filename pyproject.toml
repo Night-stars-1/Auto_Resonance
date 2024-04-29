@@ -16,7 +16,7 @@ dependencies = [
     "orjson>=3.10.0",
     "pydantic>=2.6.4",
 ]
-requires-python = ">=3.11"
+requires-python = "<3.13,>=3.11"
 readme = "README.md"
 license = {text = "MIT"}
 
@@ -31,4 +31,5 @@ distribution = true
 [tool.pdm.dev-dependencies]
 dev = [
     "pytest>=8.1.1",
+    "pyinstaller>=6.5.0",
 ]

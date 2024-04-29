@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-25 23:12:06
-LastEditTime: 2024-04-27 23:49:15
+LastEditTime: 2024-04-29 20:55:11
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -12,8 +12,8 @@ from loguru import logger
 
 from core.adb import connect, input_tap, screenshot
 from core.image import get_bgr
+from core.module.bgr import BGR, BGRGroup
 from core.presets import click_station, go_home, go_outlets
-from core.utils import compare_ranges
 
 from ..run_business import buy_business, go_business
 
@@ -21,9 +21,11 @@ from ..run_business import buy_business, go_business
 def go_assistance_center():
     go_home()
     go_outlets("工程援助中心")
-    while (bgr := get_bgr(
-        screenshot(), (300, 669), cropped_pos1=(289, 640), cropped_pos2=(424, 701)
-    )) != [251, 126, 65]:
+    while BGR(251, 126, 65) != (
+        bgr := get_bgr(
+            screenshot(), (300, 669), cropped_pos1=(289, 640), cropped_pos2=(424, 701)
+        )
+    ):
         logger.debug(f"是否进入工程援助中心颜色检查: {bgr}")
         time.sleep(0.5)
     input_tap((844, 408))
@@ -39,7 +41,7 @@ def get_consign_pos():
     bgr = get_bgr(
         screenshot(), (541, 366), cropped_pos1=(483, 317), cropped_pos2=(630, 418)
     )
-    if compare_ranges([0, 90, 115], bgr, [1, 100, 125]):
+    if BGRGroup([0, 90, 115], [1, 100, 125]) == bgr:
         logger.info("联盟币未交付")
         return (710, 662)
     else:
@@ -55,10 +57,8 @@ def consign_goods(pos: Tuple[int, int]):
         :param pos: 交付按钮坐标
     """
     logger.info("开始交付物质")
-    while compare_ranges(
-        [0, 170, 240],
-        get_bgr(screenshot(), pos, cropped_pos1=(431, 637), cropped_pos2=(924, 694)),
-        [1, 182, 250],
+    while BGRGroup([0, 170, 240], [1, 182, 250]) == get_bgr(
+        screenshot(), pos, cropped_pos1=(431, 637), cropped_pos2=(924, 694)
     ):
         input_tap(pos)
         time.sleep(1.0)
@@ -68,7 +68,7 @@ def consign_goods(pos: Tuple[int, int]):
             bgr = get_bgr(
                 screenshot(), (66, 301), cropped_pos1=(19, 266), cropped_pos2=(85, 315)
             )
-            if compare_ranges([6, 6, 6], bgr, [8, 8, 8]):
+            if BGRGroup([6, 6, 6], [8, 8, 8]) == bgr:
                 input_tap((91, 109))
                 break
     logger.info("交付完成")
@@ -86,7 +86,7 @@ def transport_order(order: str, path: str, num: int = 1):
         check_consign_gbr = get_bgr(
             screenshot(), pos, cropped_pos1=(431, 637), cropped_pos2=(924, 694)
         )
-        is_consign = compare_ranges([0, 170, 240], check_consign_gbr, [1, 182, 250])
+        is_consign = BGRGroup([0, 170, 240], [1, 182, 250]) == check_consign_gbr
         logger.debug(f"交付坐标: {pos} {check_consign_gbr} {is_consign}")
         if not is_consign:
             go_home()

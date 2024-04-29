@@ -12,6 +12,7 @@ from loguru import logger
 from core.adb import input_tap, screenshot
 from core.exception_handling import get_excption
 from core.image import get_bgr, get_hsv
+from core.module.bgr import BGR
 from core.ocr import number_predict, predict
 from core.utils import compare_ranges
 
@@ -27,7 +28,7 @@ def sell_business(num=0):
     while time.perf_counter() - start_time < 15:
         bgr = get_bgr(screenshot(), (1156, 100))
         logger.debug(f"是否出售货物颜色检查 {bgr}")
-        if not compare_ranges([0, 0, 90], bgr, [0, 0, 110]):
+        if not (bgr.b == 0 and bgr.g == 0 and 90 <= bgr.r <= 100):
             logger.info(f"出售全部货物 {bgr}")
             input_tap((1187, 103))
             time.sleep(0.5)
@@ -46,7 +47,7 @@ def is_empty_goods():
     bgr = get_bgr(
         screenshot(), (898, 169), cropped_pos1=(870, 132), cropped_pos2=(994, 205)
     )
-    return compare_ranges([22, 27, 27], bgr, [22, 27, 27])
+    return BGR(25, 33, 33) == bgr
 
 
 def click_bargain_button(num=0):

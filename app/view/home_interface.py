@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-02 19:12:22
-LastEditTime: 2024-04-28 23:24:42
+LastEditTime: 2024-04-29 21:06:40
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -162,7 +162,7 @@ class HomeInterface(ScrollArea):
             self.run.titleLabel.setText("停止")
             from main import main, stop
 
-            tasks = self.taskBoxLayout.getAllAccept()
+            tasks = self.taskCheckboxGroup.getAllAccept()
             self.workers = Worker(
                 main,
                 stop,

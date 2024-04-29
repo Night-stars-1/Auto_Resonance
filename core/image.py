@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-01 23:18:15
-LastEditTime: 2024-04-12 00:33:52
+LastEditTime: 2024-04-29 19:43:59
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -10,6 +10,9 @@ from typing import List, Tuple
 import cv2 as cv
 import numpy as np
 from loguru import logger
+
+from core.module.bgr import BGR
+from core.module.hsv import HSV
 
 
 def crop_image(
@@ -75,7 +78,7 @@ def get_bgr(
     pos=(0, 0),
     cropped_pos1: Tuple[int, int] = (0, 0),
     cropped_pos2: Tuple[int, int] = (0, 0),
-) -> List[int]:
+):
     """
     说明:
         获取指定位置的BGR
@@ -91,7 +94,7 @@ def get_bgr(
         ]
         pos = (pos[0] - cropped_pos1[0], pos[1] - cropped_pos1[1])
     color = image[pos[1], pos[0]]
-    return color.tolist()
+    return BGR(*color, offset=0)
 
 
 def get_hsv(
@@ -99,7 +102,7 @@ def get_hsv(
     pos=(0, 0),
     cropped_pos1: Tuple[int, int] = (0, 0),
     cropped_pos2: Tuple[int, int] = (0, 0),
-) -> List[int]:
+):
     """
     说明:
         获取指定位置的HSV
@@ -116,7 +119,7 @@ def get_hsv(
         ]
         pos = (pos[0] - cropped_pos1[0], pos[1] - cropped_pos1[1])
     color = image_hsv[int(pos[1]), int(pos[0])]
-    return color.tolist()
+    return HSV(*color, offset=0)
 
 
 def get_bgrs(
@@ -124,7 +127,7 @@ def get_bgrs(
     positions: List[Tuple[int, int]] = [(0, 0)],
     cropped_pos1: Tuple[int, int] = (0, 0),
     cropped_pos2: Tuple[int, int] = (0, 0),
-) -> List[List[int]]:
+):
     """
     说明:
         获取指定位置的颜色
@@ -145,7 +148,7 @@ def get_bgrs(
     positions = [[position[1], position[0]] for position in positions]
     positions = np.array(positions)
     colors = image[positions[:, 0], positions[:, 1]]
-    return colors.tolist()
+    return [BGR(*color, offset=0) for color in colors]
 
 
 def get_all_color_pos(
@@ -198,6 +201,7 @@ def show_image(screenshot, name="image", time=0):
     cv.waitKey(time)
     cv.destroyAllWindows()
 
+
 def find_icons_coordinates(image, icon_path, threshold=0.8, min_distance=10):
     """
     说明:
@@ -213,13 +217,13 @@ def find_icons_coordinates(image, icon_path, threshold=0.8, min_distance=10):
     img_gray = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
     template = cv.imread(icon_path)
     template_gray = cv.cvtColor(template, cv.COLOR_BGR2GRAY)
-    
+
     w, h = template_gray.shape[::-1]
-    
+
     # 模板匹配
     res = cv.matchTemplate(img_gray, template_gray, cv.TM_CCOEFF_NORMED)
     loc = np.where(res >= threshold)
-    
+
     coordinates = []
     for pt in zip(*loc[::-1]):  # Switch columns and rows
         coordinates.append((pt[0], pt[1]))  # 只添加左上角坐标
@@ -229,7 +233,9 @@ def find_icons_coordinates(image, icon_path, threshold=0.8, min_distance=10):
     for coord in coordinates:
         too_close = False
         for fcoord in filtered:
-            distance = ((fcoord[0] - coord[0]) ** 2 + (fcoord[1] - coord[1]) ** 2) ** 0.5
+            distance = (
+                (fcoord[0] - coord[0]) ** 2 + (fcoord[1] - coord[1]) ** 2
+            ) ** 0.5
             if distance < min_distance:
                 too_close = True
                 break

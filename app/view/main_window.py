@@ -1,18 +1,23 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-02 19:27:03
-LastEditTime: 2024-04-17 00:36:55
+LastEditTime: 2024-04-29 22:46:46
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
+import asyncio
+import subprocess
 from typing import Union
 
-# coding: utf-8
-from PyQt5.QtCore import QSize
+from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QWidget
+from qfluentwidgets import DotInfoBadge
 from qfluentwidgets import FluentIcon as FIF
 from qfluentwidgets import (
+    InfoBadgePosition,
+    InfoBar,
+    InfoBarPosition,
     MSFluentWindow,
     NavigationBarPushButton,
     NavigationItemPosition,
@@ -21,6 +26,7 @@ from qfluentwidgets import (
 
 from app.view.daily_task_interface import DailyTaskInterface
 from app.view.running_business_interface import RunningBusinessInterface
+from updater import Updater
 
 from ..common import resource  # 图标数据
 from ..common.config import VERSION, cfg
@@ -55,6 +61,9 @@ class MainWindow(MSFluentWindow):
         # add items to navigation interface
         self.initNavigation()
         self.splashScreen.finish()
+        # 检查更新
+        self.is_updae = False
+        asyncio.run(self.checkUpdate())
 
     def connectSignalToSlot(self):
         signalBus.micaEnableChanged.connect(self.setMicaEffectEnabled)
@@ -73,6 +82,14 @@ class MainWindow(MSFluentWindow):
             self.loggerInterface,
             FIF.ALIGNMENT,
             "日志",
+            position=NavigationItemPosition.BOTTOM,
+        )
+        self.updateButton = self.navigationInterface.addItem(
+            routeKey="Update",
+            icon=FIF.UPDATE,
+            text="更新",
+            onClick=self.Update,
+            selectable=False,
             position=NavigationItemPosition.BOTTOM,
         )
         self.addSubInterface(
@@ -123,3 +140,36 @@ class MainWindow(MSFluentWindow):
     def switchToCard(self, routeKey):
         """switch to card"""
         self.switchTo(self.wights[routeKey])
+
+    def Update(self):
+        """
+        说明:
+            检查更新
+        """
+        if not self.is_updae:
+            subprocess.Popen(
+                ["HeiYue Updater.exe"], creationflags=subprocess.DETACHED_PROCESS
+            )
+            exit()
+        else:
+            InfoBar.success(
+                title="当前已是最新版本",
+                content="",
+                orient=Qt.Horizontal,
+                isClosable=False,
+                position=InfoBarPosition.TOP,
+                duration=1000,
+                parent=self,
+            )
+
+    async def checkUpdate(self):
+        updater = Updater()
+        is_last, _ = await updater.is_last()
+        if is_last:
+            self.updateBadge = DotInfoBadge.error(
+                parent=self.navigationInterface,
+                target=self.updateButton,
+                position=InfoBadgePosition.NAVIGATION_ITEM,
+            )
+            self.updateBadge.setFixedSize(10, 10)
+            self.is_updae = True

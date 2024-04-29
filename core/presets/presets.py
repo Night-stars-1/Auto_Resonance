@@ -9,8 +9,7 @@ import time
 
 from loguru import logger
 
-from core import ocr
-from core.utils import compare_ranges
+from core.module.bgr import BGRGroup
 
 from ..adb import input_swipe, input_tap, screenshot
 from ..image import get_all_color_pos, get_bgrs, match_screenshot
@@ -220,24 +219,30 @@ def wait_fight_end():
     logger.info("等待战斗结束")
     start = time.perf_counter()
     while time.perf_counter() - start < FIGHT_TIME:
-        bgrs = get_bgrs(screenshot(), [(1114, 630), (1204, 624), (236, 26), (1134, 628)])
+        bgrs = get_bgrs(
+            screenshot(), [(1114, 630), (1204, 624), (236, 26), (1134, 628)]
+        )
         logger.debug(f"等待战斗结束颜色检查: {bgrs}")
-        if compare_ranges([198, 200, 200], bgrs[0], [202, 204, 204]) and compare_ranges(
-            [183, 185, 185], bgrs[1], [187, 189, 189]
+        if BGRGroup([198, 200, 200], [202, 204, 204]) == bgrs[0] and BGRGroup(
+            [183, 185, 185], [187, 189, 189] == bgrs[1]
         ):
             logger.info("检测到执照等级提升")
             input_tap((1151, 626))
             continue
-        elif compare_ranges(
-            [245, 245, 245], bgrs[0], [255, 255, 255]
-        ) and compare_ranges([0, 0, 0], bgrs[1], [10, 10, 10]):
+        elif (
+            BGRGroup([245, 245, 245], [255, 255, 255]) == bgrs[0]
+            and BGRGroup([0, 0, 0], [10, 10, 10]) == bgrs[1]
+        ):
             logger.info("战斗胜利")
+            time.sleep(1.0)
             input_tap((1151, 626))
             return True
-        elif compare_ranges(
-            [245, 245, 245], bgrs[0], [255, 255, 255]
-        ) and compare_ranges([9, 9, 9], bgrs[3], [10, 10, 10]):
+        elif (
+            BGRGroup([245, 245, 245], [255, 255, 255]) == bgrs[0]
+            and BGRGroup([9, 9, 9], [10, 10, 10]) == bgrs[3]
+        ):
             logger.info("战斗失败")
+            time.sleep(1.0)
             input_tap((1151, 626))
             return True
         elif bgrs[2] == [124, 126, 125]:

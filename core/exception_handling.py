@@ -14,7 +14,7 @@ from core.adb import input_tap, screenshot
 from core.image import crop_image, show_image
 from core.ocr import predict
 
-ROOT_PATH = Path().resolve()
+ROOT_PATH = Path()
 """项目根目录路径"""
 IMAGE_PATH = ROOT_PATH / "logs" / "image"
 """异常图片文件夹路径"""

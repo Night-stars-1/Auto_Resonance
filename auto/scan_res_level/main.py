@@ -18,6 +18,7 @@ from loguru import logger
 
 from core.adb import connect, input_swipe, input_tap, screenshot
 from core.image import get_bgr, get_bgrs
+from core.module.bgr import BGR
 from core.ocr import predict
 from core.presets import go_home
 from core.utils import compare_ranges
@@ -88,7 +89,7 @@ def run(
             screenshot(), (162, 365), cropped_pos1=(147, 349), cropped_pos2=(191, 382)
         )
         logger.debug(f"是否进入角色界面颜色检查: {bgr}")
-        if compare_ranges([152, 152, 152], bgr, [157, 157, 157]):
+        if BGR(155, 155, 155) == bgr:
             input_tap((91, 174))  # 点击角色
             break
     time.sleep(1)

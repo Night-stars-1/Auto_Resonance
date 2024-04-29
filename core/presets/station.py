@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:24:47
-LastEditTime: 2024-04-23 00:08:35
+LastEditTime: 2024-04-29 21:18:33
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -12,6 +12,7 @@ from loguru import logger
 from core.adb import input_tap, screenshot
 from core.image import get_bgr, get_bgrs, match_screenshot
 from core.models.config import config
+from core.module.bgr import BGRGroup
 from core.utils import compare_ranges
 
 FIGHT_TIME = 300
@@ -48,22 +49,23 @@ class STATION:
             )
             logger.debug(f"行车检测: {reach_bgrs}")
             if (
-                compare_ranges([8, 168, 234], attack_bgrs[0], [9, 171, 245])
-                and compare_ranges([8, 168, 234], attack_bgrs[1], [9, 171, 245])
-                and compare_ranges([8, 168, 234], attack_bgrs[2], [9, 171, 245])
+                BGRGroup([8, 168, 234], [9, 171, 245]) == attack_bgrs[0]
+                and BGRGroup([8, 168, 234], [9, 171, 245]) == attack_bgrs[1]
+                and BGRGroup([8, 168, 234], [9, 171, 245]) == attack_bgrs[2]
             ):
                 logger.info("检测到拦截，进行攻击")
                 self.join_wait_fight()
-            elif compare_ranges(
-                [20, 20, 20], reach_bgrs[0], [25, 25, 25]
-            ) and compare_ranges([250, 250, 250], reach_bgrs[1], [255, 255, 255]):
+            elif (
+                BGRGroup([20, 20, 20], reach_bgrs[0], [25, 25, 25]) == reach_bgrs[0]
+                and BGRGroup([250, 250, 250], [255, 255, 255]) == reach_bgrs[1]
+            ):
                 logger.info("站点到达")
                 input_tap((877, 359))
                 self.wait_home()
                 return True
             elif (
                 reach_bgrs[2] == [251, 253, 253]
-                and not compare_ranges([235, 235, 250], reach_bgrs[2], [240, 240, 255])
+                and BGRGroup([235, 235, 250], [240, 240, 255]) != reach_bgrs[2]
                 and config.global_config.isSpeed
             ):
                 logger.info("点击加速弹丸")
@@ -115,16 +117,26 @@ class STATION:
         start = time.perf_counter()
         while time.perf_counter() - start < FIGHT_TIME:
             bgrs = get_bgrs(screenshot(), [(1114, 630), (1204, 624), (236, 26)])
-            if compare_ranges(
-                [198, 200, 200], bgrs[0], [202, 204, 204]
-            ) and compare_ranges([183, 185, 185], bgrs[1], [187, 189, 189]):
+            if (
+                BGRGroup([198, 200, 200], [202, 204, 204]) == bgrs[0]
+                and BGRGroup([183, 185, 185], [187, 189, 189]) == bgrs[1]
+            ):
                 logger.info("检测到执照等级提升")
                 input_tap((1151, 626))
-            if compare_ranges(
-                [245, 245, 245], bgrs[0], [255, 255, 255]
-            ) and compare_ranges([0, 0, 0], bgrs[1], [10, 10, 10]):
-                logger.info("战斗结束")
-                time.sleep(0.5)
+            elif (
+                BGRGroup([245, 245, 245], [255, 255, 255]) == bgrs[0]
+                and BGRGroup([0, 0, 0], [10, 10, 10]) == bgrs[1]
+            ):
+                logger.info("战斗胜利")
+                time.sleep(1.0)
+                input_tap((1151, 626))
+                return True
+            elif (
+                BGRGroup([245, 245, 245], [255, 255, 255]) == bgrs[0]
+                and BGRGroup([9, 9, 9], [10, 10, 10]) == bgrs[3]
+            ):
+                logger.info("战斗失败")
+                time.sleep(1.0)
                 input_tap((1151, 626))
                 return True
             elif bgrs[2] == [124, 126, 125]:

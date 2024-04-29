@@ -46,8 +46,10 @@ class RSBModel(BaseModel):
 class GlobalConfigModel(BaseModel):
     """全局配置模型"""
 
-    isSpeed: bool = True
+    is_speed: bool = True
     """是否使用加速弹丸"""
+    is_auto_pick: bool = False
+    """是否自动拾取"""
 
 
 class Config(BaseModel):

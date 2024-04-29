@@ -65,11 +65,11 @@ class STATION:
             elif (
                 reach_bgrs[2] == [251, 253, 253]
                 and BGRGroup([235, 235, 250], [240, 240, 255]) != reach_bgrs[2]
-                and config.global_config.isSpeed
+                and config.global_config.is_speed
             ):
                 logger.info("点击加速弹丸")
                 input_tap((1061, 657))
-            input_tap((686, 376)) # 捡垃圾
+            config.global_config.is_auto_pick and input_tap((686, 376))  # 捡垃圾
             time.sleep(0.5)
         logger.error("站点超时")
         return False
@@ -116,7 +116,9 @@ class STATION:
         # 等待战斗结束
         start = time.perf_counter()
         while time.perf_counter() - start < FIGHT_TIME:
-            bgrs = get_bgrs(screenshot(), [(1114, 630), (1204, 624), (236, 26), (1134, 628)])
+            bgrs = get_bgrs(
+                screenshot(), [(1114, 630), (1204, 624), (236, 26), (1134, 628)]
+            )
             if (
                 BGRGroup([198, 200, 200], [202, 204, 204]) == bgrs[0]
                 and BGRGroup([183, 185, 185], [187, 189, 189]) == bgrs[1]

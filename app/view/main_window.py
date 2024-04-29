@@ -142,6 +142,10 @@ class MainWindow(MSFluentWindow):
         self.switchTo(self.wights[routeKey])
 
     def Update(self):
+        """
+        说明:
+            检查更新
+        """
         if not self.is_updae:
             subprocess.Popen(
                 ["HeiYue Updater.exe"], creationflags=subprocess.DETACHED_PROCESS

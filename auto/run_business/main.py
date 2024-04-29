@@ -17,7 +17,6 @@ from core.image import get_bgr
 from core.models.city_goods import RoutesModel
 from core.module.bgr import BGR
 from core.presets import click_station, get_city, go_home, go_outlets, wait_gbr
-from core.utils import compare_ranges
 
 from .buy import buy_business
 from .sell import sell_business

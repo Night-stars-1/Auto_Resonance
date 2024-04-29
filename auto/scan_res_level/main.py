@@ -21,7 +21,6 @@ from core.image import get_bgr, get_bgrs
 from core.module.bgr import BGR
 from core.ocr import predict
 from core.presets import go_home
-from core.utils import compare_ranges
 
 
 def get_skill_level_list():

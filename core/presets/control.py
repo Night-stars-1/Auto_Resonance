@@ -11,7 +11,6 @@ from typing import Tuple
 from loguru import logger
 
 from core.module.bgr import BGRGroup
-from core.utils import compare_ranges
 
 from ..adb import input_tap, screenshot
 from ..exception_handling import get_excption

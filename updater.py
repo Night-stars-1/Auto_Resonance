@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-29 12:51:19
-LastEditTime: 2024-04-29 22:25:16
+LastEditTime: 2024-04-30 03:14:04
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -9,6 +9,7 @@ import asyncio
 import shutil
 import sys
 import time
+from enum import Enum
 from pathlib import Path
 from typing import List, Optional, Tuple, TypedDict
 from zipfile import ZipFile
@@ -35,6 +36,14 @@ class APIResultModel(TypedDict):
     """版本标签"""
     assets: List[AssetsModel]
     """资源"""
+
+
+class UpdateStatus(Enum):
+    """更新状态枚举类"""
+
+    Latest = 1
+    UPDATE = 2
+    FAILURE = 0
 
 
 class Updater:
@@ -84,18 +93,16 @@ class Updater:
             print(f"最快的下载地址: {fastest_url} 响应时间: {fastest_time:.2f}s")
             return fastest_url
 
-    async def get_first_valid_response(
-        self,
-    ) -> Tuple[Optional[APIResultModel], Optional[str]]:
+    async def get_first_valid_response(self):
         async def fetch(session: ClientSession, url):
             try:
                 async with session.get(url) as response:
                     data: APIResultModel = await response.json()
                     if data["tag_name"]:  # 检查是否是有效结果
-                        return data, url
+                        return data
             except Exception as e:
-                return None, url
-            return None, url
+                return None
+            return None
 
         async with ClientSession() as session:
             tasks = [asyncio.create_task(fetch(session, url)) for url in self.api_urls]
@@ -106,17 +113,17 @@ class Updater:
 
                 # 检查已完成的任务是否有有效结果
                 for task in done:
-                    result, url = task.result()
+                    result = task.result()
                     if result:
                         # 如果找到有效结果，取消所有其他任务
                         for p in pending:
                             p.cancel()
-                        return result, url  # 返回第一个有效的结果
+                        return result  # 返回第一个有效的结果
 
                 # 没有有效结果，更新任务列表继续等待
                 tasks = list(pending)
 
-            return None, None  # 所有请求完成但没有有效结果
+            return None  # 所有请求完成但没有有效结果
 
     async def download_file_with_progress(self, url: str):
         """
@@ -227,31 +234,43 @@ class Updater:
                     # 创建目标子目录
                     target.mkdir(parents=True, exist_ok=True)
 
-    async def is_last(self):
+    async def get_update_status(self):
         """
         说明:
             检查是否是最新版本
         参数:
             :param version 版本号
         """
-        result, url = await self.get_first_valid_response()
-        version = result["tag_name"]
-        url = result["assets"][0]["browser_download_url"]
-        self.unzip_dir = TEMP_PATH / f"Auto_Resonance_{version}"
-        return parse(version) <= parse(__version__), url
+        try:
+            result = await self.get_first_valid_response()
+            if result:
+                version = result["tag_name"]
+                url: str = result["assets"][0]["browser_download_url"]
+                self.unzip_dir = TEMP_PATH / f"Auto_Resonance_{version}"
+                return (
+                    UpdateStatus.Latest
+                    if parse(version) <= parse(__version__)
+                    else UpdateStatus.UPDATE
+                ), url
+            return UpdateStatus.FAILURE, ""
+        except Exception as e:
+            print(f"获取更新信息失败: {e}")
+            return UpdateStatus.FAILURE, ""
 
     async def run(self):
         """
         说明:
             运行更新流程
         """
-        is_last_version, url = await self.is_last()
-        if not is_last_version:
+        update_status, url = await self.get_update_status()
+        if update_status == UpdateStatus.UPDATE:
             self.mirror_urls = await self.find_fastest_mirror(url)
             await self.download_file_with_progress(self.mirror_urls)
             self.unzip_with_progress(HEIYUE_FILE_PATH, TEMP_PATH)
             self.sync_subdirectories(self.unzip_dir, ROOT_PATH)
             self.move_directory_with_progress(self.unzip_dir, ROOT_PATH)
+        elif update_status == UpdateStatus.FAILURE:
+            print("获取更新信息失败")
         else:
             print("已经是最新版了")
 

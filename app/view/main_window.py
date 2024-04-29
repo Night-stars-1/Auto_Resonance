@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-02 19:27:03
-LastEditTime: 2024-04-29 22:46:46
+LastEditTime: 2024-04-30 03:12:36
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -26,7 +26,7 @@ from qfluentwidgets import (
 
 from app.view.daily_task_interface import DailyTaskInterface
 from app.view.running_business_interface import RunningBusinessInterface
-from updater import Updater
+from updater import Updater, UpdateStatus
 
 from ..common import resource  # 图标数据
 from ..common.config import VERSION, cfg
@@ -146,11 +146,21 @@ class MainWindow(MSFluentWindow):
         说明:
             检查更新
         """
-        if not self.is_updae:
+        if self.update_status == UpdateStatus.UPDATE:
             subprocess.Popen(
                 ["HeiYue Updater.exe"], creationflags=subprocess.DETACHED_PROCESS
             )
             exit()
+        elif self.update_status == UpdateStatus.FAILURE:
+            InfoBar.error(
+                title="检查更新失败",
+                content="请稍后重试",
+                orient=Qt.Horizontal,
+                isClosable=False,
+                position=InfoBarPosition.TOP,
+                duration=1000,
+                parent=self,
+            )
         else:
             InfoBar.success(
                 title="当前已是最新版本",
@@ -164,12 +174,11 @@ class MainWindow(MSFluentWindow):
 
     async def checkUpdate(self):
         updater = Updater()
-        is_last, _ = await updater.is_last()
-        if is_last:
+        self.update_status, _ = await updater.get_update_status()
+        if self.update_status == UpdateStatus.UPDATE:
             self.updateBadge = DotInfoBadge.error(
                 parent=self.navigationInterface,
                 target=self.updateButton,
                 position=InfoBadgePosition.NAVIGATION_ITEM,
             )
             self.updateBadge.setFixedSize(10, 10)
-            self.is_updae = True

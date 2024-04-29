@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-10 22:54:08
-LastEditTime: 2024-04-28 21:01:23
+LastEditTime: 2024-04-30 00:39:52
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -300,26 +300,14 @@ class RunningBusinessInterface(ScrollArea):
             self.workers.finished.connect(lambda: self.on_worker_finished(self.workers))
             self.workers.result.connect(result)
 
-        """
-        InfoBar.success(
-            title="成功",
-            content=get_goods_info_kmou(cfg.uuid.value) if cfg.goodsType.value else get_goods_info_srap(),
-            orient=Qt.Horizontal,
-            isClosable=True,
-            position=InfoBarPosition.TOP_RIGHT,
-            duration=2000,
-            parent=self
-        )
-        """
-
     def autoscan(self):
 
         def result(skill_level: Dict[str, int]):
-            for role_name, level in skill_level.items():
-                role_name = role_name.replace("闻笔", "闻笙")  # 纠正一些角色名
-                if role_name in self.skillCardData:
-                    # setattr(cfg, skill, level)
-                    self.skillCardData[role_name].spinBox.setValue(level)
+            for role_name in self.skillCardData:
+                role_name_other = role_name.replace("闻笙", "闻笔")  # 纠正一些角色名
+                self.skillCardData[role_name].spinBox.setValue(
+                    skill_level.get(role_name_other, 0)
+                )
 
         signalBus.switchToCard.emit("LoggerInterface")
         from auto.scan_res_level import run

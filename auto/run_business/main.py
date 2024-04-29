@@ -17,7 +17,6 @@ from core.image import get_bgr
 from core.models.city_goods import RoutesModel
 from core.module.bgr import BGR
 from core.presets import click_station, get_city, go_home, go_outlets, wait_gbr
-from core.utils import compare_ranges
 
 from .buy import buy_business
 from .sell import sell_business
@@ -40,11 +39,7 @@ def go_business(type: Literal["buy", "sell"] = "buy"):
         time.sleep(1.0)
         bgr = get_bgr(screenshot(), (1175, 460))
         logger.debug(f"进入交易所颜色检查: {bgr}")
-        if (
-            bgr == [2, 133, 253]
-            or bgr == [0, 183, 253]
-            or BGR(225, 225, 225) == bgr
-        ):
+        if bgr == [2, 133, 253] or bgr == [0, 183, 253] or BGR(225, 225, 225) == bgr:
             return True
         else:
             logger.error("进入交易所失败")
@@ -54,11 +49,7 @@ def go_business(type: Literal["buy", "sell"] = "buy"):
         return False
 
 
-def run(
-    order: str,
-    path: str,
-    route: RoutesModel,
-):
+def run(order: str, path: str, route: RoutesModel):
     status = connect(order, path)
     if not status:
         logger.error("ADB连接失败")

@@ -9,15 +9,10 @@ from core.module.bgr import BGR, BGRGroup
 from core.presets import (
     click,
     click_image,
-    click_station,
-    find_text,
     go_home,
     go_outlets,
-    wait,
     wait_fight_end as _wait_fight_end,
-    wait_time,
 )
-from core.utils import compare_ranges
 
 
 def click_task():

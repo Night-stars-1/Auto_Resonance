@@ -21,7 +21,6 @@ from core.image import get_bgr, get_bgrs
 from core.module.bgr import BGR
 from core.ocr import predict
 from core.presets import go_home
-from core.utils import compare_ranges
 
 
 def get_skill_level_list():
@@ -35,7 +34,7 @@ def get_skill_level_list():
     )
     logger.debug(f"角色共振等级颜色检测: {bgrs}")
     for bgr in bgrs:
-        if bgr[-1] > 200:
+        if bgr.r > 200:
             levels.append(True)
     return levels
 

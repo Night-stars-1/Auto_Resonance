@@ -1,10 +1,17 @@
+"""
+Author: Night-stars-1 nujj1042633805@gmail.com
+Date: 2024-04-29 19:44:17
+LastEditTime: 2024-04-30 03:33:10
+LastEditors: Night-stars-1 nujj1042633805@gmail.com
+"""
 
 from typing import List, Tuple, Union
 
+
 def compare_ranges(
-    low: Union['HSV', Tuple[int, int, int], List[int]],
-    x: Union['HSV', Tuple[int, int, int], List[int]],
-    high: Union['HSV', Tuple[int, int, int], List[int]],
+    low: Union["HSV", Tuple[int, int, int], List[int]],
+    x: Union["HSV", Tuple[int, int, int], List[int]],
+    high: Union["HSV", Tuple[int, int, int], List[int]],
 ):
     """
     说明:
@@ -26,6 +33,7 @@ def compare_ranges(
         and (low_2 <= x_2 <= high_2)
     )
 
+
 class HSV:
     """HSV 模块"""
 
@@ -37,11 +45,11 @@ class HSV:
 
     def __str__(self):
         return f"H: {self.h}, S: {self.s}, V: {self.v}"
-    
+
     def __repr__(self):
         return f"HSV({self.h}, {self.s}, {self.v})"
 
-    def __eq__(self, other: Union['HSV', Tuple[int, int, int], List[int]]):
+    def __eq__(self, other: Union["HSV", Tuple[int, int, int], List[int]]):
         """
         说明:
             判断指定HSV是否在范围
@@ -49,9 +57,13 @@ class HSV:
             :param other: 另一个 HSV
         :warning: 该方法会根据 offset 对前一个 HSV 进行范围偏移
         """
-        return compare_ranges((self.h-self.offset, self.s-self.offset, self.v-self.offset), other, (self.h+self.offset, self.s+self.offset, self.v+self.offset))
+        return compare_ranges(
+            (self.h - self.offset, self.s - self.offset, self.v - self.offset),
+            other,
+            (self.h + self.offset, self.s + self.offset, self.v + self.offset),
+        )
 
-    def __ne__(self, other: Union['HSV', Tuple[int, int, int], List[int]]):
+    def __ne__(self, other: Union["HSV", Tuple[int, int, int], List[int]]):
         """
         说明:
             判断指定HSV是否不在范围
@@ -59,9 +71,26 @@ class HSV:
             :param other: 另一个 HSV
         :warning: 该方法会根据 offset 对前一个 HSV 进行范围偏移
         """
-        return not compare_ranges((self.h-self.offset, self.s-self.offset, self.v-self.offset), other, (self.h+self.offset, self.s+self.offset, self.v+self.offset))
+        return not compare_ranges(
+            (self.h - self.offset, self.s - self.offset, self.v - self.offset),
+            other,
+            (self.h + self.offset, self.s + self.offset, self.v + self.offset),
+        )
 
     def __iter__(self):
         yield self.h
         yield self.s
         yield self.v
+
+    def __getitem__(self, key):
+        if isinstance(key, int):
+            if key == 0 or key == -3:
+                return self.h
+            elif key == 1 or key == -2:
+                return self.s
+            elif key == 2 or key == -1:
+                return self.v
+            else:
+                raise IndexError("BGR index out of range")
+        else:
+            raise TypeError("Invalid index type. Must be an integer.")

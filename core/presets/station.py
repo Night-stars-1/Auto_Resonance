@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:24:47
-LastEditTime: 2024-04-29 21:18:33
+LastEditTime: 2024-04-30 02:58:34
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -13,7 +13,6 @@ from core.adb import input_tap, screenshot
 from core.image import get_bgr, get_bgrs, match_screenshot
 from core.models.config import config
 from core.module.bgr import BGRGroup
-from core.utils import compare_ranges
 
 FIGHT_TIME = 300
 MAP_WAIT_TIME = 3000
@@ -56,7 +55,7 @@ class STATION:
                 logger.info("检测到拦截，进行攻击")
                 self.join_wait_fight()
             elif (
-                BGRGroup([20, 20, 20], reach_bgrs[0], [25, 25, 25]) == reach_bgrs[0]
+                BGRGroup([20, 20, 20], [25, 25, 25]) == reach_bgrs[0]
                 and BGRGroup([250, 250, 250], [255, 255, 255]) == reach_bgrs[1]
             ):
                 logger.info("站点到达")
@@ -66,11 +65,12 @@ class STATION:
             elif (
                 reach_bgrs[2] == [251, 253, 253]
                 and BGRGroup([235, 235, 250], [240, 240, 255]) != reach_bgrs[2]
-                and config.global_config.isSpeed
+                and config.global_config.is_speed
             ):
                 logger.info("点击加速弹丸")
                 input_tap((1061, 657))
-            time.sleep(1)
+            config.global_config.is_auto_pick and input_tap((781, 484))  # 捡垃圾
+            time.sleep(0.3)
         logger.error("站点超时")
         return False
 
@@ -116,7 +116,9 @@ class STATION:
         # 等待战斗结束
         start = time.perf_counter()
         while time.perf_counter() - start < FIGHT_TIME:
-            bgrs = get_bgrs(screenshot(), [(1114, 630), (1204, 624), (236, 26)])
+            bgrs = get_bgrs(
+                screenshot(), [(1114, 630), (1204, 624), (236, 26), (1134, 628)]
+            )
             if (
                 BGRGroup([198, 200, 200], [202, 204, 204]) == bgrs[0]
                 and BGRGroup([183, 185, 185], [187, 189, 189]) == bgrs[1]

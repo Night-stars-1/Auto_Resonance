@@ -1,23 +1,21 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-07 23:14:47
-LastEditTime: 2024-04-19 13:31:52
+LastEditTime: 2024-04-30 04:02:40
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
-# coding:utf-8
-from loguru import logger
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QLabel, QWidget
 from qfluentwidgets import ExpandLayout
 from qfluentwidgets import FluentIcon as FIF
 from qfluentwidgets import ScrollArea, SettingCardGroup, SwitchSettingCard
 
+from core.models.config import config
+
 from ..common.config import cfg
 from ..common.style_sheet import StyleSheet
 from ..components.settings.line_edit_setting_card import LineEditSettingCard
-
-from core.models.config import config
 
 
 class SettingInterface(ScrollArea):
@@ -68,12 +66,21 @@ class SettingInterface(ScrollArea):
             "是否自动使用加速弹丸",
             parent=self.musicInThisPCGroup,
         )
-        self.isSpeedCard.setValue(config.global_config.isSpeed)
+        self.isAutoPickCard = SwitchSettingCard(
+            FIF.PALETTE,
+            "是否自动拾取",
+            "是否自动拾取掉落物",
+            parent=self.musicInThisPCGroup,
+        )
+        self.isSpeedCard.setValue(config.global_config.is_speed)
         self.isSpeedCard.switchButton.checkedChanged.connect(self.__onCheckedChanged)
+        self.isAutoPickCard.setValue(config.global_config.is_auto_pick)
+        self.isAutoPickCard.switchButton.checkedChanged.connect(self.__onCheckedChanged)
         self.__initWidget()
 
-    def __onCheckedChanged(self, isChecked: bool):
-        config.global_config.isSpeed = isChecked
+    def __onCheckedChanged(self):
+        config.global_config.is_speed = self.isSpeedCard.isChecked()
+        config.global_config.is_auto_pick = self.isSpeedCard.isChecked()
         config.save_config()
 
     def __initWidget(self):
@@ -101,6 +108,7 @@ class SettingInterface(ScrollArea):
         self.musicInThisPCGroup.addSettingCard(self.adbPathCard)
         self.musicInThisPCGroup.addSettingCard(self.adbOrderCard)
         self.musicInThisPCGroup.addSettingCard(self.isSpeedCard)
+        self.musicInThisPCGroup.addSettingCard(self.isAutoPickCard)
 
         # add setting card group to layout
         self.expandLayout.setSpacing(28)

@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-04 17:54:58
-LastEditTime: 2024-04-29 19:53:02
+LastEditTime: 2024-04-30 03:39:43
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -15,11 +15,10 @@ from loguru import logger
 from core.adb import input_swipe, input_tap, screenshot
 from core.exception_handling import get_excption
 from core.image import get_bgr, get_hsv
-from core.module.bgr import BGR
+from core.module.bgr import BGR, BGRGroup
 from core.module.hsv import HSV
 from core.ocr import predict
 from core.presets import click, find_text
-from core.utils import compare_ranges
 
 
 def buy_business(
@@ -214,7 +213,7 @@ def click_bargain_button(num=0):
             return True
         bgr = get_bgr(screenshot(), (1176, 461))
         logger.debug(f"降价界面颜色检查: {bgr}")
-        if BGR(5, 130, 245) == bgr:
+        if BGRGroup([0, 123, 240], [2, 133, 253]) == bgr:
             input_tap((1177, 461))
             time.sleep(1.0)
         elif bgr == [251, 253, 253]:

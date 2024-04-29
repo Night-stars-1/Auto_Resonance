@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-01 23:06:19
-LastEditTime: 2024-04-22 00:28:20
+LastEditTime: 2024-04-30 03:19:47
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -16,7 +16,7 @@ import cv2
 
 from core.adb import connect, screenshot
 
-connect("127.0.0.1:16384")
+connect("127.0.0.1:21523")
 
 
 def click_event(event, x, y, flags, param):

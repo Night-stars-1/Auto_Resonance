@@ -6,24 +6,10 @@ LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import (
-    QFrame,
-    QHBoxLayout,
-    QLabel,
-    QStackedWidget,
-    QVBoxLayout,
-    QWidget,
-)
+from PyQt5.QtWidgets import QLabel, QWidget
 from qfluentwidgets import ExpandLayout
 from qfluentwidgets import FluentIcon as FIF
-from qfluentwidgets import (
-    IconWidget,
-    ScrollArea,
-    SettingCardGroup,
-    SubtitleLabel,
-    TabBar,
-    setFont,
-)
+from qfluentwidgets import ScrollArea, SettingCardGroup
 
 from core.models.config import config
 

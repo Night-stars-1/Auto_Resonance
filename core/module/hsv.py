@@ -65,3 +65,16 @@ class HSV:
         yield self.h
         yield self.s
         yield self.v
+
+    def __getitem__(self, key):
+        if isinstance(key, int):
+            if key == 0 or key == -3:
+                return self.h
+            elif key == 1 or key == -2:
+                return self.s
+            elif key == 2 or key == -1:
+                return self.v
+            else:
+                raise IndexError("BGR index out of range")
+        else:
+            raise TypeError("Invalid index type. Must be an integer.")

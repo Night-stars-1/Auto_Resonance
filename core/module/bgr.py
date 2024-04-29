@@ -30,17 +30,17 @@ def compare_ranges(
 class BGR:
     """BGR 模块"""
 
-    def __init__(self, r: int, g: int, b: int, offset: int = 5):
-        self.r = r
-        self.g = g
+    def __init__(self, b: int, g: int, r: int, offset: int = 5):
         self.b = b
+        self.g = g
+        self.r = r
         self.offset = offset
 
     def __str__(self):
-        return f"R: {self.r}, G: {self.g}, B: {self.b}"
+        return f"B: {self.b}, G: {self.g}, R: {self.r}"
 
     def __repr__(self):
-        return f"BGR({self.r}, {self.g}, {self.b})"
+        return f"BGR({self.b}, {self.g}, {self.r})"
 
     def __eq__(self, other: Union["BGR", Tuple[int, int, int], List[int]]):
         """
@@ -51,9 +51,9 @@ class BGR:
         :warning: 该方法会根据 offset 对前一个 BGR 进行范围偏移
         """
         return compare_ranges(
-            (self.r - self.offset, self.g - self.offset, self.b - self.offset),
+            (self.b - self.offset, self.g - self.offset, self.r - self.offset),
             other,
-            (self.r + self.offset, self.g + self.offset, self.b + self.offset),
+            (self.b + self.offset, self.g + self.offset, self.r + self.offset),
         )
 
     def __ne__(self, other: Union["BGR", Tuple[int, int, int], List[int]]):
@@ -65,15 +65,15 @@ class BGR:
         :warning: 该方法会根据 offset 对前一个 BGR 进行范围偏移
         """
         return not compare_ranges(
-            (self.r - self.offset, self.g - self.offset, self.b - self.offset),
+            (self.b - self.offset, self.g - self.offset, self.r - self.offset),
             other,
-            (self.r + self.offset, self.g + self.offset, self.b + self.offset),
+            (self.b + self.offset, self.g + self.offset, self.r + self.offset),
         )
 
     def __iter__(self):
-        yield self.r
-        yield self.g
         yield self.b
+        yield self.g
+        yield self.r
 
     def __getitem__(self, key):
         if isinstance(key, int):

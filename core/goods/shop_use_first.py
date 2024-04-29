@@ -253,7 +253,7 @@ class SHOP:
         说明:
             获取购买商品的价格
         参数:
-            :param price: 商品价格
+            :param price: 商品价格, 砍价前
             :param num: 商品数量
             :param city_name: 城市名称
             :param good_name: 商品名称
@@ -263,9 +263,9 @@ class SHOP:
         ).buy_num  # 城市声望数量加成
         skill_num = self.goods_addition.get(good_name, 0)  # 角色技能增加的数量
         new_num = round5(num * (1 + buy_num + skill_num))
-        tax_rate = self.all_city_info[city_name].revenue  # 税率
+        # tax_rate = self.all_city_info[city_name].revenue  # 税率
         new_price = round5(
-            price * (1 - 0.2 + tax_rate)  # 砍价前的价格  # 砍抬一律0.2
+            price * 0.8 # 砍抬一律0.2
         )  # 砍价后的价格
         return new_price, new_num
 
@@ -286,9 +286,15 @@ class SHOP:
         )  # 不带税的售价, 抬价后
         tax_rate = self.all_city_info[city_name].revenue  # 税率
         no_tax_profit = no_revenue_sell_price - buy_price  # 不带税的利润, 单个商品
-        revenue = (no_revenue_sell_price - buy_price) * tax_rate  # 税收
+        revenue = round5(no_tax_profit * tax_rate)  # 税收
 
-        new_sell_price = round5((no_revenue_sell_price - revenue))
+        new_sell_price = no_revenue_sell_price - revenue
+        """
+        if city_name == "阿妮塔战备工厂" and good_name == "阿妮塔小型桦树发电机":
+            print(
+                f"{city_name=} {good_name=} {new_sell_price=} {buy_price=} {no_tax_profit=} {revenue}"
+            )
+        """
         return new_sell_price, no_tax_profit
 
     def get_need_buy_use_first(

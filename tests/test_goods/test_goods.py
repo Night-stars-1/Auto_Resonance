@@ -110,8 +110,9 @@ def test_get_goods_info_kmou():
         station_level={
             "7号自由港": 19,
             "修格里城": 13,
-            "曼德矿场": 12,
-            "澄明数据中心": 18,
+            "曼德矿场": 14,
+            "澄明数据中心": 17,
+            "阿妮塔发射中心": 0
         },
         negotiate_price={
             "buyTired": 12,

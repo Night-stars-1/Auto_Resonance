@@ -59,4 +59,4 @@ class RunningBusinessConfig(QConfig):
     澄明数据中心声望 = ConfigItem("StationLevel", "澄明数据中心", 0, None)
     曼德矿场声望 = ConfigItem("StationLevel", "曼德矿场", 0, None)
     修格里城声望 = ConfigItem("StationLevel", "修格里城", 0, None)
-    阿妮塔发射中心声望 = ConfigItem("NegotiatePrice", "阿妮塔发射中心", 0, None)
+    阿妮塔发射中心声望 = ConfigItem("StationLevel", "阿妮塔发射中心", 0, None)

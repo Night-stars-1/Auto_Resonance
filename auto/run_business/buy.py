@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-04 17:54:58
-LastEditTime: 2024-04-22 22:07:09
+LastEditTime: 2024-04-29 19:53:02
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -15,6 +15,8 @@ from loguru import logger
 from core.adb import input_swipe, input_tap, screenshot
 from core.exception_handling import get_excption
 from core.image import get_bgr, get_hsv
+from core.module.bgr import BGR
+from core.module.hsv import HSV
 from core.ocr import predict
 from core.presets import click, find_text
 from core.utils import compare_ranges
@@ -91,7 +93,7 @@ def buy_good(good: str, book: int, max_book: int, again: bool = False):
         show_image(image)
         """
         logger.debug(f"是否进货检测: {hsv}")
-        if compare_ranges([90, 0, 250], hsv, [100, 10, 255]):
+        if HSV(95, 5, 255) == hsv:
             if book < max_book:
                 use_book(pos, book)
                 return (
@@ -186,7 +188,7 @@ def click_bargain_button_of_bargain(target_bargain=0):
             return False
         bgr = get_bgr(screenshot(), (1176, 461))
         logger.debug(f"降价界面颜色检查: {bgr}")
-        if compare_ranges([0, 130, 240], bgr, [2, 133, 253]):
+        if BGR(5, 135, 245) == bgr:
             input_tap((1177, 461))
             time.sleep(0.5)
         elif bgr == [251, 253, 253]:
@@ -212,7 +214,7 @@ def click_bargain_button(num=0):
             return True
         bgr = get_bgr(screenshot(), (1176, 461))
         logger.debug(f"降价界面颜色检查: {bgr}")
-        if compare_ranges([0, 125, 240], bgr, [2, 133, 253]):
+        if BGR(5, 130, 245) == bgr:
             input_tap((1177, 461))
             time.sleep(1.0)
         elif bgr == [251, 253, 253]:

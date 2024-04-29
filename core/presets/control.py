@@ -10,6 +10,7 @@ from typing import Tuple
 
 from loguru import logger
 
+from core.module.bgr import BGRGroup
 from core.utils import compare_ranges
 
 from ..adb import input_tap, screenshot
@@ -65,8 +66,8 @@ def wait_gbr(
         :param trynum: 尝试次数
     """
     for _ in range(trynum):
-        gbr = get_bgr(screenshot(), pos, cropped_pos1, cropped_pos2)
-        if compare_ranges(min_gbr, gbr, max_gbr):
+        bgr = get_bgr(screenshot(), pos, cropped_pos1, cropped_pos2)
+        if BGRGroup(min_gbr, max_gbr) == bgr:
             return True
         time.sleep(1)
     logger.info(get_excption())

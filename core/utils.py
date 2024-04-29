@@ -1,11 +1,13 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-02 12:30:29
-LastEditTime: 2024-04-19 14:54:58
+LastEditTime: 2024-04-29 19:35:18
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
 import json
+from typing import List, Tuple, Union
+
 
 
 def read_json(file_path):
@@ -13,7 +15,19 @@ def read_json(file_path):
         return json.load(f)
 
 
-def compare_ranges(low, x, high):
+def compare_ranges(
+    low: Union[Tuple[int, int, int], List[int]],
+    x: Union[Tuple[int, int, int], List[int]],
+    high: Union[Tuple[int, int, int], List[int]],
+):
+    """
+    说明:
+        判断指定颜色是否在范围
+    参数:
+        :param low: 最低颜色
+        :param x: 目标颜色
+        :param high: 最高颜色
+    """
     # 解构列表到单独的变量
     low_0, low_1, low_2 = low
     x_0, x_1, x_2 = x

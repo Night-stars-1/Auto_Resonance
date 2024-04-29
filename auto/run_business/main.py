@@ -15,6 +15,7 @@ from core.api.kmou import get_goods_info as get_goods_info_kmou
 from core.api.srap import get_goods_info as get_goods_info_srap
 from core.image import get_bgr
 from core.models.city_goods import RoutesModel
+from core.module.bgr import BGR
 from core.presets import click_station, get_city, go_home, go_outlets, wait_gbr
 from core.utils import compare_ranges
 
@@ -42,7 +43,7 @@ def go_business(type: Literal["buy", "sell"] = "buy"):
         if (
             bgr == [2, 133, 253]
             or bgr == [0, 183, 253]
-            or compare_ranges([225, 225, 225], bgr, [251, 253, 253])
+            or BGR(225, 225, 225) == bgr
         ):
             return True
         else:

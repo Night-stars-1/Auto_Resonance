@@ -69,7 +69,7 @@ class STATION:
             ):
                 logger.info("点击加速弹丸")
                 input_tap((1061, 657))
-            input_tap((634, 379))
+            input_tap((686, 376)) # 捡垃圾
             time.sleep(0.5)
         logger.error("站点超时")
         return False

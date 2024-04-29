@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-04 17:54:58
-LastEditTime: 2024-04-29 19:53:02
+LastEditTime: 2024-04-30 03:39:43
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -213,7 +213,7 @@ def click_bargain_button(num=0):
             return True
         bgr = get_bgr(screenshot(), (1176, 461))
         logger.debug(f"降价界面颜色检查: {bgr}")
-        if BGRGroup([0, 130, 240], [2, 133, 253]) == bgr:
+        if BGRGroup([0, 123, 240], [2, 133, 253]) == bgr:
             input_tap((1177, 461))
             time.sleep(1.0)
         elif bgr == [251, 253, 253]:

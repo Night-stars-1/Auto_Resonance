@@ -125,15 +125,15 @@ class Updater:
 
             return None  # 所有请求完成但没有有效结果
 
-    async def download_file_with_progress(self, url: str):
+    async def download_file_with_progress(self, fastest_url: str):
         """
         说明:
             下载文件，并显示进度条
         参数:
-            :param url 下载地址
+            :param fastest_url 下载地址
         """
         async with ClientSession() as session:
-            async with session.get(url) as resp:
+            async with session.get(fastest_url) as resp:
                 if resp.status == 200:
                     # 设置下载进度条
                     total_size = int(resp.headers.get("content-length", 0))
@@ -264,8 +264,8 @@ class Updater:
         """
         update_status, url = await self.get_update_status()
         if update_status == UpdateStatus.UPDATE:
-            self.mirror_urls = await self.find_fastest_mirror(url)
-            await self.download_file_with_progress(self.mirror_urls)
+            fastest_url = await self.find_fastest_mirror(url)
+            await self.download_file_with_progress(fastest_url)
             self.unzip_with_progress(HEIYUE_FILE_PATH, TEMP_PATH)
             self.sync_subdirectories(self.unzip_dir, ROOT_PATH)
             self.move_directory_with_progress(self.unzip_dir, ROOT_PATH)

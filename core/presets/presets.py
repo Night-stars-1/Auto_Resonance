@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:24:47
-LastEditTime: 2024-04-30 15:30:02
+LastEditTime: 2024-05-04 15:32:49
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -25,6 +25,7 @@ STATION_NAME2PNG = {
     "澄明数据中心": "cmsjzx.png",
     "阿妮塔战备工厂": "antzbgc.png",
     "阿妮塔能源研究所": "antnyyjs.png",
+    "阿妮塔发射中心": "antfszx.png",
     "淘金乐园": "tjly.png",
     "曼德矿场": "mdkc.png",
     "荒原站": "hyz.png",
@@ -86,19 +87,26 @@ def click_station(name: str):
 
     city_differences = STATION_DIFFERENCES.get((source, name))
     if city_differences:
+        source_x = 640
+        source_y = 360
         # 如果有路线则进行寻找
-        x1 = 450 + city_differences[0]
-        if x1 > 1280:
+        x1 = source_x + city_differences[0]
+        if (x_distance := x1 - 1280) > 0:
             x1 = 1280
-        elif x1 < 0:
+            source_x = source_x - x_distance
+        elif (x_distance := x1 - 0) < 0:
             x1 = 0
-        y1 = 500 + city_differences[1]
-        if y1 > 720:
+            source_x = source_x - x_distance
+        y1 = source_y + city_differences[1]
+        if (y_distance := y1 - 720) > 0:
             y1 = 720
-        elif y1 < 78:
+            source_y = source_y - y_distance
+        elif (y_distance := y1 - 78) < 0:
             y1 = 78
+            source_y = source_y - y_distance
+
         # 滑动到目标站点
-        input_swipe((x1, y1), (450, 500), time=500)
+        input_swipe((x1, y1), (source_x, source_y), time=500)
 
         result = match_screenshot(
             screenshot(), f"resources/stations/{STATION_NAME2PNG[name]}"

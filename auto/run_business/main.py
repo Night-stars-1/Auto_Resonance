@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:14:29
-LastEditTime: 2024-04-28 22:33:46
+LastEditTime: 2024-05-06 00:02:03
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -10,16 +10,17 @@ from typing import Literal
 
 from loguru import logger
 
+from auto.run_business.buy import buy_business
+from auto.run_business.sell import sell_business
 from core.adb import connect, input_tap, screenshot
 from core.api.kmou import get_goods_info as get_goods_info_kmou
 from core.api.srap import get_goods_info as get_goods_info_srap
+from core.goods.shop import show
 from core.image import get_bgr
+from core.models import app
 from core.models.city_goods import RoutesModel
 from core.module.bgr import BGR
 from core.presets import click_station, get_city, go_home, go_outlets, wait_gbr
-
-from .buy import buy_business
-from .sell import sell_business
 
 
 def go_business(type: Literal["buy", "sell"] = "buy"):
@@ -49,16 +50,16 @@ def go_business(type: Literal["buy", "sell"] = "buy"):
         return False
 
 
-def run(route: RoutesModel):
+def run(routes: RoutesModel):
+    logger.info(show(routes))
     status = connect()
     if not status:
         logger.error("ADB连接失败")
         return False
     city_name = get_city()
-    if route.city_data[0].sell_city_name == city_name:
-        route.city_data = [route.city_data[1], route.city_data[0]]
-        # print(route.city_data)
-    for city in route.city_data:
+    if routes.city_data[0].sell_city_name == city_name:
+        routes.city_data = [routes.city_data[1], routes.city_data[0]]
+    for city in routes.city_data:
         if city.profit == 0:
             logger.info("没有数据")
             return False
@@ -78,3 +79,21 @@ def run(route: RoutesModel):
         sell_business(city.sell_argaining_num)
     logger.info("运行完成")
     return True
+
+
+def start():
+    """
+    说明:
+        循环监听单位疲劳利润，达到阈值时进行跑商
+    """
+    while True:
+        if app.Global.goodsType:
+            routes = get_goods_info_kmou()
+        else:
+            routes = get_goods_info_srap()
+        if routes.tired_profit >= app.Global.tiredProfitThreshold:
+            run(routes)
+
+
+if __name__ == "__main__":
+    start()

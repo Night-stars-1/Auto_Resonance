@@ -145,6 +145,7 @@ class HomeInterface(ScrollArea):
 
         self.taskCheckboxGroup.addCheckbox("购买桦石", cfg.huashi)
         self.taskCheckboxGroup.addCheckbox("刷铁安局", cfg.railwaySafetyBureau)
+        self.taskCheckboxGroup.addCheckbox("自动跑商", cfg.runBusiness)
 
         self.run = basicInputView.addSampleCard(
             icon=":/gallery/images/controls/Button.png",

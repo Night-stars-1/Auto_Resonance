@@ -38,12 +38,6 @@ def test_get_goods_info_kmou():
 
 
 def test_get_city_data_by_city_level():
-    station_level = {
-        "7号自由港": 19,
-        "修格里城": 13,
-        "曼德矿场": 12,
-        "澄明数据中心": 18,
-    }
     result = SHOP(goods_data=GoodsModel(goods=[])).get_city_data_by_city_level()
     print(result)
     assert result["7号自由港"].buy_num != 0.0

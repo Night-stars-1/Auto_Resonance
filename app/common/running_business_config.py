@@ -15,6 +15,7 @@ class RunningBusinessConfig(QConfig):
     profitThreshold = ConfigItem("RunningBusiness", "profitThreshold", 100000, None)
     priceThreshold = ConfigItem("RunningBusiness", "priceThreshold", 500, None)
     maxGoodsNum = ConfigItem("RunningBusiness", "maxGoodsNum", 625, None)
+    tiredProfitThreshold = ConfigItem("RunningBusiness", "tiredProfitThreshold", 12000, None)
 
     朱利安 = ConfigItem("SkillLevel", "朱利安", 0, None)
     狮鬃 = ConfigItem("SkillLevel", "狮鬃", 0, None)

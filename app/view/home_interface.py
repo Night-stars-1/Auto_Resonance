@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-02 19:12:22
-LastEditTime: 2024-05-04 15:55:01
+LastEditTime: 2024-05-04 17:07:15
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -170,13 +170,7 @@ class HomeInterface(ScrollArea):
             from main import main, stop
 
             tasks = self.taskCheckboxGroup.getAllAccept()
-            self.workers = Worker(
-                main,
-                stop,
-                order=cfg.adbOrder.value,
-                path=cfg.adbPath.value,
-                tasks=tasks,
-            )
+            self.workers = Worker(main, stop, tasks=tasks)
             self.workers.finished.connect(lambda: self.on_worker_finished(self.workers))
             self.workers.start()
         else:
@@ -186,12 +180,7 @@ class HomeInterface(ScrollArea):
         """停止自动化程序"""
         from main import main, stop
 
-        self.workers = Worker(
-            main,
-            stop,
-            order=cfg.adbOrder.value,
-            path=cfg.adbPath.value,
-        )
+        self.workers = Worker(main, stop)
         self.workers.finished.connect(lambda: self.on_worker_finished(self.workers))
         self.workers.stop()
 

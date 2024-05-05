@@ -151,8 +151,8 @@ def attack_five(num: int = 1):
             break
 
 
-def attack_boss(order: str, path: str, num: int = 1, bossList: Dict[str, str] = {}):
-    status = connect(order, path)
+def attack_boss(num: int = 1, bossList: Dict[str, str] = {}):
+    status = connect()
     if not status:
         logger.error("ADB连接失败")
         return False

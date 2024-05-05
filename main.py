@@ -26,8 +26,8 @@ def stop():
     adb_stop()
 
 
-def main(order, path, tasks: Dict[str, str]):
-    status = connect(order, path)
+def main(tasks: Dict[str, str]):
+    status = connect()
     if status:
         for description, task in tasks.items():
             logger.info(f"开始运行{description}")

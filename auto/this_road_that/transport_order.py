@@ -74,8 +74,8 @@ def consign_goods(pos: Tuple[int, int]):
     logger.info("交付完成")
 
 
-def transport_order(order: str, path: str, num: int = 1):
-    status = connect(order, path)
+def transport_order(num: int = 1):
+    status = connect()
     if not status:
         logger.error("ADB连接失败")
         return False

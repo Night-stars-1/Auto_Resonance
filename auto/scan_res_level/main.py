@@ -72,11 +72,8 @@ def get_skill_level():
     return {}
 
 
-def run(
-    order: str,
-    path: str,
-):
-    status = connect(order, path)
+def run():
+    status = connect()
     if not status:
         logger.error("ADB连接失败")
         return {}

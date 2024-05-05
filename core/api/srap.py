@@ -15,14 +15,7 @@ from ..goods import SHOP
 from ..models.srap import SrapRequestGzipModel
 
 
-def get_goods_info(
-    city_book: Dict[str, int],
-    skill_level: Dict[str, int],
-    station_level: Dict[str, int],
-    negotiate_price: Dict[str, int],
-    max_goods_num: int,
-    _=None,
-):
+def get_goods_info():
     headers = {
         "accept": "application/json",
         "Content-Type": "application/json",
@@ -41,9 +34,7 @@ def get_goods_info(
         raise Exception(f"请求失败: {response.text}")
     result = gzip.decompress(response.content).decode("utf-8")
     goods_data = SrapRequestGzipModel.model_validate(orjson.loads(result))
-    return SHOP(
-        goods_data, city_book, skill_level, station_level, negotiate_price, max_goods_num
-    ).get_optimal_route()
+    return SHOP(goods_data).get_optimal_route()
 
 
 def get_boss():

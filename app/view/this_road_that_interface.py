@@ -103,12 +103,7 @@ class ThisRoadThatInterface(ScrollArea):
         from auto.this_road_that import attack_boss
 
         self.workers = Worker(
-            attack_boss,
-            attack_boss,
-            order=cfg.adbOrder.value,
-            path=cfg.adbPath.value,
-            num=cfg.thisRoadThatBoss.value,
-            bossList=self.bossListGroup.getAllAccept(),
+            attack_boss, attack_boss, bossList=self.bossListGroup.getAllAccept()
         )
         self.workers.start()
         signalBus.switchToCard.emit("LoggerInterface")
@@ -117,13 +112,7 @@ class ThisRoadThatInterface(ScrollArea):
     def clickTransportOrder(self):
         from auto.this_road_that import transport_order
 
-        self.workers = Worker(
-            transport_order,
-            transport_order,
-            order=cfg.adbOrder.value,
-            path=cfg.adbPath.value,
-            num=cfg.thisRoadThatTransportOrder.value,
-        )
+        self.workers = Worker(transport_order, transport_order)
         self.workers.start()
         signalBus.switchToCard.emit("LoggerInterface")
         self.workers.finished.connect(lambda: self.on_worker_finished(self.workers))

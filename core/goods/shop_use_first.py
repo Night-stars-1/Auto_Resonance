@@ -7,6 +7,7 @@ from typing import Dict, List
 
 from loguru import logger
 
+from core.models import app
 from core.models.city_goods import (
     CityDataModel,
     RouteModel,
@@ -174,15 +175,7 @@ skill_data = {
 
 
 class SHOP:
-    def __init__(
-        self,
-        goods_data: GoodsModel,
-        city_book: Dict[str, int],
-        skill_level: Dict[str, int],
-        station_level: Dict[str, int],
-        negotiate_price: Dict[str, int],
-        max_goods_num: int,
-    ) -> None:
+    def __init__(self, goods_data: GoodsModel) -> None:
         """
         说明:
             跑商基类
@@ -199,25 +192,25 @@ class SHOP:
         """城市可购买的商品信息"""
         self.sell_goods = self.goods_data.sell_goods
         """城市可出售的商品信息"""
-        self.city_book = city_book
+        self.city_book = app.RunningBusiness
         """城市最大单次进货书"""
-        self.goods_addition: Dict[str, int] = self.get_goods_addition(skill_level)
+        self.goods_addition: Dict[str, int] = self.get_goods_addition()
         """商品附加"""
-        self.all_city_info: Dict[str, CityDataModel] = self.get_city_data_by_city_level(
-            station_level
+        self.all_city_info: Dict[str, CityDataModel] = (
+            self.get_city_data_by_city_level()
         )
         """城市税率等声望信息"""
-        self.negotiate_price = negotiate_price
+        self.negotiate_price = app.NegotiatePrice
         """议价次数和单次疲劳"""
-        self.max_goods_num = max_goods_num
+        self.max_goods_num = app.RunningBusiness.maxGoodsNum
         """最大商品数量"""
         self.cache_route_data = {}
         """路线利润缓存数据"""
 
-    def get_goods_addition(self, skill_level: Dict[str, int]) -> Dict[str, int]:
+    def get_goods_addition(self) -> Dict[str, int]:
         goods_addition: dict = {}
         """商品附加"""
-        for role_name, role_level in skill_level.items():
+        for role_name, role_level in app.SkillLevel.items():
             role_skill_data = skill_data.get(role_name, [])
 
             for skill_affect in role_skill_data:
@@ -234,10 +227,8 @@ class SHOP:
                             goods_addition[good_name] += param
         return goods_addition
 
-    def get_city_data_by_city_level(
-        self,
-        station_level: Dict[str, int],
-    ) -> Dict[str, CityDataModel]:
+    def get_city_data_by_city_level(self) -> Dict[str, CityDataModel]:
+        station_level = app.StationLevel
         city_level_data = {}
         for attached_name, station_name in attached_to_city_data.items():
             if station_name not in station_level.keys():
@@ -264,9 +255,7 @@ class SHOP:
         skill_num = self.goods_addition.get(good_name, 0)  # 角色技能增加的数量
         new_num = round5(num * (1 + buy_num + skill_num))
         # tax_rate = self.all_city_info[city_name].revenue  # 税率
-        new_price = round5(
-            price * 0.8 # 砍抬一律0.2
-        )  # 砍价后的价格
+        new_price = round5(price * 0.8)  # 砍抬一律0.2  # 砍价后的价格
         return new_price, new_num
 
     def get_good_sell_price(self, buy_price: int, city_name: str, good_name: str):
@@ -313,14 +302,17 @@ class SHOP:
             goods.items(), key=lambda item: item[1].isSpeciality, reverse=True
         )  # 按照是否特产排序
         speciality_num = len([good for good in goods.values() if good.isSpeciality])
-        buy_argaining_num = self.negotiate_price.get(buy_city_name, 0)  # 购买议价次数
-        sell_argaining_num = self.negotiate_price.get(sell_city_name, 0)  # 出售议价次数
+        buy_argaining_num = getattr(
+            self.negotiate_price, buy_city_name, 0
+        )  # 购买议价次数
+        sell_argaining_num = getattr(
+            self.negotiate_price, sell_city_name, 0
+        )  # 出售议价次数
         # 总疲劳
         city_tired = (
             city_tired_data.get(f"{buy_city_name}-{sell_city_name}", 99999)
-            + buy_argaining_num * self.negotiate_price.get("buyTired", 0)  # 购买总疲劳
-            + sell_argaining_num
-            * self.negotiate_price.get("sellTired", 0)  # 出售总疲劳
+            + buy_argaining_num * self.negotiate_price.buyTired  # 购买总疲劳
+            + sell_argaining_num * self.negotiate_price.sellTired  # 出售总疲劳
         )
         # 目标站点的商品价格信息
         route_price_data: RouteModel = RouteModel(
@@ -346,7 +338,7 @@ class SHOP:
                 buy_price, sell_city_name, good_name
             )
             good_profit = profit * num  # 商品利润
-            if profit >= self.city_book["priceThreshold"] or good.isSpeciality:
+            if profit >= self.city_book.priceThreshold or good.isSpeciality:
                 if (
                     profit >= 1000
                     and buy_num < self.max_goods_num / (book + 1) / speciality_num
@@ -380,10 +372,7 @@ class SHOP:
             else self.cache_route_data[f"{buy_city_name}-{sell_city_name}-{book-1}"]
         )
         route_price_data.book_profit = route_price_data.profit - last_profit
-        if (
-            route_price_data.book_profit < self.city_book["profitThreshold"]
-            and book != 0
-        ):
+        if route_price_data.book_profit < self.city_book.profitThreshold and book != 0:
             # 当单书利润小于阈值时，过滤该路线
             return None
         return route_price_data
@@ -395,7 +384,7 @@ class SHOP:
         返回:
             :return: 路线数据
         """
-        total_max_book = self.city_book["totalMaxBook"]
+        total_max_book = self.city_book.totalMaxBook
         routes: List[RoutesModel] = []
         for city1, city2 in itertools.combinations(set(self.buy_goods.keys()), 2):
             for max_book in range(total_max_book + 1):

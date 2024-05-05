@@ -14,6 +14,8 @@ from typing import Tuple
 import cv2 as cv
 import numpy as np
 
+from core.models import app
+
 from .exceptions import StopExecution
 
 ADBOREDER = ""
@@ -37,7 +39,7 @@ def run(
     )
 
 
-def connect(order="127.0.0.1:7555", path="resources\\lib\\adb"):
+def connect():
     """
     说明:
         连接ADB
@@ -45,8 +47,8 @@ def connect(order="127.0.0.1:7555", path="resources\\lib\\adb"):
         :param order: ADB端口
     """
     global ADBOREDER, ADBPATH, STOP
-    ADBOREDER = order
-    ADBPATH = path
+    ADBOREDER = app.Global.adbOrder
+    ADBPATH = app.Global.adbPath
     STOP = False
     shell = [ADBPATH, "connect", ADBOREDER]
     result = run(shell, capture_output=True, check=False)

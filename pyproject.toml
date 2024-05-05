@@ -15,6 +15,7 @@ dependencies = [
     "opencv-python==4.9.0.80",
     "orjson>=3.10.0",
     "pydantic>=2.6.4",
+    "watchdog>=4.0.0",
 ]
 requires-python = "<3.13,>=3.11"
 readme = "README.md"

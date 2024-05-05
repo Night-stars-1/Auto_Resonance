@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-02 19:13:20
-LastEditTime: 2024-04-28 22:02:38
+LastEditTime: 2024-05-04 17:41:41
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -20,6 +20,7 @@ from qfluentwidgets import (
     qconfig,
 )
 
+from core.models import app
 from version import __version__
 
 from .running_business_config import RunningBusinessConfig
@@ -59,11 +60,21 @@ class Config(RunningBusinessConfig):
 
     # 我建我路
     thisRoadThatBoss = ConfigItem("ThisRoadThat", "boss", 10, None)
-    thisRoadThatAttackOne = ConfigItem("ThisRoadThat", "attack_one", False, BoolValidator())
-    thisRoadThatAttackTwo = ConfigItem("ThisRoadThat", "attack_two", False, BoolValidator())
-    thisRoadThatAttackThree = ConfigItem("ThisRoadThat", "attack_three", False, BoolValidator())
-    thisRoadThatAttackFour = ConfigItem("ThisRoadThat", "attack_four", False, BoolValidator())
-    thisRoadThatAttackFive = ConfigItem("ThisRoadThat", "attack_five", False, BoolValidator())
+    thisRoadThatAttackOne = ConfigItem(
+        "ThisRoadThat", "attack_one", False, BoolValidator()
+    )
+    thisRoadThatAttackTwo = ConfigItem(
+        "ThisRoadThat", "attack_two", False, BoolValidator()
+    )
+    thisRoadThatAttackThree = ConfigItem(
+        "ThisRoadThat", "attack_three", False, BoolValidator()
+    )
+    thisRoadThatAttackFour = ConfigItem(
+        "ThisRoadThat", "attack_four", False, BoolValidator()
+    )
+    thisRoadThatAttackFive = ConfigItem(
+        "ThisRoadThat", "attack_five", False, BoolValidator()
+    )
     thisRoadThatTransportOrder = ConfigItem("ThisRoadThat", "thisRoadThat", 1, None)
 
     # task

@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-29 12:51:19
-LastEditTime: 2024-04-30 03:14:04
+LastEditTime: 2024-05-05 20:20:02
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -44,6 +44,7 @@ class UpdateStatus(Enum):
     Latest = 1
     UPDATE = 2
     FAILURE = 0
+    NOSUPPORT = 3
 
 
 class Updater:
@@ -241,6 +242,8 @@ class Updater:
         参数:
             :param version 版本号
         """
+        if not getattr(sys, "frozen", False):
+            return UpdateStatus.NOSUPPORT
         try:
             result = await self.get_first_valid_response()
             if result:
@@ -279,7 +282,7 @@ def check_temp_dir_and_run():
     """检查临时目录并运行更新程序。"""
     if not getattr(sys, "frozen", False):
         print("更新程序只支持打包成exe后运行")
-        sys.exit(1)
+        return UpdateStatus.NOSUPPORT
 
     if TEMP_PATH.exists():
         shutil.rmtree(TEMP_PATH)

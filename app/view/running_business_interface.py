@@ -121,8 +121,8 @@ class RunningBusinessInterface(ScrollArea):
             FIF.ACCEPT,
             "单位疲劳阈值",
             "当单位疲劳高于该值的时候自动跑商",
-            spin_box_min=50000,
-            spin_box_max=300000,
+            spin_box_min=5000,
+            spin_box_max=30000,
             parent=self.scrollWidget,
         )
         self.testRunBusinessCard = PrimaryPushLoadCard(

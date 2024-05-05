@@ -2,16 +2,13 @@
 
 import itertools
 import json
-from decimal import Decimal, ROUND_HALF_UP
+from decimal import ROUND_HALF_UP, Decimal
 from typing import Dict, List
 
 from loguru import logger
 
-from core.models.city_goods import (
-    CityDataModel,
-    RouteModel,
-    RoutesModel,
-)
+from core.models.city_goods import CityDataModel, RouteModel, RoutesModel
+
 from ..models.goods import GoodsModel
 
 
@@ -65,6 +62,63 @@ def show(routes: RoutesModel):
     书本数量: {book}"""
 
     return message
+
+
+def sort_goods_by_profit(route: RoutesModel):
+    """
+    说明:
+        根据利润排序商品
+    参数:
+        :param route: 路线数据
+    """
+    route.city_data[0].normal_goods = {
+        k: v
+        for k, v in sorted(
+            route.city_data[0].normal_goods.items(),
+            key=lambda item: item[1],
+        )
+    }
+    route.city_data[0].primary_goods = [
+        good[0]
+        for good in sorted(
+            route.city_data[0].buy_goods.items(),
+            key=lambda item: item[1],
+            reverse=True,
+        )
+    ]
+    route.city_data[0].secondary_goods = [
+        good[0]
+        for good in sorted(
+            route.city_data[0].normal_goods.items(),
+            key=lambda item: item[1],
+            reverse=True,
+        )
+    ]
+
+    route.city_data[1].normal_goods = {
+        k: v
+        for k, v in sorted(
+            route.city_data[1].normal_goods.items(),
+            key=lambda item: item[1],
+        )
+    }
+    route.city_data[1].primary_goods = [
+        good[0]
+        for good in sorted(
+            route.city_data[1].buy_goods.items(),
+            key=lambda item: item[1],
+            reverse=True,
+        )
+    ]
+    route.city_data[1].secondary_goods = [
+        good[0]
+        for good in sorted(
+            route.city_data[1].normal_goods.items(),
+            key=lambda item: item[1],
+            reverse=True,
+        )
+    ]
+    return route
 
 
 with open("resources/goods/CityGoodsData.json", "r", encoding="utf-8") as file:
@@ -289,7 +343,9 @@ class SHOP:
         new_sell_price = round5((no_revenue_sell_price - revenue))
         return new_sell_price, no_tax_profit
 
-    def get_pending_purchase(self, buy_city_name: str, sell_city_name: str, max_book: int = 0):
+    def get_pending_purchase(
+        self, buy_city_name: str, sell_city_name: str, max_book: int = 0
+    ):
         """
         说明:
             获取需要购买的物品的信息
@@ -298,17 +354,18 @@ class SHOP:
             :param sell_city_name: 出售城市名称
             :param max_book: 最大书本数量
         """
-        goods = self.buy_goods[buy_city_name] # 购买城市的商品信息
+        goods = self.buy_goods[buy_city_name]  # 购买城市的商品信息
         sorted_goods = sorted(
             goods.items(), key=lambda item: item[1].isSpeciality, reverse=True
-        ) # 按照是否特产排序
-        buy_argaining_num = self.negotiate_price.get(buy_city_name, 0) # 购买议价次数
-        sell_argaining_num = self.negotiate_price.get(sell_city_name, 0) # 出售议价次数
+        )  # 按照是否特产排序
+        buy_argaining_num = self.negotiate_price.get(buy_city_name, 0)  # 购买议价次数
+        sell_argaining_num = self.negotiate_price.get(sell_city_name, 0)  # 出售议价次数
         # 总疲劳
         city_tired = (
             city_tired_data.get(f"{buy_city_name}-{sell_city_name}", 99999)
-            + buy_argaining_num * self.negotiate_price.get("buyTired", 0) # 购买总疲劳
-            + sell_argaining_num * self.negotiate_price.get("sellTired", 0) # 出售总疲劳
+            + buy_argaining_num * self.negotiate_price.get("buyTired", 0)  # 购买总疲劳
+            + sell_argaining_num
+            * self.negotiate_price.get("sellTired", 0)  # 出售总疲劳
         )
         # 目标站点的商品价格信息
         route_price_data: RouteModel = RouteModel(
@@ -318,7 +375,10 @@ class SHOP:
             buy_argaining_num=buy_argaining_num,
             sell_argaining_num=sell_argaining_num,
         )
-        while route_price_data.num < self.max_goods_num and route_price_data.book < max_book:  # 直到货仓被装满
+        while (
+            route_price_data.num < self.max_goods_num
+            and route_price_data.book < max_book
+        ):  # 直到货仓被装满
             old_route_price_data = route_price_data.model_copy()
             route_price_data.book += 1
             for good_name, good in sorted_goods:
@@ -336,14 +396,16 @@ class SHOP:
                 sell_price, profit = self.get_good_sell_price(
                     buy_price, sell_city_name, good_name
                 )
-                good_profit = profit * num # 商品利润
+                good_profit = profit * num  # 商品利润
                 # print(f"{buy_city_name}<=>{sell_city_name}:{good_name}=>{sell_price} {profit * num}")
                 if profit >= self.city_book["priceThreshold"] or good.isSpeciality:
                     if profit >= 1000:
                         route_price_data.buy_goods[good_name] = profit
                     else:
                         route_price_data.normal_goods[good_name] = profit
-                    route_price_data.goods_data.setdefault(good_name, RouteModel.GoodsData())
+                    route_price_data.goods_data.setdefault(
+                        good_name, RouteModel.GoodsData()
+                    )
                     route_price_data.goods_data[good_name].num += num
                     route_price_data.goods_data[good_name].buy_price += buy_price
                     route_price_data.goods_data[good_name].sell_price += sell_price
@@ -355,13 +417,68 @@ class SHOP:
                 else:
                     route_price_data.normal_goods[good_name] = profit
 
-            if route_price_data.book and route_price_data.profit / route_price_data.book < self.city_book["profitThreshold"]: # 判断是否小于进货书利润阈值
-                route_price_data = old_route_price_data # 小于进货书利润阈值，本次计算无效，结束计算
+            # 判断是否小于进货书利润阈值
+            if (
+                route_price_data.book
+                and route_price_data.profit / route_price_data.book
+                < self.city_book["profitThreshold"]
+            ):
+                route_price_data = (
+                    old_route_price_data  # 小于进货书利润阈值，本次计算无效，结束计算
+                )
                 break
 
         route_price_data.tired_profit = round5(route_price_data.profit / city_tired)
-        route_price_data.book_profit = route_price_data.book and round5(route_price_data.profit / route_price_data.book)
+        route_price_data.book_profit = route_price_data.book and round5(
+            route_price_data.profit / route_price_data.book
+        )
         return route_price_data
+
+    def get_best_goods(
+        self,
+        buy_city_name: str,
+        sell_city_name: str,
+        book: int,
+        buy_neg: int = 0,
+        sell_neg: int = 0,
+    ):
+        # TODO: 议价要算期望, 有点麻烦哈, 主要还有更优的策略就是边看边算
+        goods = self.buy_goods[buy_city_name]
+        fatigue_cost = city_tired_data.get(f"{buy_city_name}-{sell_city_name}", 99999)
+        data: RouteModel = RouteModel(
+            buy_city_name=buy_city_name,
+            sell_city_name=sell_city_name,
+            city_tired=fatigue_cost,
+            buy_argaining_num=buy_neg,
+            sell_argaining_num=sell_neg,
+        )
+        sorted_goods = sorted(
+            goods.items(),
+            key=lambda item: self.get_good_sell_price(0, sell_city_name, item[0])[1],
+            reverse=True,
+        )
+        for good_name, good in sorted_goods:
+            if data.num >= self.max_goods_num:
+                break
+            count = min(self.max_goods_num - data.num, good.num * book)
+            buy_price, buy_num = self.get_good_buy_price(
+                good.price, count, buy_city_name, good_name
+            )
+            sell_price, profit = self.get_good_sell_price(
+                buy_price, sell_city_name, good_name
+            )
+            data.goods_data.setdefault(good_name, RouteModel.GoodsData())
+            data.goods_data[good_name].num += count
+            data.goods_data[good_name].buy_price += buy_price
+            data.goods_data[good_name].sell_price += sell_price
+            data.buy_price += buy_price * count
+            data.sell_price += sell_price * count
+            data.profit += profit * count
+            data.num += count
+
+        data.tired_profit = round5(data.profit / fatigue_cost)
+        data.book_profit = data.book and round5(data.profit / data.book)
+        return data
 
     def get_route_profit(self):
         """
@@ -373,12 +490,14 @@ class SHOP:
         total_max_book = self.city_book["totalMaxBook"]
         routes: List[RoutesModel] = []
         for city1, city2 in itertools.combinations(set(self.buy_goods.keys()), 2):
-            for max_book in range(1, total_max_book+1):
+            for max_book in range(1, total_max_book + 1):
                 if city1 not in self.all_city_info or city2 not in self.all_city_info:
                     continue
                 city_routes = RoutesModel()
                 target1 = self.get_pending_purchase(city1, city2, max_book)
-                target2 = self.get_pending_purchase(city2, city1, total_max_book-max_book)
+                target2 = self.get_pending_purchase(
+                    city2, city1, total_max_book - max_book
+                )
                 city_routes.city_data = [target1, target2]
                 # 总计
                 city_routes.book = (
@@ -400,6 +519,48 @@ class SHOP:
                 routes.append(city_routes)
         return routes
 
+    def get_all_route_profit(self):
+        """
+        说明:
+            获取不同进货书数量, 不同议价情况的路线利润
+        返回:
+            :return: 路线数据
+        """
+        routes: List[RoutesModel] = []
+        # TODO: 加上议价之后记得优化, 这里是 O(n^4), 这玩意基本上是单调的, 肯定不需要全部遍历
+        MAX_NEGOTIATE = 0
+        for r in itertools.product(
+            itertools.combinations(set(self.buy_goods.keys()), 2),
+            range(0, self.city_book["totalMaxBook"] + 1),
+            range(0, self.city_book["totalMaxBook"] + 1),
+            # range(0, MAX_NEGOTIATE + 1),
+            # range(0, MAX_NEGOTIATE + 1),
+            # range(0, MAX_NEGOTIATE + 1),
+            # range(0, MAX_NEGOTIATE + 1),
+        ):
+            _ = r[0]
+            city1, city2 = r[0]
+            book1 = r[1]
+            book2 = r[2]
+            book = book1 + book2
+            if book > self.city_book["totalMaxBook"]:
+                continue
+            # TODO: 加上议价
+            # neg1buy = r[3]
+            # neg1sell = r[4]
+            # neg2buy = r[5]
+            # neg2sell = r[6]
+            route = RoutesModel(book=book)
+            target1 = self.get_best_goods(city1, city2, book1)
+            target2 = self.get_best_goods(city2, city1, book2)
+            route.city_data = [target1, target2]
+            route.profit = target1.profit + target2.profit
+            route.city_tired = target1.city_tired + target2.city_tired
+            route.tired_profit = round5(route.profit / route.city_tired)
+            route.book_profit = route.book and round5(route.profit / route.book)
+            routes.append(route)
+        return routes
+
     def get_optimal_route(self):
         """
         说明:
@@ -418,55 +579,36 @@ class SHOP:
         for good in routes:
             logger.info(show(good))
         """
-        # 根据利润排序低价值商品
-        optimal_route.city_data[0].normal_goods = {
-            k: v
-            for k, v in sorted(
-                optimal_route.city_data[0].normal_goods.items(),
-                key=lambda item: item[1],
-            )
-        }
-        # 根据利润重新排序商品，避免高价值商品因为满载而无法购买
-        optimal_route.city_data[0].primary_goods = [
-            good[0]
-            for good in sorted(
-                optimal_route.city_data[0].buy_goods.items(),
-                key=lambda item: item[1],
-                reverse=True,
-            )
-        ]
-        optimal_route.city_data[0].secondary_goods = [
-            good[0]
-            for good in sorted(
-                optimal_route.city_data[0].normal_goods.items(),
-                key=lambda item: item[1],
-                reverse=True,
-            )
-        ]
 
-        # 根据利润排序低价值商品
-        optimal_route.city_data[1].normal_goods = {
-            k: v
-            for k, v in sorted(
-                optimal_route.city_data[1].normal_goods.items(),
-                key=lambda item: item[1],
+        return sort_goods_by_profit(optimal_route)
+
+    def get_optimal_route_test(self):
+        """
+        说明:
+            获取往返路线的最优路线
+            sjfh 写的测试下效果先
+        """
+
+        # TODO: 修改来源, 用户设置或者什么方式计算出来的后验值
+        prior_fatiue_price = self.city_book["fatiguePriorPrice"]
+        prior_book_price = self.city_book["bookPriorPrice"]
+
+        routes = self.get_all_route_profit()
+
+        def profit(route: RoutesModel):
+            return (
+                route.profit
+                - prior_fatiue_price * route.city_tired
+                - prior_book_price * route.book
             )
-        }
-        # 根据利润重新排序商品，避免高价值商品因为满载而无法购买
-        optimal_route.city_data[1].primary_goods = [
-            good[0]
-            for good in sorted(
-                optimal_route.city_data[1].buy_goods.items(),
-                key=lambda item: item[1],
-                reverse=True,
-            )
-        ]
-        optimal_route.city_data[1].secondary_goods = [
-            good[0]
-            for good in sorted(
-                optimal_route.city_data[1].normal_goods.items(),
-                key=lambda item: item[1],
-                reverse=True,
-            )
-        ]
-        return optimal_route
+
+        optimal_route = max(
+            (route for route in routes),
+            key=profit,
+            default=RoutesModel(),  # 如果没有符合条件的对象，返回None
+        )
+
+        if profit(optimal_route) < 0:
+            return RoutesModel()
+
+        return sort_goods_by_profit(optimal_route)

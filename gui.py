@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-02 18:52:36
-LastEditTime: 2024-05-04 17:46:20
+LastEditTime: 2024-05-06 00:09:24
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -9,11 +9,12 @@ import atexit
 import os
 import sys
 
-import qfluentwidgets
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication
 
 from app.common.config import cfg
+
+cfg.save() # 生成配置文件
 from app.view.main_window import MainWindow
 from core.adb import kill
 

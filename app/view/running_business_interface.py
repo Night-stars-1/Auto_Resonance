@@ -116,6 +116,15 @@ class RunningBusinessInterface(ScrollArea):
             spin_box_max=1000,
             parent=self.scrollWidget,
         )
+        self.tiredProfitThresholdCard = SpinBoxSettingCard(
+            cfg.tiredProfitThreshold,
+            FIF.ACCEPT,
+            "单位疲劳阈值",
+            "当单位疲劳高于该值的时候自动跑商",
+            spin_box_min=5000,
+            spin_box_max=30000,
+            parent=self.scrollWidget,
+        )
         self.testRunBusinessCard = PrimaryPushLoadCard(
             "测试", FIF.TAG, "跑商测试", "测试跑商功能", self.scrollWidget
         )
@@ -231,6 +240,7 @@ class RunningBusinessInterface(ScrollArea):
         # self.expandLayout.setSpacing(28)
         self.expandLayout.setContentsMargins(36, 0, 36, 0)
         self.expandLayout.addWidget(self.maxGoodsNumCard)
+        self.expandLayout.addWidget(self.tiredProfitThresholdCard)
         self.expandLayout.addWidget(self.testRunBusinessCard)
         self.expandLayout.addWidget(self.bookGroup)
         self.expandLayout.addWidget(self.skillGroup)
@@ -246,14 +256,14 @@ class RunningBusinessInterface(ScrollArea):
         from auto.run_business import run
         from core.goods import show
 
-        def result(route):
-            w = Dialog("路线详细", show(route), self)
+        def result(routes):
+            w = Dialog("路线详细", show(routes), self)
             if w.exec():
                 signalBus.switchToCard.emit("LoggerInterface")
                 self.workers = Worker(
                     run,
                     run,
-                    route=route,
+                    routes=routes,
                 )
                 self.workers.start()
                 self.workers.finished.connect(

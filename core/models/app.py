@@ -41,6 +41,8 @@ class GlobalModel(BaseModel):
     goodsType: bool = False
     """货物类型"""
     uuid: str = ""
+    tiredProfitThreshold: int = 12000
+    """单位疲劳阈值"""
 
 
 class NegotiatePriceModel(BaseModel):

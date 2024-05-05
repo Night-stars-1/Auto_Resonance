@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-29 12:51:19
-LastEditTime: 2024-05-05 20:20:02
+LastEditTime: 2024-05-05 23:57:24
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -193,17 +193,17 @@ class Updater:
         """
 
         # 获取source目录下所有的子目录
-        source_dirs = [d for d in source.iterdir() if d.is_dir()]
+        source_dirs = [d for d in source.iterdir()]
 
         # 遍历source目录下的子目录
         for source_dir in source_dirs:
             # 构建在destination中相应的目录路径
-            dest_dir = destination / source_dir.name
-
-            # 检查此目录是否在destination中存在
-            if dest_dir.exists():
-                # 如果存在，则删除该目录
-                shutil.rmtree(dest_dir)
+            dest = destination / source_dir.name
+            if dest.exists():
+                if dest.is_file():
+                    dest.unlink()
+                elif dest.is_dir():
+                    shutil.rmtree(dest)
 
     def move_directory_with_progress(self, source: Path, destination: Path):
         """
@@ -243,7 +243,7 @@ class Updater:
             :param version 版本号
         """
         if not getattr(sys, "frozen", False):
-            return UpdateStatus.NOSUPPORT
+            return UpdateStatus.NOSUPPORT, ""
         try:
             result = await self.get_first_valid_response()
             if result:

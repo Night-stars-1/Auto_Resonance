@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-02 19:13:20
-LastEditTime: 2024-05-04 17:41:41
+LastEditTime: 2024-05-06 00:09:07
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -20,7 +20,6 @@ from qfluentwidgets import (
     qconfig,
 )
 
-from core.models import app
 from version import __version__
 
 from .running_business_config import RunningBusinessConfig

@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-08 22:57:00
-LastEditTime: 2024-04-28 19:28:15
+LastEditTime: 2024-05-04 17:23:38
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -9,26 +9,14 @@ from typing import Dict
 
 import requests
 
+from core.models import app
+
 from ..goods import SHOP
 from ..models.kmou import KMouRequestModel
 
 
-def get_goods_info(
-    city_book: Dict[str, int],
-    skill_level: Dict[str, int],
-    station_level: Dict[str, int],
-    negotiate_price: Dict[str, int],
-    max_goods_num: int,
-    uuid: str,
-):
+def get_goods_info():
     url = "https://reso-data.kmou424.moe/api/fetch/goods_info"
-    response = requests.get(url, params={"uuid": uuid})
+    response = requests.get(url, params={"uuid": app.Global.uuid})
     goods_data = KMouRequestModel.model_validate(response.json())
-    return SHOP(
-        goods_data,
-        city_book,
-        skill_level,
-        station_level,
-        negotiate_price,
-        max_goods_num,
-    ).get_optimal_route()
+    return SHOP(goods_data).get_optimal_route()

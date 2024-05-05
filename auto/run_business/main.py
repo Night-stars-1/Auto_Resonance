@@ -49,8 +49,8 @@ def go_business(type: Literal["buy", "sell"] = "buy"):
         return False
 
 
-def run(order: str, path: str, route: RoutesModel):
-    status = connect(order, path)
+def run(route: RoutesModel):
+    status = connect()
     if not status:
         logger.error("ADB连接失败")
         return False

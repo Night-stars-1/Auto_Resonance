@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-04 17:54:58
-LastEditTime: 2024-04-30 03:39:43
+LastEditTime: 2024-04-30 15:38:14
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -19,6 +19,7 @@ from core.module.bgr import BGR, BGRGroup
 from core.module.hsv import HSV
 from core.ocr import predict
 from core.presets import click, find_text
+from core.presets.presets import go_home
 
 
 def buy_business(
@@ -61,11 +62,22 @@ def buy_business(
     for good in secondary_goods:
         if (book := process_goods(book, good)) is True:
             break
+    if not is_empty_goods():
+        click_bargain_button(num)
+        click_buy_button()
+        time.sleep(0.5)
+        return input_tap((896, 676))
+    else:
+        logger.error("未购买物品")
+        go_home()
 
-    click_bargain_button(num)
-    click_buy_button()
-    time.sleep(0.5)
-    return input_tap((896, 676))
+
+def is_empty_goods():
+    bgr = get_bgr(
+        screenshot(), (898, 169), cropped_pos1=(870, 132), cropped_pos2=(994, 205)
+    )
+    logger.debug(f"货物是否为空检查 {bgr}")
+    return BGR(27, 26, 26) == bgr
 
 
 def buy_good(good: str, book: int, max_book: int, again: bool = False):

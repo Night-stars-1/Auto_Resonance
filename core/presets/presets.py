@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:24:47
-LastEditTime: 2024-04-26 13:08:53
+LastEditTime: 2024-05-04 15:32:49
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -25,6 +25,7 @@ STATION_NAME2PNG = {
     "澄明数据中心": "cmsjzx.png",
     "阿妮塔战备工厂": "antzbgc.png",
     "阿妮塔能源研究所": "antnyyjs.png",
+    "阿妮塔发射中心": "antfszx.png",
     "淘金乐园": "tjly.png",
     "曼德矿场": "mdkc.png",
     "荒原站": "hyz.png",
@@ -32,21 +33,117 @@ STATION_NAME2PNG = {
     "修格里城": "xglc.png",
 }
 
+STATION_POS_DATA = {
+    "澄明数据中心": (1049, 345),
+    "7号自由港": (665, 577),
+    "阿妮塔战备工厂": (832, 664),
+    "阿妮塔发射中心": (164, 420 + 577),
+    "阿妮塔能源研究所": (614, 454 + 577),
+    "修格里城": (285 + 1049, 121 + 345),
+    "铁盟哨站": (501 + 1049, 122 + 345),
+    "荒原站": (753 + 1049, 121 + 345),
+    "曼德矿场": (602 + 1049, 322 + 345),
+    "淘金乐园": (701 + 1049, 604 + 345),
+}
+
+
+def calculate_station_differences(station_map_data: dict):
+    differences = {}
+    for site1, coords1 in station_map_data.items():
+        for site2, coords2 in station_map_data.items():
+            if site1 != site2:
+                x_diff = coords2[0] - coords1[0]
+                y_diff = coords2[1] - coords1[1]
+                differences[(site1, site2)] = (x_diff, y_diff)
+    return differences
+
+
+# 计算站点之间的差值
+STATION_DIFFERENCES = calculate_station_differences(STATION_POS_DATA)
+
 
 def click_station(name: str):
+    """
+    说明:
+        点击站点
+    参数:
+        :param name: 目标站点
+    """
+    source = ""
     logger.info(f"点击站点 => {name}")
     if match_screenshot(screenshot(), "resources/main_map.png")["max_val"] < 0.95:
         logger.info("未检测到主地图界面，返回主地图")
         go_home()
     reslut = predict(screenshot(), cropped_pos1=(1131, 498), cropped_pos2=(1238, 516))
     if len(reslut) > 0:
-        logger.info(f"当前站点: {reslut[0]['text']}")
+        source = reslut[0]["text"]
+        logger.info(f"当前站点: {source}")
         if name in [item["text"] for item in reslut]:
             logger.info("已在目标站点")
             return STATION(True, is_destine=True)
     logger.info("检测到主地图界面，点击地图")
     input_tap((1201, 666))
     time.sleep(1)
+
+    city_differences = STATION_DIFFERENCES.get((source, name))
+    if city_differences:
+        source_x = 640
+        source_y = 360
+        # 如果有路线则进行寻找
+        x1 = source_x + city_differences[0]
+        if (x_distance := x1 - 1280) > 0:
+            x1 = 1280
+            source_x = source_x - x_distance
+        elif (x_distance := x1 - 0) < 0:
+            x1 = 0
+            source_x = source_x - x_distance
+        y1 = source_y + city_differences[1]
+        if (y_distance := y1 - 720) > 0:
+            y1 = 720
+            source_y = source_y - y_distance
+        elif (y_distance := y1 - 78) < 0:
+            y1 = 78
+            source_y = source_y - y_distance
+
+        # 滑动到目标站点
+        input_swipe((x1, y1), (source_x, source_y), time=500)
+
+        result = match_screenshot(
+            screenshot(), f"resources/stations/{STATION_NAME2PNG[name]}"
+        )
+        if result["max_val"] > 0.95:
+            # 点击站点
+            input_tap(result["max_loc"])
+        time.sleep(0.5)
+        # 点击前往目的地按钮
+        logger.info("点击前往目的地按钮")
+        if click_image(
+            "resources/map/go_station.png",
+            cropped_pos1=(937, 605),
+            cropped_pos2=(1218, 679),
+            trynum=5,
+        ):
+            return STATION(True)
+    return multiple_slide_click_station(name)
+
+
+def multiple_slide_click_station(name: str):
+    """
+    说明:
+        多次滑动点击站点
+    参数:
+        :param name: 站点名称
+    """
+    logger.info(f"多次滑动点击站点 => {name}")
+    if match_screenshot(screenshot(), "resources/main_map.png")["max_val"] > 0.95:
+        logger.info("检测到主地图界面，点击地图")
+        input_tap((1201, 666))
+        time.sleep(1)
+
+    if match_screenshot(screenshot(), "resources/main_map.png")["max_val"] > 0.95:
+        logger.info("检测到主地图界面，点击地图")
+        input_tap((1201, 666))
+        time.sleep(1)
 
     def select_station(name):
         n = 0

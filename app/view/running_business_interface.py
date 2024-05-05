@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-10 22:54:08
-LastEditTime: 2024-04-30 00:39:52
+LastEditTime: 2024-05-04 17:07:56
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -253,8 +253,6 @@ class RunningBusinessInterface(ScrollArea):
                 self.workers = Worker(
                     run,
                     run,
-                    order=cfg.adbOrder.value,
-                    path=cfg.adbPath.value,
                     route=route,
                 )
                 self.workers.start()
@@ -264,38 +262,17 @@ class RunningBusinessInterface(ScrollArea):
 
         self.testRunBusinessCard.loading(True)
 
-        city_book = cfg.toDict()["RunningBusiness"]
-        skill_level = cfg.toDict()["SkillLevel"]
-        station_level = cfg.toDict()["StationLevel"]
-        negotiate_price = cfg.toDict()["NegotiatePrice"]
-        max_goods_num = cfg.maxGoodsNum.value
         uuid = cfg.uuid.value
         if cfg.goodsType.value:
             if uuid == "":
                 logger.info("未设置UUID")
                 return False
-            self.workers = Worker(
-                get_goods_info_kmou,
-                get_goods_info_kmou,
-                city_book=city_book,
-                skill_level=skill_level,
-                station_level=station_level,
-                negotiate_price=negotiate_price,
-                max_goods_num=max_goods_num,
-            )
+            self.workers = Worker(get_goods_info_kmou, get_goods_info_kmou)
             self.workers.start()
             self.workers.finished.connect(lambda: self.on_worker_finished(self.workers))
             self.workers.result.connect(result)
         else:
-            self.workers = Worker(
-                get_goods_info_srap,
-                get_goods_info_srap,
-                city_book=city_book,
-                skill_level=skill_level,
-                station_level=station_level,
-                negotiate_price=negotiate_price,
-                max_goods_num=max_goods_num,
-            )
+            self.workers = Worker(get_goods_info_srap, get_goods_info_srap)
             self.workers.start()
             self.workers.finished.connect(lambda: self.on_worker_finished(self.workers))
             self.workers.result.connect(result)
@@ -312,9 +289,7 @@ class RunningBusinessInterface(ScrollArea):
         signalBus.switchToCard.emit("LoggerInterface")
         from auto.scan_res_level import run
 
-        self.workers = Worker(
-            run, run, order=cfg.adbOrder.value, path=cfg.adbPath.value
-        )
+        self.workers = Worker(run, run)
         self.workers.start()
         self.workers.finished.connect(lambda: self.on_worker_finished(self.workers))
         self.workers.result.connect(result)

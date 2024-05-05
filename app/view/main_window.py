@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-02 19:27:03
-LastEditTime: 2024-04-30 03:12:36
+LastEditTime: 2024-05-05 20:19:52
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -24,14 +24,14 @@ from qfluentwidgets import (
     SplashScreen,
 )
 
+from app.common import resource  # 图标数据
+from app.common.config import VERSION, cfg
+from app.common.icon import FluentIconBase
+from app.common.signal_bus import signalBus
 from app.view.daily_task_interface import DailyTaskInterface
 from app.view.running_business_interface import RunningBusinessInterface
 from updater import Updater, UpdateStatus
 
-from ..common import resource  # 图标数据
-from ..common.config import VERSION, cfg
-from ..common.icon import FluentIconBase
-from ..common.signal_bus import signalBus
 from .home_interface import HomeInterface
 from .logger_interface import LoggerInterface
 from .setting_interface import SettingInterface
@@ -155,6 +155,16 @@ class MainWindow(MSFluentWindow):
             InfoBar.error(
                 title="检查更新失败",
                 content="请稍后重试",
+                orient=Qt.Horizontal,
+                isClosable=False,
+                position=InfoBarPosition.TOP,
+                duration=1000,
+                parent=self,
+            )
+        elif self.update_status == UpdateStatus.NOSUPPORT:
+            InfoBar.error(
+                title="更新程序只支持打包成exe后运行",
+                content="",
                 orient=Qt.Horizontal,
                 isClosable=False,
                 position=InfoBarPosition.TOP,

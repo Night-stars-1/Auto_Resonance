@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-02 18:52:36
-LastEditTime: 2024-04-29 22:55:18
+LastEditTime: 2024-05-04 17:46:20
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -9,12 +9,14 @@ import atexit
 import os
 import sys
 
+import qfluentwidgets
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication
 
 from app.common.config import cfg
 from app.view.main_window import MainWindow
 from core.adb import kill
+
 
 def close_service():
     """界面退出关闭服务"""

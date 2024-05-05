@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:24:47
-LastEditTime: 2024-04-30 02:58:34
+LastEditTime: 2024-04-30 16:07:15
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -42,7 +42,10 @@ class STATION:
         start = time.perf_counter()
         while time.perf_counter() - start < MAP_WAIT_TIME:
             image = screenshot()
-            attack_bgrs = get_bgrs(image, [(944, 247), (967, 229), (1056, 229)])
+            # 0-2攻击检测，3-4拦截检测
+            attack_bgrs = get_bgrs(
+                image, [(944, 247), (967, 229), (1056, 229), (1103, 328), (1128, 332)]
+            )
             reach_bgrs = get_bgrs(
                 image, [(839, 354), (814, 359), (1051, 641), (658, 690)]
             )
@@ -54,6 +57,11 @@ class STATION:
             ):
                 logger.info("检测到拦截，进行攻击")
                 self.join_wait_fight()
+            elif (
+                BGRGroup([8, 168, 234], [9, 171, 245]) == attack_bgrs[3]
+                and BGRGroup([8, 168, 234], [9, 171, 245]) == attack_bgrs[4]
+            ):
+                logger.info("检测到可撞击")
             elif (
                 BGRGroup([20, 20, 20], [25, 25, 25]) == reach_bgrs[0]
                 and BGRGroup([250, 250, 250], [255, 255, 255]) == reach_bgrs[1]

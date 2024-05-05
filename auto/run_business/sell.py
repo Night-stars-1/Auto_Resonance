@@ -46,6 +46,7 @@ def is_empty_goods():
     bgr = get_bgr(
         screenshot(), (898, 169), cropped_pos1=(870, 132), cropped_pos2=(994, 205)
     )
+    logger.debug(f"货物是否为空检查 {bgr}")
     return BGR(25, 33, 33) == bgr
 
 

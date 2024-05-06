@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-29 12:51:19
-LastEditTime: 2024-05-05 23:57:24
+LastEditTime: 2024-05-06 23:12:56
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -11,7 +11,7 @@ import sys
 import time
 from enum import Enum
 from pathlib import Path
-from typing import List, Optional, Tuple, TypedDict
+from typing import List, TypedDict
 from zipfile import ZipFile
 
 from aiohttp import ClientSession
@@ -76,7 +76,9 @@ class Updater:
                     allow_redirects=True,
                 ) as response:
                     if response.status == 200:
-                        return mirror_url, time.time() - start_time  # 返回URL和响应时间
+                        speed_time = time.time() - start_time
+                        print(mirror_url, speed_time)
+                        return mirror_url, speed_time  # 返回URL和响应时间
                     else:
                         return mirror_url, float(
                             "inf"
@@ -125,6 +127,31 @@ class Updater:
                 tasks = list(pending)
 
             return None  # 所有请求完成但没有有效结果
+
+    async def get_update_status(self):
+        """
+        说明:
+            检查是否是最新版本
+        参数:
+            :param version 版本号
+        """
+        if not getattr(sys, "frozen", False):
+            return UpdateStatus.NOSUPPORT, ""
+        try:
+            result = await self.get_first_valid_response()
+            if result:
+                version = result["tag_name"]
+                download_url: str = result["assets"][0]["browser_download_url"]
+                self.unzip_dir = TEMP_PATH / f"Auto_Resonance_{version}"
+                return (
+                    UpdateStatus.Latest
+                    if parse(version) <= parse(__version__)
+                    else UpdateStatus.UPDATE
+                ), download_url
+            return UpdateStatus.FAILURE, ""
+        except Exception as e:
+            print(f"获取更新信息失败: {e}")
+            return UpdateStatus.FAILURE, ""
 
     async def download_file_with_progress(self, fastest_url: str):
         """
@@ -193,17 +220,14 @@ class Updater:
         """
 
         # 获取source目录下所有的子目录
-        source_dirs = [d for d in source.iterdir()]
+        source_dirs = [d for d in source.iterdir() if d.is_dir()]
 
         # 遍历source目录下的子目录
         for source_dir in source_dirs:
             # 构建在destination中相应的目录路径
-            dest = destination / source_dir.name
-            if dest.exists():
-                if dest.is_file():
-                    dest.unlink()
-                elif dest.is_dir():
-                    shutil.rmtree(dest)
+            dest_dir = destination / source_dir.name
+            if dest_dir.exists():
+                shutil.rmtree(dest_dir)
 
     def move_directory_with_progress(self, source: Path, destination: Path):
         """
@@ -222,6 +246,8 @@ class Updater:
         ) as pbar:
             # 遍历源目录中的所有文件和子目录
             for item in source.rglob("*"):
+                if item.name == "HeiYue Updater.exe":
+                    item = item.replace(item.parent / "HeiYue Updater.exe.new")
                 # 创建目标路径
                 target = destination / item.relative_to(source)
                 target.parent.mkdir(parents=True, exist_ok=True)  # 确保目标目录存在
@@ -229,45 +255,20 @@ class Updater:
                 if item.is_file():
                     szie = item.stat().st_size
                     # 移动文件并更新进度条
-                    shutil.move(str(item), str(target))
+                    shutil.move(item, target)
                     pbar.update(szie)
                 elif item.is_dir() and not target.exists():
                     # 创建目标子目录
                     target.mkdir(parents=True, exist_ok=True)
-
-    async def get_update_status(self):
-        """
-        说明:
-            检查是否是最新版本
-        参数:
-            :param version 版本号
-        """
-        if not getattr(sys, "frozen", False):
-            return UpdateStatus.NOSUPPORT, ""
-        try:
-            result = await self.get_first_valid_response()
-            if result:
-                version = result["tag_name"]
-                url: str = result["assets"][0]["browser_download_url"]
-                self.unzip_dir = TEMP_PATH / f"Auto_Resonance_{version}"
-                return (
-                    UpdateStatus.Latest
-                    if parse(version) <= parse(__version__)
-                    else UpdateStatus.UPDATE
-                ), url
-            return UpdateStatus.FAILURE, ""
-        except Exception as e:
-            print(f"获取更新信息失败: {e}")
-            return UpdateStatus.FAILURE, ""
 
     async def run(self):
         """
         说明:
             运行更新流程
         """
-        update_status, url = await self.get_update_status()
+        update_status, download_url = await self.get_update_status()
         if update_status == UpdateStatus.UPDATE:
-            fastest_url = await self.find_fastest_mirror(url)
+            fastest_url = await self.find_fastest_mirror(download_url)
             await self.download_file_with_progress(fastest_url)
             self.unzip_with_progress(HEIYUE_FILE_PATH, TEMP_PATH)
             self.sync_subdirectories(self.unzip_dir, ROOT_PATH)
@@ -280,6 +281,7 @@ class Updater:
 
 def check_temp_dir_and_run():
     """检查临时目录并运行更新程序。"""
+    print("开始检查更新")
     if not getattr(sys, "frozen", False):
         print("更新程序只支持打包成exe后运行")
         return UpdateStatus.NOSUPPORT

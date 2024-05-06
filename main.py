@@ -1,11 +1,12 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-03-20 22:24:35
-LastEditTime: 2024-04-28 22:38:00
+LastEditTime: 2024-05-06 22:59:48
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
-from typing import Dict, List
+from pathlib import Path
+from typing import Dict
 
 from loguru import logger
 
@@ -16,6 +17,13 @@ from core.analysis_tasks import AnalysisTasks
 from core.utils import read_json
 
 analysis = None
+
+NEW_UPDATER_PATH = Path("HeiYue Updater.exe.new")
+OLD_UPDATER_PATH = Path("HeiYue Updater.exe")
+
+# 检查是否存在HeiYue Updater.exe.new存在则覆盖HeiYue Updater.exe
+if NEW_UPDATER_PATH.exists():
+    NEW_UPDATER_PATH.replace(OLD_UPDATER_PATH)
 
 
 def stop():

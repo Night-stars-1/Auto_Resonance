@@ -16,7 +16,6 @@ from qfluentwidgets import (
     PasswordLineEdit,
     ConfigItem,
 )
-from qfluentwidgets import qconfig
 
 
 class LineEditCard(SettingCard):

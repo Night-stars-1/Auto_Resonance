@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-07 23:54:39
-LastEditTime: 2024-04-10 01:11:23
+LastEditTime: 2024-05-10 23:06:09
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -15,9 +15,8 @@ from qfluentwidgets import (
     LineEdit,
     PasswordLineEdit,
     ConfigItem,
+    qconfig
 )
-from qfluentwidgets import qconfig
-
 
 class LineEditSettingCard(SettingCard):
     """Setting card with a push button"""

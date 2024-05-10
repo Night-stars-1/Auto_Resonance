@@ -13,6 +13,7 @@ from loguru import logger
 import auto
 from core.adb import connect
 from core.adb import stop as adb_stop
+from auto.run_business import stop as business_stop
 from core.analysis_tasks import AnalysisTasks
 from core.utils import read_json
 
@@ -32,6 +33,7 @@ def stop():
         停止运行
     """
     adb_stop()
+    business_stop()
 
 
 def main(tasks: Dict[str, str]):

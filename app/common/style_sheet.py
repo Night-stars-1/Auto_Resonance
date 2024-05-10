@@ -7,7 +7,7 @@ LastEditors: Night-stars-1 nujj1042633805@gmail.com
 
 from enum import Enum
 
-from qfluentwidgets import StyleSheetBase, Theme, isDarkTheme, qconfig
+from qfluentwidgets import StyleSheetBase, Theme, qconfig
 
 
 class StyleSheet(StyleSheetBase, Enum):

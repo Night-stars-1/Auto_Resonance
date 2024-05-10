@@ -1,9 +1,16 @@
+"""
+Author: Night-stars-1 nujj1042633805@gmail.com
+Date: 2024-04-28 22:46:58
+LastEditTime: 2024-05-10 23:18:06
+LastEditors: Night-stars-1 nujj1042633805@gmail.com
+"""
+
 from typing import Dict, List, Union
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QHBoxLayout, QWidget
-from qfluentwidgets import CheckBox, SettingCard, FluentIconBase, ConfigItem, qconfig
+from qfluentwidgets import CheckBox, ConfigItem, FluentIconBase, SettingCard, qconfig
 
 
 class CheckboxGroup(QWidget):
@@ -37,10 +44,13 @@ class CheckboxGroup(QWidget):
             if configItem.value
         }
 
+
 class CheckboxGroupCard(SettingCard):
     """水平复选框群组"""
 
-    def __init__(self, icon: Union[str, QIcon, FluentIconBase], title, content=None, parent=None):
+    def __init__(
+        self, icon: Union[str, QIcon, FluentIconBase], title, content=None, parent=None
+    ):
         super().__init__(icon=icon, title=title, content=content, parent=parent)
         self.checkboxGroup = CheckboxGroup(self)
         self.hBoxLayout.addWidget(self.checkboxGroup, 0, Qt.AlignRight)

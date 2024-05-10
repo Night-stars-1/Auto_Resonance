@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-08 17:45:06
-LastEditTime: 2024-05-04 17:50:35
+LastEditTime: 2024-05-06 23:44:41
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -10,8 +10,6 @@ from pathlib import Path
 from typing import Dict
 
 from pydantic import BaseModel
-from watchdog.events import FileSystemEventHandler
-from watchdog.observers import Observer
 
 ROOT_PATH = Path().resolve()
 """项目根目录路径"""
@@ -41,8 +39,6 @@ class GlobalModel(BaseModel):
     goodsType: bool = False
     """货物类型"""
     uuid: str = ""
-    tiredProfitThreshold: int = 12000
-    """单位疲劳阈值"""
 
 
 class NegotiatePriceModel(BaseModel):
@@ -85,6 +81,8 @@ class RunningBusinessModel(BaseModel):
     """利润阈值"""
     totalMaxBook: int = 4
     """总最大预定"""
+    tiredProfitThreshold: int = 12000
+    """单位疲劳阈值"""
 
 
 class StationLevelModel(BaseModel):
@@ -116,36 +114,7 @@ class Config(BaseModel):
     SkillLevel: Dict[str, int] = {}
     """角色共振等级"""
 
-
 if APP_PATH.exists() and APP_PATH.is_file():
     with open(APP_PATH, "r", encoding="utf-8") as f:
         data = json.load(f)
     app = Config.model_validate(data)
-
-
-class FileHandler(FileSystemEventHandler):
-    """监听文本改动"""
-    def __init__(self, file_path: Path):
-        super().__init__()
-        self.file_path = file_path
-
-    @property
-    def get_data(self):
-        with open(self.file_path, "r", encoding="utf-8") as file:
-            data = json.load(file)
-        return data
-
-    def on_modified(self, event):
-        if not event.is_directory and event.src_path == str(self.file_path):
-            app.model_validate(self.get_data)
-
-
-# 创建文件系统事件处理器
-event_handler = FileHandler(APP_PATH)
-
-# 创建观察者对象
-observer = Observer()
-observer.schedule(event_handler, path=APP_PATH.parent, recursive=False)
-
-# 启动观察者
-observer.start()

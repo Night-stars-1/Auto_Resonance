@@ -1,13 +1,14 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-02 19:13:20
-LastEditTime: 2024-05-06 00:09:07
+LastEditTime: 2024-05-10 23:32:54
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
 # coding:utf-8
 import sys
 from enum import Enum
+from typing import List
 
 from PyQt5.QtCore import QLocale
 from qfluentwidgets import (
@@ -93,9 +94,8 @@ class Config(RunningBusinessConfig):
         restart=True,
     )
 
-
 YEAR = 2023
-AUTHOR = "zhiyiYo"
+AUTHOR = "Night-stars-1"
 VERSION = __version__
 REPO_URL = "https://github.com/Night-stars-1/Auto_Resonance"
 

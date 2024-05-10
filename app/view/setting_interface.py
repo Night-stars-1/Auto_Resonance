@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-07 23:14:47
-LastEditTime: 2024-04-30 04:02:40
+LastEditTime: 2024-05-09 23:48:19
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -80,7 +80,7 @@ class SettingInterface(ScrollArea):
 
     def __onCheckedChanged(self):
         config.global_config.is_speed = self.isSpeedCard.isChecked()
-        config.global_config.is_auto_pick = self.isSpeedCard.isChecked()
+        config.global_config.is_auto_pick = self.isAutoPickCard.isChecked()
         config.save_config()
 
     def __initWidget(self):

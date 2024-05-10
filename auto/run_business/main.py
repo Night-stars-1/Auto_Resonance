@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:14:29
-LastEditTime: 2024-05-06 00:02:03
+LastEditTime: 2024-05-10 23:25:42
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -12,9 +12,10 @@ from loguru import logger
 
 from auto.run_business.buy import buy_business
 from auto.run_business.sell import sell_business
-from core.adb import connect, input_tap, screenshot
+from core.adb import STOP, connect, input_tap, screenshot
 from core.api.kmou import get_goods_info as get_goods_info_kmou
 from core.api.srap import get_goods_info as get_goods_info_srap
+from core.exceptions import StopExecution
 from core.goods.shop import show
 from core.image import get_bgr
 from core.models import app
@@ -81,17 +82,34 @@ def run(routes: RoutesModel):
     return True
 
 
+def stop():
+    """
+    说明:
+        停止运行
+    """
+    global STOP
+    STOP = True
+
+
 def start():
     """
     说明:
         循环监听单位疲劳利润，达到阈值时进行跑商
     """
+    global STOP
+    STOP = False
     while True:
+        if STOP:
+            raise StopExecution()
         if app.Global.goodsType:
             routes = get_goods_info_kmou()
         else:
             routes = get_goods_info_srap()
-        if routes.tired_profit >= app.Global.tiredProfitThreshold:
+        logger.debug(
+            f"疲劳利润: {routes.tired_profit} 阈值: {app.RunningBusiness.tiredProfitThreshold}"
+        )
+        test = app.RunningBusiness.tiredProfitThreshold
+        if routes.tired_profit >= app.RunningBusiness.tiredProfitThreshold:
             run(routes)
 
 

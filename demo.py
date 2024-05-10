@@ -7,7 +7,7 @@ LastEditors: Night-stars-1 nujj1042633805@gmail.com
 
 from loguru import logger
 
-from auto.run_business import run
+from auto.run_business import run, start
 from auto.run_business.main import buy_business, click_station, go_business
 from auto.run_business.sell import sell_business
 from core.adb import connect
@@ -74,9 +74,8 @@ if __name__ == "__main__1":
     # click_station("修格里城")
 
 if __name__ == "__main__":
-    connect("127.0.0.1:16384")
     # go_business("buy")
 
-    sell_business(2)
+    start()
 
     # click_station("荒原站")

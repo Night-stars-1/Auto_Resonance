@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:14:29
-LastEditTime: 2024-05-10 23:25:42
+LastEditTime: 2024-05-19 21:30:11
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -16,7 +16,7 @@ from core.adb import STOP, connect, input_tap, screenshot
 from core.api.kmou import get_goods_info as get_goods_info_kmou
 from core.api.srap import get_goods_info as get_goods_info_srap
 from core.exceptions import StopExecution
-from core.goods.shop import show
+from core.goods import show
 from core.image import get_bgr
 from core.models import app
 from core.models.city_goods import RoutesModel
@@ -68,9 +68,10 @@ def run(routes: RoutesModel):
         go_home()
         click_station(city.buy_city_name).wait()
         go_business("buy")
+        goods_data = list(city.goods_data.keys())
         buy_business(
-            city.primary_goods,
-            city.secondary_goods,
+            goods_data[0],
+            goods_data[1:],
             city.buy_argaining_num,
             max_book=city.book,
         )
@@ -105,12 +106,13 @@ def start():
             routes = get_goods_info_kmou()
         else:
             routes = get_goods_info_srap()
-        logger.debug(
-            f"疲劳利润: {routes.tired_profit} 阈值: {app.RunningBusiness.tiredProfitThreshold}"
-        )
-        test = app.RunningBusiness.tiredProfitThreshold
         if routes.tired_profit >= app.RunningBusiness.tiredProfitThreshold:
             run(routes)
+        else:
+            logger.debug(
+                f"疲劳利润: {routes.tired_profit} 阈值: {app.RunningBusiness.tiredProfitThreshold}，未达到阈值不跑商"
+            )
+            time.sleep(5)
 
 
 if __name__ == "__main__":

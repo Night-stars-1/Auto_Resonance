@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-08 17:45:06
-LastEditTime: 2024-04-27 19:38:13
+LastEditTime: 2024-05-11 22:12:26
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -27,6 +27,8 @@ class GoodModel(BaseModel):
     """数量"""
     price: int
     """价格"""
+    profit: int = 0
+    """利润"""
     base_price: int
     """基础价格"""
     isSpeciality: bool = False
@@ -36,6 +38,21 @@ class GoodModel(BaseModel):
         if "station" in data:
             data["city"] = data.pop("station")
         super().__init__(**data)
+
+
+class GoodInfoModel(BaseModel):
+    """商品信息模型"""
+
+    name: str
+    """名称"""
+    buy_price: int
+    """购买价格"""
+    sell_price: int
+    """出售价格"""
+    profit: int
+    """利润"""
+    buy_num: int
+    """购买数量"""
 
 
 LACK_DATA = []

@@ -45,5 +45,5 @@ def test_get_city_data_by_city_level():
 
 if __name__ == "__main__":
     # test_get_goods_info_kmou()
-    # test_get_goods_info_srap()
-    test_get_city_data_by_city_level()
+    test_get_goods_info_srap()
+    # test_get_city_data_by_city_level()

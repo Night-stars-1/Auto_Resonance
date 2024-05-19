@@ -38,12 +38,6 @@ class RouteModel(BaseModel):
     """商品数据"""
     buy_goods: Dict[str, int] = {}
     """待购商品列表"""
-    normal_goods: Dict[str, int] = {}
-    """低价值商品"""
-    primary_goods: List[str] = []
-    """主要商品"""
-    secondary_goods: List[str] = []
-    """次要商品"""
     buy_price: int = 0
     """总购价"""
     sell_price: int = 0

@@ -1,19 +1,20 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-03-20 22:24:35
-LastEditTime: 2024-05-06 22:59:48
+LastEditTime: 2024-05-19 21:26:03
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
+import traceback
 from pathlib import Path
 from typing import Dict
 
 from loguru import logger
 
 import auto
+from auto.run_business import stop as business_stop
 from core.adb import connect
 from core.adb import stop as adb_stop
-from auto.run_business import stop as business_stop
 from core.analysis_tasks import AnalysisTasks
 from core.utils import read_json
 
@@ -41,11 +42,13 @@ def main(tasks: Dict[str, str]):
     if status:
         for description, task in tasks.items():
             logger.info(f"开始运行{description}")
-            try:
-                start = getattr(auto, task).start
-                start()
-            except AttributeError:
-                logger.error(f"找不到{task}的start函数")
+            if task := getattr(auto, task, None):
+                if start := getattr(task, "start"):
+                    start()
+                else:
+                    logger.error(f"{task}模块没有start函数")
+            else:
+                logger.error(f"未找到{task}模块")
     else:
         logger.error("ADB连接失败")
     return status

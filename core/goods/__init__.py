@@ -1,1 +1,1 @@
-from .shop_use_first import SHOP, show
+from .shop import SHOP, show

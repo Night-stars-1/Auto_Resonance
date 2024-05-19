@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:14:29
-LastEditTime: 2024-05-10 23:25:42
+LastEditTime: 2024-05-19 19:25:59
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -105,12 +105,13 @@ def start():
             routes = get_goods_info_kmou()
         else:
             routes = get_goods_info_srap()
-        logger.debug(
-            f"疲劳利润: {routes.tired_profit} 阈值: {app.RunningBusiness.tiredProfitThreshold}"
-        )
-        test = app.RunningBusiness.tiredProfitThreshold
         if routes.tired_profit >= app.RunningBusiness.tiredProfitThreshold:
             run(routes)
+        else:
+            logger.debug(
+                f"疲劳利润: {routes.tired_profit} 阈值: {app.RunningBusiness.tiredProfitThreshold}，未达到阈值不跑商"
+            )
+            time.sleep(5)
 
 
 if __name__ == "__main__":

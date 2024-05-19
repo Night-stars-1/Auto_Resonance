@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-10 22:54:08
-LastEditTime: 2024-05-19 19:01:08
+LastEditTime: 2024-05-19 19:24:46
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -121,7 +121,6 @@ class RunningBusinessInterface(ScrollArea):
             FIF.ACCEPT,
             "单位疲劳阈值",
             "当单位疲劳高于该值的时候自动跑商",
-            spin_box_min=5000,
             spin_box_max=30000,
             parent=self.scrollWidget,
         )
@@ -180,7 +179,10 @@ class RunningBusinessInterface(ScrollArea):
             self.skillGroup.viewLayout.addWidget(skillCard)
 
         self.tiredGroup = ExpandSettingCard(
-            FIF.BRUSH, "砍抬疲劳设置", content = "当城市设置进货书数量设置为-1的时候禁用该城市", parent=self.scrollWidget
+            FIF.BRUSH,
+            "砍抬疲劳设置",
+            content="当城市设置进货书数量设置为-1时禁用该城市",
+            parent=self.scrollWidget,
         )
         self.tiredGroup.viewLayout.addWidget(
             SpinBoxSettingCard(
@@ -207,7 +209,7 @@ class RunningBusinessInterface(ScrollArea):
                 city,
                 f"{city}砍抬次数",
                 parent=self.tiredGroup,
-                spin_box_min = -1,
+                spin_box_min=-1,
             )
             self.tiredGroup.viewLayout.addWidget(bookCard)
 

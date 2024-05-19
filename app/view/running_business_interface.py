@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-10 22:54:08
-LastEditTime: 2024-05-19 19:24:46
+LastEditTime: 2024-05-19 19:31:10
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -207,7 +207,7 @@ class RunningBusinessInterface(ScrollArea):
                 getattr(cfg, f"{city}砍抬次数"),
                 FIF.ACCEPT,
                 city,
-                f"{city}砍抬次数",
+                f"{city}砍抬成功次数",
                 parent=self.tiredGroup,
                 spin_box_min=-1,
             )

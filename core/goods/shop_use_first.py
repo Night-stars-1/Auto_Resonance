@@ -40,7 +40,7 @@ def show(routes: RoutesModel):
     商品数量: {to_goods_num}
     商品顺序: {"->".join(route[0].goods_data.keys())}
     商品总量: {route[0].num}
-    购买价格: {round5(route[0].buy_price * 1.02)}
+    购买价格: {route[0].buy_price}
     出售价格: {route[0].sell_price}
     商品利润: {route[0].profit}
     所需疲劳: {route[0].city_tired}
@@ -51,7 +51,7 @@ def show(routes: RoutesModel):
     商品数量: {back_goods_num}
     商品顺序: {"->".join(route[1].goods_data.keys())}
     商品总量: {route[1].num}
-    购买价格: {round5(route[1].buy_price * 1.02)}
+    购买价格: {route[1].buy_price}
     出售价格: {route[1].sell_price}
     商品利润: {route[1].profit}
     所需疲劳: {route[1].city_tired}
@@ -187,12 +187,12 @@ class SHOP:
         revenue = round5(no_tax_profit * tax_rate)  # 税收
 
         new_sell_price = no_revenue_sell_price - revenue
-        """
-        if city_name == "阿妮塔战备工厂" and good_name == "阿妮塔小型桦树发电机":
+
+        if city_name == "阿妮塔战备工厂" and good_name != "1阿妮塔小型桦树发电机":
             print(
-                f"{city_name=} {good_name=} {new_sell_price=} {buy_price=} {no_tax_profit=} {revenue}"
+                f"{city_name=} {good_name=} {new_sell_price=} {buy_price=} {no_revenue_sell_price=} {no_tax_profit=} {revenue}"
             )
-        """
+
         return new_sell_price, no_tax_profit
 
     def get_goods_profit(
@@ -272,7 +272,7 @@ class SHOP:
                 good_info.buy_num * (book + 1),
                 self.max_goods_num - route_data.num,
             )  # 确保购买数量不超过最大商品数量
-            good_profit = good_info.profit * num  # 商品利润
+            # good_profit = good_info.profit * num  # 商品利润
             route_data.goods_data.setdefault(good_info.name, RouteModel.GoodsData())
             route_data.goods_data[good_info.name].num += num
             route_data.goods_data[good_info.name].buy_price += good_info.buy_price
@@ -282,6 +282,10 @@ class SHOP:
             route_data.profit += good_info.profit * num
             route_data.buy_price += good_info.buy_price * num
             route_data.sell_price += good_info.sell_price * num
+
+        # 计算所有商品附税购买价
+        tax_rate = self.all_city_info[buy_city_name].revenue  # 税率
+        route_data.buy_price = round5((1+tax_rate) * route_data.buy_price)
 
         route_data.tired_profit = round5(route_data.profit / city_tired)
         # 通过缓存利润计算单书利润

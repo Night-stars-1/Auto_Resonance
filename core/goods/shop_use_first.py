@@ -244,10 +244,10 @@ class SHOP:
         speciality_num = len([good for good in goods.values() if good.isSpeciality])
         """
         buy_argaining_num = getattr(
-            self.negotiate_price, buy_city_name, 0
+            self.negotiate_price, buy_city_name, -1
         )  # 购买议价次数
         sell_argaining_num = getattr(
-            self.negotiate_price, sell_city_name, 0
+            self.negotiate_price, sell_city_name, -1
         )  # 出售议价次数
         # 总疲劳
         city_tired = (
@@ -264,6 +264,8 @@ class SHOP:
             sell_argaining_num=sell_argaining_num,
             book=book,
         )
+        if buy_argaining_num == -1 or sell_argaining_num == -1:
+            return None # 当议价次数为-1时候，过滤该路线方案
         sorted_good_info = self.get_goods_profit(goods, buy_city_name, sell_city_name)
         for good_info in sorted_good_info:
             num = min(
@@ -284,7 +286,7 @@ class SHOP:
         route_data.tired_profit = round5(route_data.profit / city_tired)
         # 通过缓存利润计算单书利润
         last_profit = 0 if book == 0 else self.last_route_profit
-        # 缓存路线利润
+        # 缓存路线方案利润
         self.last_route_profit = route_data.profit
 
         route_data.book_profit = route_data.profit - last_profit
@@ -314,6 +316,7 @@ class SHOP:
                         if (route := self.get_need_buy_use_first(city1, city2, book))
                     ),
                     key=lambda route: route.tired_profit,
+                    default=None
                 )
                 target2 = max(
                     (
@@ -322,7 +325,10 @@ class SHOP:
                         if (route := self.get_need_buy_use_first(city2, city1, book))
                     ),
                     key=lambda route: route.tired_profit,
+                    default=None
                 )
+                if target1 is None or target2 is None:
+                    continue # 该路线无有效线路，过滤
                 city_routes.city_data = [target1, target2]
                 # 总计
                 city_routes.book = (

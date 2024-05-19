@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-04 17:54:58
-LastEditTime: 2024-04-30 15:38:14
+LastEditTime: 2024-05-19 21:32:57
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -130,7 +130,7 @@ def use_book(pos: Tuple[int, int], book: int):
     time.sleep(1.0)
     click((959, 541))
     while (hsv := get_hsv(screenshot(), pos))[-1] < 60:
-        logger.info(f"进货书是否所有成功颜色检查: {hsv}")
+        logger.debug(f"进货书是否所有成功颜色检查: {hsv}")
         time.sleep(0.5)
 
 
@@ -165,7 +165,7 @@ def get_boatload():
         获取载货量百分比
     """
     image = screenshot()
-    lower_color_bound = np.array([36, 36, 36])
+    lower_color_bound = np.array([35, 35, 35])
     upper_color_bound = np.array([36, 36, 36])
 
     y = 418

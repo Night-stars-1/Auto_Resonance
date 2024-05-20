@@ -12,10 +12,8 @@ from auto.run_business.main import buy_business, click_station, go_business
 from auto.run_business.sell import sell_business
 from core.adb import connect
 
-if __name__ == "__main__1":
+if __name__ == "__main__":
     run(
-        order="127.0.0.1:7555",
-        path="resources\\lib\\adb",
         city_book={
             "7号自由港": 3,
             "修格里城": 3,
@@ -73,7 +71,7 @@ if __name__ == "__main__1":
     )
     # click_station("修格里城")
 
-if __name__ == "__main__":
+if __name__ == "__main__2":
     # go_business("buy")
 
     start()

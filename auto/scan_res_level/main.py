@@ -41,7 +41,10 @@ def get_skill_level():
     """
     skill_level = {}
     start_time = time.perf_counter()
-    while time.perf_counter() - start_time < 300:
+    while run_time := time.perf_counter() - start_time:
+        if run_time > 1200:
+            logger.error(f"扫描时间过长，强制停止")
+            break
         input_tap((1255, 87))
         time.sleep(1)
         input_tap((992, 205))
@@ -62,7 +65,7 @@ def get_skill_level():
             logger.info(f"{role_name}: {len(levels)}")
         input_swipe((658, 359), (116, 374), time=500)
         time.sleep(0.5)
-    return {}
+    return skill_level
 
 
 def run():

@@ -1,7 +1,7 @@
 <!--
  * @Author: Night-stars-1 nujj1042633805@gmail.com
  * @Date: 2024-03-20 22:24:35
- * @LastEditTime: 2024-05-19 21:52:53
+ * @LastEditTime: 2024-05-28 21:25:06
  * @LastEditors: Night-stars-1 nujj1042633805@gmail.com
 -->
 # <雷索纳斯>自动跑图 - 黑月无人驾驶
@@ -20,8 +20,8 @@
 ![taj](resources/readme/taj.png)
 
 ## 使用方法
-> [!INFO]
-> 推荐使用**MUMU模拟器**并把分辨率和画质全调最低，模拟器分辨率调整为1280:720
+> [!TIP]
+> 推荐使用**MUMU模拟器**并把分辨率和画质全调最低，模拟器分辨率调整为1280:720 dpi:240
 ### 1. 打包程序直接运行
   - 在[releases](https://github.com/Night-stars-1/Auto_Resonance/releases/latest)下载`Auto_Resonance_xxx.zip`,如果没有就等一会儿
   - 解压在目录
@@ -35,6 +35,8 @@
 - `ssl.SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1006)`
   - 如果你使用了新版火绒（≥6.0），请在设置-病毒防护-web扫描中添加本程序为受信任程序，或关闭加密链接扫描功能。
 
+## 问题反馈/功能请求
+- 前往[issues](https://github.com/Night-stars-1/Auto_Resonance/issues)提交反馈或者需求
+
 ## 开发指南
 - 施工中
-

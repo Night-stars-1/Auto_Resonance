@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-10 22:54:08
-LastEditTime: 2024-05-19 19:31:10
+LastEditTime: 2024-05-28 21:04:01
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -181,7 +181,7 @@ class RunningBusinessInterface(ScrollArea):
         self.tiredGroup = ExpandSettingCard(
             FIF.BRUSH,
             "砍抬疲劳设置",
-            content="当城市设置进货书数量设置为-1时禁用该城市",
+            content="当城市设置砍抬成功次数为-1时禁用该城市",
             parent=self.scrollWidget,
         )
         self.tiredGroup.viewLayout.addWidget(
@@ -293,6 +293,7 @@ class RunningBusinessInterface(ScrollArea):
     def autoscan(self):
 
         def result(skill_level: Dict[str, int]):
+            logger.debug(skill_level)
             for role_name in self.skillCardData:
                 role_name_other = role_name.replace("闻笙", "闻笔")  # 纠正一些角色名
                 self.skillCardData[role_name].spinBox.setValue(

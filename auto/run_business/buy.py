@@ -104,7 +104,7 @@ def buy_good(good: str, book: int, max_book: int, again: bool = False):
         show_image(image)
         """
         logger.debug(f"是否进货检测: {hsv}")
-        if HSV(95, 5, 255) == hsv:
+        if HSV(95, 5, 255) == hsv or HSV(5, 5, 255) == hsv:
             if book < max_book:
                 use_book(pos, book)
                 return (
@@ -114,6 +114,7 @@ def buy_good(good: str, book: int, max_book: int, again: bool = False):
             else:
                 return None, book
         else:
+            logger.info(f"点击商品: {good}")
             click(pos)
             return True, book
     else:

@@ -13,6 +13,8 @@ import sys
 
 from loguru import logger
 
+from version import __version__
+
 path_log = os.path.join("logs", "debug.log")
 LEVEL = "DEBUG"
 logger.remove()
@@ -39,3 +41,5 @@ logger.add(
     encoding="utf-8",
     retention="10 days",
 )
+
+logger.info(f"当前版本: {__version__}")

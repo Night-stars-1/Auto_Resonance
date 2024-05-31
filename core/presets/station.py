@@ -49,11 +49,12 @@ class STATION:
             reach_bgrs = get_bgrs(
                 image, [(839, 354), (814, 359), (1051, 641), (658, 690)]
             )
+            logger.debug(f"行车攻击检测: {attack_bgrs}")
             logger.debug(f"行车检测: {reach_bgrs}")
             if (
-                BGRGroup([8, 168, 234], [9, 171, 245]) == attack_bgrs[0]
-                and BGRGroup([8, 168, 234], [9, 171, 245]) == attack_bgrs[1]
-                and BGRGroup([8, 168, 234], [9, 171, 245]) == attack_bgrs[2]
+                BGRGroup([8, 168, 234], [10, 171, 245]) == attack_bgrs[0]
+                and BGRGroup([8, 168, 234], [10, 171, 245]) == attack_bgrs[1]
+                and BGRGroup([8, 168, 234], [10, 171, 245]) == attack_bgrs[2]
             ):
                 logger.info("检测到拦截，进行攻击")
                 self.join_wait_fight()

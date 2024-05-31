@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 15:17:19
-LastEditTime: 2024-04-30 02:56:30
+LastEditTime: 2024-05-31 20:50:51
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -57,13 +57,14 @@ def click_bargain_button(num=0):
     参数:
         :param num: 议价次数
     """
+    logger.info(f"议价次数: {num}")
     start = time.perf_counter()
     while time.perf_counter() - start < 15:
         if num <= 0:
             return True
         bgr = get_bgr(screenshot(), (1176, 461))
         logger.debug(f"抬价界面颜色检查: {bgr}")
-        if BGRGroup([0, 170, 240], [2, 183, 253]) == bgr:
+        if BGRGroup([0, 170, 240], [2, 185, 253]) == bgr:
             input_tap((1177, 461))
             time.sleep(1.0)
         elif bgr == [251, 253, 253]:

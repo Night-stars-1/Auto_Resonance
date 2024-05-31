@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:14:29
-LastEditTime: 2024-05-21 02:13:27
+LastEditTime: 2024-05-31 20:13:45
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -61,7 +61,6 @@ def run(routes: RoutesModel):
     if routes.city_data[0].sell_city_name == city_name:
         routes.city_data = [routes.city_data[1], routes.city_data[0]]
     for city in routes.city_data:
-        logger.info(list(city.goods_data.keys()))
         if city.profit == 0:
             logger.info("没有数据")
             return False

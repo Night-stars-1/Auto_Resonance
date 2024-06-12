@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-07 23:14:47
-LastEditTime: 2024-05-09 23:48:19
+LastEditTime: 2024-06-12 22:51:45
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -46,13 +46,13 @@ class SettingInterface(ScrollArea):
             parent=self.musicInThisPCGroup,
             isPassword=True,
         )
-        self.adbPathCard = LineEditSettingCard(
-            cfg.adbPath,
-            "ADB路径",
-            FIF.PALETTE,
-            "ADB程序路径",
-            parent=self.musicInThisPCGroup,
-        )
+        # self.adbPathCard = LineEditSettingCard(
+        #     cfg.adbPath,
+        #     "ADB路径",
+        #     FIF.PALETTE,
+        #     "ADB程序路径",
+        #     parent=self.musicInThisPCGroup,
+        # )
         self.adbOrderCard = LineEditSettingCard(
             cfg.adbOrder,
             "ADB地址",
@@ -105,7 +105,7 @@ class SettingInterface(ScrollArea):
         # add cards to group
         self.musicInThisPCGroup.addSettingCard(self.goodsTypeCard)
         self.musicInThisPCGroup.addSettingCard(self.uuidCard)
-        self.musicInThisPCGroup.addSettingCard(self.adbPathCard)
+        # self.musicInThisPCGroup.addSettingCard(self.adbPathCard)
         self.musicInThisPCGroup.addSettingCard(self.adbOrderCard)
         self.musicInThisPCGroup.addSettingCard(self.isSpeedCard)
         self.musicInThisPCGroup.addSettingCard(self.isAutoPickCard)

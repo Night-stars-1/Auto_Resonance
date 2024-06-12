@@ -28,6 +28,8 @@ class Worker(QThread):
             self.result.emit(result)
         except StopExecution:
             pass
+        except AssertionError as e:
+            logger.error(f"{e}")
         except Exception:
             logger.exception("崩溃信息:")
 

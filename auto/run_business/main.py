@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:14:29
-LastEditTime: 2024-05-31 20:13:45
+LastEditTime: 2024-06-12 23:20:59
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -41,7 +41,7 @@ def go_business(type: Literal["buy", "sell"] = "buy"):
         time.sleep(1.0)
         bgr = get_bgr(screenshot(), (1175, 460))
         logger.debug(f"进入交易所颜色检查: {bgr}")
-        if bgr == [2, 133, 253] or bgr == [0, 183, 253] or BGR(225, 225, 225) == bgr:
+        if bgr == [2, 133, 253] or bgr == [0, 183, 253] or BGR(225, 225, 225) == bgr or bgr == BGR(0, 183, 253):
             return True
         else:
             logger.error("进入交易所失败")

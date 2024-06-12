@@ -5,7 +5,7 @@ LastEditTime: 2024-06-12 23:43:49
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union
 
 from core.exceptions import StopExecution
 
@@ -20,12 +20,13 @@ class KMouRequestModel(GoodsModel):
     @classmethod
     def model_validate(
         self,
-        obj: dict,
+        obj: Union[dict, list],
         strict: Optional[bool] = None,
         from_attributes: Optional[bool] = None,
         context: Optional[Dict[str, Any]] = None,
     ) -> GoodsModel:
-        assert obj.get("error") == None, obj["error"]
+        if isinstance(obj, dict):
+            assert obj.get("error") == None, obj["error"]
         new_obj = []
         for good in obj:
             good["type"] = "sell" if good["type"] == "buy" else "buy"

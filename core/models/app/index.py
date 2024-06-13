@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-08 17:45:06
-LastEditTime: 2024-05-06 23:44:41
+LastEditTime: 2024-06-13 16:17:25
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -9,7 +9,7 @@ import json
 from pathlib import Path
 from typing import Dict
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 ROOT_PATH = Path().resolve()
 """项目根目录路径"""
@@ -48,7 +48,7 @@ class NegotiatePriceModel(BaseModel):
     """买入疲劳值"""
     sellTired: int = 10
     """卖出疲劳值"""
-    七号自由港: int = 2
+    七号自由港: int = Field(2, alias="7号自由港")
     """七号自由港"""
     修格里城: int = 2
     """修格里城"""
@@ -69,6 +69,10 @@ class NegotiatePriceModel(BaseModel):
     阿妮塔能源研究所: int = 2
     """阿妮塔能源研究所"""
 
+    def get_tired(self, station_name: str, default: int) -> int:
+        """获取疲劳值"""
+        return self.model_dump(by_alias=True).get(station_name, default)
+
 
 class RunningBusinessModel(BaseModel):
     """跑商模型"""
@@ -88,7 +92,7 @@ class RunningBusinessModel(BaseModel):
 class StationLevelModel(BaseModel):
     """站点等级模型"""
 
-    七号自由港: int = 19
+    七号自由港: int = Field(19, alias="7号自由港")
     """七号自由港"""
     修格里城: int = 13
     """修格里城"""
@@ -113,6 +117,7 @@ class Config(BaseModel):
     """城市声望等级"""
     SkillLevel: Dict[str, int] = {}
     """角色共振等级"""
+
 
 if APP_PATH.exists() and APP_PATH.is_file():
     with open(APP_PATH, "r", encoding="utf-8") as f:

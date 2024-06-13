@@ -243,12 +243,8 @@ class SHOP:
         )  # 按照是否特产排序
         speciality_num = len([good for good in goods.values() if good.isSpeciality])
         """
-        buy_argaining_num = getattr(
-            self.negotiate_price, buy_city_name, -1
-        )  # 购买议价次数
-        sell_argaining_num = getattr(
-            self.negotiate_price, sell_city_name, -1
-        )  # 出售议价次数
+        buy_argaining_num = self.negotiate_price.get_tired(buy_city_name, -1) # 购买议价次数
+        sell_argaining_num = self.negotiate_price.get_tired(sell_city_name, -1) # 出售议价次数
         # 总疲劳
         city_tired = (
             city_tired_data.get(f"{buy_city_name}-{sell_city_name}", 99999)

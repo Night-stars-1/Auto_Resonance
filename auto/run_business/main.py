@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:14:29
-LastEditTime: 2024-06-12 23:20:59
+LastEditTime: 2024-07-08 21:15:53
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -113,7 +113,7 @@ def start():
         if routes.tired_profit >= app.RunningBusiness.tiredProfitThreshold:
             run(routes)
         else:
-            logger.debug(
+            logger.info(
                 f"疲劳利润: {routes.tired_profit} 阈值: {app.RunningBusiness.tiredProfitThreshold}，未达到阈值不跑商"
             )
             time.sleep(5)

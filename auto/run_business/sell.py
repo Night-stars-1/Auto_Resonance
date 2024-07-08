@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 15:17:19
-LastEditTime: 2024-06-12 23:23:01
+LastEditTime: 2024-07-08 21:11:34
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -64,11 +64,11 @@ def click_bargain_button(num=0):
             return True
         bgr = get_bgr(screenshot(), (1176, 461))
         logger.debug(f"抬价界面颜色检查: {bgr}")
-        if BGRGroup([0, 170, 240], [5, 185, 253]) == bgr:
+        if BGRGroup([0, 170, 240], [5, 185, 255]) == bgr:
             input_tap((1177, 461))
             time.sleep(1.0)
         elif bgr == [251, 253, 253]:
-            logger.info("议价次数不足")
+            logger.info("抬价次数不足")
             return True
         elif bgr == [62, 63, 63]:
             logger.info("疲劳不足")

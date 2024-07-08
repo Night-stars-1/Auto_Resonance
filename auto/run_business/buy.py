@@ -231,7 +231,7 @@ def click_bargain_button(num=0):
             input_tap((1177, 461))
             time.sleep(1.0)
         elif bgr == [251, 253, 253]:
-            logger.info("议价次数不足")
+            logger.info("降价次数不足")
             return True
         elif bgr == [62, 63, 63]:
             logger.info("疲劳不足")

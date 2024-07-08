@@ -1,25 +1,31 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-02 19:12:22
-LastEditTime: 2024-05-04 17:07:15
+LastEditTime: 2024-07-08 23:23:19
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
 from PyQt5.QtCore import QRectF, Qt, QTimer
 from PyQt5.QtGui import QBrush, QColor, QLinearGradient, QPainter, QPainterPath, QPixmap
 from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget
-from qfluentwidgets import FluentIcon, ScrollArea, isDarkTheme
+from qfluentwidgets import (
+    FluentIcon,
+    InfoBar,
+    InfoBarIcon,
+    InfoBarPosition,
+    ScrollArea,
+    isDarkTheme,
+)
 from qfluentwidgets.window.stacked_widget import StackedWidget
 
+from app.common.config import REPO_URL, cfg
+from app.common.style_sheet import StyleSheet
+from app.common.worker import Worker
+from app.components.button_card import ButtonCardView
+from app.components.homes.title_brogress_bars_card import TitleProgressBarsCard
+from app.components.link_card import LinkCardView
+from app.components.settings.checkbox_group_card import CheckboxGroup
 from core.api.srap import get_boss
-
-from ..common.config import REPO_URL, cfg
-from ..common.style_sheet import StyleSheet
-from ..common.worker import Worker
-from ..components.button_card import ButtonCardView
-from ..components.homes.title_brogress_bars_card import TitleProgressBarsCard
-from ..components.link_card import LinkCardView
-from ..components.settings.checkbox_group_card import CheckboxGroup
 
 
 class BannerWidget(QWidget):
@@ -132,17 +138,29 @@ class HomeInterface(ScrollArea):
         self.setWidgetResizable(True)
 
         self.vBoxLayout.setContentsMargins(0, 0, 0, 36)
-        self.vBoxLayout.setSpacing(40)
+        self.vBoxLayout.setSpacing(10)
         self.vBoxLayout.addWidget(self.banner)
         self.vBoxLayout.setAlignment(Qt.AlignTop)
 
     def loadSamples(self):
         """load samples"""
-        # basic input samples
+
+        tipBar = InfoBar(
+            icon=InfoBarIcon.WARNING,
+            title=self.tr("Warning"),
+            content="推荐使用 MUMU模拟器 并把游戏分辨率和画质全调最低，模拟器分辨率调整为1280:720 dpi:240",
+            orient=Qt.Vertical,
+            isClosable=False,
+            duration=-1,
+            position=InfoBarPosition.NONE,
+            parent=self,
+        )
+
         basicInputView = ButtonCardView(
             "开始运行", header=self.taskCheckboxGroup, parent=self.view
         )
 
+        basicInputView.vBoxLayout.insertWidget(0, tipBar)
         self.taskCheckboxGroup.addCheckbox("购买桦石", cfg.huashi)
         self.taskCheckboxGroup.addCheckbox("刷铁安局", cfg.railwaySafetyBureau)
         self.taskCheckboxGroup.addCheckbox("自动跑商", cfg.runBusiness)

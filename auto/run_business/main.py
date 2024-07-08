@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:14:29
-LastEditTime: 2024-06-12 23:20:59
+LastEditTime: 2024-07-08 21:15:53
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -20,7 +20,7 @@ from core.goods import show
 from core.image import get_bgr
 from core.models import app
 from core.models.city_goods import RoutesModel
-from core.module.bgr import BGR
+from core.module.bgr import BGR, BGRGroup
 from core.presets import click_station, get_city, go_home, go_outlets, wait_gbr
 
 
@@ -41,7 +41,11 @@ def go_business(type: Literal["buy", "sell"] = "buy"):
         time.sleep(1.0)
         bgr = get_bgr(screenshot(), (1175, 460))
         logger.debug(f"进入交易所颜色检查: {bgr}")
-        if bgr == [2, 133, 253] or bgr == [0, 183, 253] or BGR(225, 225, 225) == bgr or bgr == BGR(0, 183, 253):
+        if (
+            BGRGroup([0, 123, 240], [2, 133, 255]) == bgr
+            or BGR(225, 225, 225) == bgr
+            or BGRGroup([0, 170, 240], [5, 185, 255]) == bgr
+        ):
             return True
         else:
             logger.error("进入交易所失败")
@@ -109,7 +113,7 @@ def start():
         if routes.tired_profit >= app.RunningBusiness.tiredProfitThreshold:
             run(routes)
         else:
-            logger.debug(
+            logger.info(
                 f"疲劳利润: {routes.tired_profit} 阈值: {app.RunningBusiness.tiredProfitThreshold}，未达到阈值不跑商"
             )
             time.sleep(5)

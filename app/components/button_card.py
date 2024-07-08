@@ -1,11 +1,10 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-06 22:03:56
-LastEditTime: 2024-04-28 23:05:29
+LastEditTime: 2024-07-08 22:36:04
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
-# coding:utf-8
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QHBoxLayout, QLabel, QLayout, QVBoxLayout, QWidget
 from qfluentwidgets import CardWidget, FlowLayout, IconWidget, TextWrap

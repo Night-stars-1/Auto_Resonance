@@ -114,3 +114,4 @@ test.*
 config*
 temp/
 .pdm-build/
+*.prof

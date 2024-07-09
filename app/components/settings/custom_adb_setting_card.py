@@ -42,7 +42,7 @@ class CustomAdbSettingCard(ExpandGroupSettingCard):
             "自定义ADB端口", self.radioWidget
         )
         self.defaultRadioButton.setProperty("option", self.defaultItem)
-
+        self.defaultRadioButton.setChecked(True) # self.configItem.value == self.defaultItem
         # self.customRadioButton = RadioButton(self.tr("Custom color"), self.radioWidget)
         self.buttonGroup = QButtonGroup(self)
         for text, option in texts.items():
@@ -50,9 +50,7 @@ class CustomAdbSettingCard(ExpandGroupSettingCard):
             self.buttonGroup.addButton(button)
             self.radioLayout.addWidget(button)
             button.setProperty("option", option)
-            if value := option == self.configItem.value:
-                button.setChecked(value)
-                self.choiceLabel.setText(button.text())
+            button.setChecked(option == self.configItem.value)
 
         self.customItemWidget = QWidget(self.view)
         self.customItemLayout = QHBoxLayout(self.customItemWidget)
@@ -60,23 +58,7 @@ class CustomAdbSettingCard(ExpandGroupSettingCard):
         self.chooseItemLineEdit = LineEdit(self.customItemWidget)
         self.chooseItemLineEdit.setText(self.customConfigItem.value)
 
-        self.__initWidget()
-
-    def __initWidget(self):
         self.__initLayout()
-
-        if self.defaultItem == self.customItem:
-            self.chooseItemLineEdit.setEnabled(True)
-        else:
-            self.chooseItemLineEdit.setEnabled(False)
-
-        # self.choiceLabel.setText(self.buttonGroup.checkedButton().text())
-        self.choiceLabel.adjustSize()
-
-        self.chooseItemLineEdit.setObjectName("chooseColorButton")
-
-        self.buttonGroup.buttonClicked.connect(self.__onRadioButtonClicked)
-        self.chooseItemLineEdit.textChanged.connect(self.__onChooseItemTextChanged)
 
     def __initLayout(self):
         self.addWidget(self.choiceLabel)
@@ -86,6 +68,7 @@ class CustomAdbSettingCard(ExpandGroupSettingCard):
         self.radioLayout.setContentsMargins(48, 18, 0, 18)
         self.buttonGroup.addButton(self.defaultRadioButton)
         self.radioLayout.addWidget(self.defaultRadioButton)
+        
         self.radioLayout.setSizeConstraint(QVBoxLayout.SetMinimumSize)
 
         self.customItemLayout.setContentsMargins(48, 18, 44, 18)
@@ -97,6 +80,22 @@ class CustomAdbSettingCard(ExpandGroupSettingCard):
         self.viewLayout.setContentsMargins(0, 0, 0, 0)
         self.addGroupWidget(self.radioWidget)
         self.addGroupWidget(self.customItemWidget)
+
+        self.__initWidget()
+
+    def __initWidget(self):
+        if self.defaultItem == self.customItem:
+            self.chooseItemLineEdit.setEnabled(True)
+        else:
+            self.chooseItemLineEdit.setEnabled(False)
+
+        self.choiceLabel.setText(self.buttonGroup.checkedButton().text())
+        self.choiceLabel.adjustSize()
+
+        self.chooseItemLineEdit.setObjectName("chooseColorButton")
+
+        self.buttonGroup.buttonClicked.connect(self.__onRadioButtonClicked)
+        self.chooseItemLineEdit.textChanged.connect(self.__onChooseItemTextChanged)
 
     def __onRadioButtonClicked(self, button: RadioButton):
         """radio button clicked slot"""

@@ -13,8 +13,8 @@ from loguru import logger
 
 import auto
 from auto.run_business import stop as business_stop
-from core.adb import connect
-from core.adb import stop as adb_stop
+from core.adb.adb import connect
+from core.adb.adb import stop as adb_stop
 from core.analysis_tasks import AnalysisTasks
 from core.utils import read_json
 

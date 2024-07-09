@@ -9,10 +9,10 @@ from typing import Dict
 
 import requests
 
-from core.models import app
+from core.model import app
 
 from ..goods import SHOP
-from ..models.kmou import KMouRequestModel
+from ..model.kmou import KMouRequestModel
 
 
 def get_goods_info():

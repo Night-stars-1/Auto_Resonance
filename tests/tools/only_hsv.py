@@ -7,7 +7,7 @@ sys.path.append(str(project_root))
 
 import cv2
 import numpy as np
-from core.adb import connect, screenshot
+from core.adb.adb import connect, screenshot
 
 # 加载图像
 connect()

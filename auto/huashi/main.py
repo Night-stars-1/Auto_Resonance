@@ -10,8 +10,8 @@ from datetime import datetime
 
 from loguru import logger
 
-from core.models.config import config
-from core.presets import (
+from core.model.config import config
+from core.preset import (
     click,
     get_city,
     go_home,

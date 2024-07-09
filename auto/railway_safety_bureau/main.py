@@ -7,8 +7,8 @@ LastEditors: Night-stars-1 nujj1042633805@gmail.com
 
 from loguru import logger
 
-from core.models.config import config
-from core.presets import (
+from core.model.config import config
+from core.preset import (
     click,
     click_image,
     click_station,

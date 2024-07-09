@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-03-20 22:24:35
-LastEditTime: 2024-04-30 15:16:29
+LastEditTime: 2024-07-09 17:36:17
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -13,10 +13,12 @@ from typing import Tuple
 
 import cv2 as cv
 import numpy as np
+from loguru import logger
 
-from core.models import app
+from core.adb.adb_port import get_adb_port
+from core.model import app
 
-from .exceptions import StopExecution
+from ..exceptions import StopExecution
 
 ADBOREDER = ""
 ADBPATH = ""
@@ -47,7 +49,12 @@ def connect():
         :param order: ADB端口
     """
     global ADBOREDER, ADBPATH, STOP
-    ADBOREDER = app.Global.adbOrder
+    adb_port, name = get_adb_port()
+    if adb_port is None:
+        logger.info("未知ADB端口信息")
+        return False
+    logger.info(f"ADB端口： {adb_port} 来自: {name}")
+    ADBOREDER = f"127.0.0.1:{adb_port}"
     ADBPATH = app.Global.adbPath
     STOP = False
     shell = [ADBPATH, "connect", ADBOREDER]

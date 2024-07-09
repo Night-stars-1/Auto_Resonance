@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-02 18:52:36
-LastEditTime: 2024-07-08 23:22:02
+LastEditTime: 2024-07-09 17:26:08
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -17,7 +17,7 @@ from app.common.config import cfg
 
 cfg.save()  # 生成配置文件
 from app.view.main_window import MainWindow
-from core.adb import kill
+from core.adb.adb import kill
 
 
 def close_service():

@@ -6,11 +6,16 @@ LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
 import json
+from pathlib import Path
 from typing import List, Tuple, Union
 
+ROOT_PATH = Path().resolve()
+"""项目根目录路径"""
+RESOURCES_PATH = ROOT_PATH / "resources"
 
-
-def read_json(file_path):
+def read_json(file_path: Union[str, Path]):
+    if isinstance(file_path, Path):
+        file_path = str(file_path)
     with open(file_path, "r", encoding="utf-8") as f:
         return json.load(f)
 

@@ -12,14 +12,14 @@ import cv2 as cv
 import numpy as np
 from loguru import logger
 
-from core.adb import input_swipe, input_tap, screenshot
+from core.adb.adb import input_swipe, input_tap, screenshot
 from core.exception_handling import get_excption
 from core.image import get_bgr, get_hsv
 from core.module.bgr import BGR, BGRGroup
 from core.module.hsv import HSV
 from core.ocr import predict
-from core.presets import click, find_text
-from core.presets.presets import go_home
+from core.preset import click, find_text
+from core.preset.presets import go_home
 
 
 def buy_business(

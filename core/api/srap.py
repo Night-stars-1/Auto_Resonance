@@ -12,7 +12,7 @@ import orjson
 import requests
 
 from ..goods import SHOP
-from ..models.srap import SrapRequestGzipModel
+from ..model.srap import SrapRequestGzipModel
 
 
 def get_goods_info():

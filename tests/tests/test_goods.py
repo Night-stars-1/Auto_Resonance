@@ -8,7 +8,7 @@ LastEditors: Night-stars-1 nujj1042633805@gmail.com
 import sys
 from pathlib import Path
 
-from core.models.goods import GoodsModel
+from core.model.goods import GoodsModel
 
 # 添加项目根目录到 sys.path
 project_root = Path(__file__).resolve().parent.parent.parent

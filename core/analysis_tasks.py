@@ -10,10 +10,10 @@ from typing import Dict, List, Optional, Tuple, Union
 
 from loguru import logger
 
-import core.presets
+import core.preset
 
-from .presets import find_text
-from .adb import input_tap, screenshot
+from .preset import find_text
+from .adb.adb import input_tap, screenshot
 from .ocr import predict
 from .utils import read_json
 
@@ -33,7 +33,7 @@ class AnalysisTasks:
             if self.stop:
                 return False
             action_type = action.pop("type", "异常")
-            method = getattr(core.presets, action_type, None)
+            method = getattr(core.preset, action_type, None)
             try:
                 if method:
                     method(**action)

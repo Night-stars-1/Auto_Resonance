@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-07 23:14:47
-LastEditTime: 2024-07-09 15:12:31
+LastEditTime: 2024-07-09 17:55:56
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -11,12 +11,12 @@ from qfluentwidgets import ExpandLayout
 from qfluentwidgets import FluentIcon as FIF
 from qfluentwidgets import ScrollArea, SettingCardGroup, SwitchSettingCard
 
-from core.model.config import config
-
 from app.common.config import cfg
 from app.common.style_sheet import StyleSheet
+from app.components.settings.custom_adb_setting_card import CustomAdbSettingCard
 from app.components.settings.line_edit_setting_card import LineEditSettingCard
-from app.components.settings.custom_text_setting_card import CustomAdbSettingCard
+from core.model.config import config
+from core.model.emulator import emulator_list
 
 
 class SettingInterface(ScrollArea):
@@ -55,10 +55,12 @@ class SettingInterface(ScrollArea):
         #     parent=self.musicInThisPCGroup,
         # )
         self.adbOrderCard = CustomAdbSettingCard(
-            cfg.adbOrder,
+            cfg.emulatorType,
+            cfg.adbPort,
             FIF.PALETTE,
             "ADB地址",
-            "ADB地址",
+            "只支持部分模拟器，如果连接失败请使用自定义ADB端口",
+            texts=emulator_list.name2type,
             parent=self.musicInThisPCGroup,
         )
         # self.adbOrderCard = LineEditSettingCard(

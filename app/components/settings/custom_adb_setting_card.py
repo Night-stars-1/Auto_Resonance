@@ -7,11 +7,10 @@ from PyQt5.QtWidgets import (
     QLabel,
     QButtonGroup,
     QVBoxLayout,
-    QPushButton,
     QHBoxLayout,
 )
 
-from qfluentwidgets import ColorDialog, ExpandGroupSettingCard, RadioButton, ConfigItem
+from qfluentwidgets import LineEdit, ExpandGroupSettingCard, RadioButton, ConfigItem
 from app.common.config import qconfig
 from app.common.icon import FluentIconBase
 
@@ -22,57 +21,62 @@ class CustomAdbSettingCard(ExpandGroupSettingCard):
     def __init__(
         self,
         configItem: ConfigItem,
+        customConfigItem: ConfigItem,
         icon: Union[str, QIcon, FluentIconBase],
         title: str,
         content=None,
-        texts=None,
+        texts: dict = {},
         parent=None,
     ):
         super().__init__(icon, title, content, parent=parent)
+        self.texts = texts
         self.configItem = configItem
-        self.defaultItem = configItem.defaultValue
+        self.customConfigItem = customConfigItem
+        self.defaultItem = "Custom"
         self.customItem = qconfig.get(configItem)
 
         self.choiceLabel = QLabel(self)
         self.radioWidget = QWidget(self.view)
         self.radioLayout = QVBoxLayout(self.radioWidget)
         self.defaultRadioButton = RadioButton(
-            self.tr("Default color"), self.radioWidget
+            "自定义ADB端口", self.radioWidget
         )
+        self.defaultRadioButton.setProperty("option", self.defaultItem)
+
         # self.customRadioButton = RadioButton(self.tr("Custom color"), self.radioWidget)
         self.buttonGroup = QButtonGroup(self)
-        # for text, option in zip(texts, configItem.options):
-        #     button = RadioButton(text, self.view)
-        #     self.buttonGroup.addButton(button)
-        #     self.radioLayout.addWidget(button)
-            # button.setProperty(self.configName, option)
+        for text, option in texts.items():
+            button = RadioButton(text, self.view)
+            self.buttonGroup.addButton(button)
+            self.radioLayout.addWidget(button)
+            button.setProperty("option", option)
+            if value := option == self.configItem.value:
+                button.setChecked(value)
+                self.choiceLabel.setText(button.text())
 
         self.customItemWidget = QWidget(self.view)
         self.customItemLayout = QHBoxLayout(self.customItemWidget)
-        self.customLabel = QLabel(self.tr("Custom color"), self.customItemWidget)
-        self.chooseItemButton = QPushButton(
-            self.tr("Choose color"), self.customItemWidget
-        )
+        self.customLabel = QLabel("自定义ADB端口", self.customItemWidget)
+        self.chooseItemLineEdit = LineEdit(self.customItemWidget)
+        self.chooseItemLineEdit.setText(self.customConfigItem.value)
 
         self.__initWidget()
 
     def __initWidget(self):
         self.__initLayout()
 
-        if self.defaultItem != self.customItem:
-            self.customRadioButton.setChecked(True)
-            self.chooseItemButton.setEnabled(True)
+        if self.defaultItem == self.customItem:
+            self.chooseItemLineEdit.setEnabled(True)
         else:
-            self.defaultRadioButton.setChecked(True)
-            self.chooseItemButton.setEnabled(False)
+            self.chooseItemLineEdit.setEnabled(False)
 
-        self.choiceLabel.setText(self.buttonGroup.checkedButton().text())
+        # self.choiceLabel.setText(self.buttonGroup.checkedButton().text())
         self.choiceLabel.adjustSize()
 
-        self.chooseItemButton.setObjectName("chooseColorButton")
+        self.chooseItemLineEdit.setObjectName("chooseColorButton")
 
         self.buttonGroup.buttonClicked.connect(self.__onRadioButtonClicked)
-        # self.chooseItemButton.clicked.connect(self.__showColorDialog)
+        self.chooseItemLineEdit.textChanged.connect(self.__onChooseItemTextChanged)
 
     def __initLayout(self):
         self.addWidget(self.choiceLabel)
@@ -80,15 +84,13 @@ class CustomAdbSettingCard(ExpandGroupSettingCard):
         self.radioLayout.setSpacing(19)
         self.radioLayout.setAlignment(Qt.AlignTop)
         self.radioLayout.setContentsMargins(48, 18, 0, 18)
-        # self.buttonGroup.addButton(self.customRadioButton)
         self.buttonGroup.addButton(self.defaultRadioButton)
-        # self.radioLayout.addWidget(self.customRadioButton)
         self.radioLayout.addWidget(self.defaultRadioButton)
         self.radioLayout.setSizeConstraint(QVBoxLayout.SetMinimumSize)
 
         self.customItemLayout.setContentsMargins(48, 18, 44, 18)
         self.customItemLayout.addWidget(self.customLabel, 0, Qt.AlignLeft)
-        self.customItemLayout.addWidget(self.chooseItemButton, 0, Qt.AlignRight)
+        self.customItemLayout.addWidget(self.chooseItemLineEdit, 0, Qt.AlignRight)
         self.customItemLayout.setSizeConstraint(QHBoxLayout.SetMinimumSize)
 
         self.viewLayout.setSpacing(0)
@@ -103,15 +105,12 @@ class CustomAdbSettingCard(ExpandGroupSettingCard):
 
         self.choiceLabel.setText(button.text())
         self.choiceLabel.adjustSize()
-
-        if button is self.defaultRadioButton:
-            self.chooseItemButton.setDisabled(True)
-            qconfig.set(self.configItem, self.defaultItem)
+        if button is not self.defaultRadioButton:
+            self.chooseItemLineEdit.setDisabled(True)
         else:
-            self.chooseItemButton.setDisabled(False)
-            qconfig.set(self.configItem, self.customItem)
+            self.chooseItemLineEdit.setDisabled(False)
+        option = button.property("option")
+        qconfig.set(self.configItem, option)
 
-    def __onCustomColorChanged(self, color):
-        """custom color changed slot"""
-        qconfig.set(self.configItem, color)
-        self.customItem = QColor(color)
+    def __onChooseItemTextChanged(self, text):
+        qconfig.set(self.customConfigItem, text)

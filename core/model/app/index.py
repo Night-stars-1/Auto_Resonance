@@ -34,8 +34,12 @@ class GlobalModel(BaseModel):
 
     adbOrder: str = ""
     """ADB Order"""
+    adbPort: str = ""
+    """ADB 端口"""
     adbPath: str = ""
     """ADB 路径"""
+    emulatorType: str = ""
+    """模拟器类型"""
     goodsType: bool = False
     """货物类型"""
     uuid: str = ""

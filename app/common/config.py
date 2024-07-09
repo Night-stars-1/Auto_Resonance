@@ -56,8 +56,10 @@ class Config(RunningBusinessConfig):
     uuid = ConfigItem("Global", "uuid", "", None)
     goodsType = ConfigItem("Global", "goodsType", False, BoolValidator())
     adbPath = ConfigItem("Global", "adbPath", "resources\\lib\\adb", None)
+    emulatorType = ConfigItem("Global", "emulatorType", "Auto", None)
     adbOrder = ConfigItem("Global", "adbOrder", "127.0.0.1:7555", None)
-    
+    adbPort = ConfigItem("Global", "adbPort", "7555", None)
+
     # 我建我路
     thisRoadThatBoss = ConfigItem("ThisRoadThat", "boss", 10, None)
     thisRoadThatAttackOne = ConfigItem(
@@ -93,6 +95,7 @@ class Config(RunningBusinessConfig):
         OptionsValidator([1, 1.25, 1.5, 1.75, 2, "Auto"]),
         restart=True,
     )
+
 
 YEAR = 2023
 AUTHOR = "Night-stars-1"

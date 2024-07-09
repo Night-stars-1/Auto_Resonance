@@ -1,0 +1,23 @@
+[
+    {
+        "name": "自动识别",
+        "type": "Auto",
+        "path": "",
+        "VMS_path": "",
+        "adb_key": ""
+    },
+    {
+        "name": "逍遥模拟器",
+        "type": "MEnu",
+        "path": "Microvirt\\MEmu\\MEmu.exe",
+        "VMS_path": "MemuHyperv VMs\\MEmu\\MEmu.memu",
+        "adb_key": "ADB"
+    },
+    {
+        "name": "雷索纳斯-MuMu模拟器12",
+        "type": "MuMuPlayer",
+        "path": "YXResonanceSolstice-12.0\\shell\\MuMuPlayer.exe",
+        "VMS_path": "../vms/YXResonanceSolstice-12.0-0/YXResonanceSolstice-12.0-0.nemu",
+        "adb_key": "ADB_PORT"
+    }
+]

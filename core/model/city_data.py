@@ -1,23 +1,19 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-09 19:02:29
-LastEditTime: 2024-04-09 19:09:30
+LastEditTime: 2024-07-09 15:51:12
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
-import json
-from pathlib import Path
-from typing import Any, Dict, List
+from typing import Dict
 
-from pydantic import BaseModel, Field, RootModel
+from pydantic import BaseModel, RootModel
 
-ROOT_PATH = Path().resolve()
-"""项目根目录路径"""
-RESOURCES_PATH = ROOT_PATH / "resources"
+from core.utils import read_json, RESOURCES_PATH
+
 GOODSDATA_PATH = RESOURCES_PATH / "goods" / "CityGoodsData.json"
 """自动程序配置文件路径"""
-with open(GOODSDATA_PATH, "r", encoding="utf-8") as f:
-    goods_data = json.load(f)
+goods_data = read_json(GOODSDATA_PATH)
 
 
 class CityGoodsDataModel(BaseModel):

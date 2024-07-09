@@ -14,9 +14,9 @@ from typing import Tuple
 import cv2 as cv
 import numpy as np
 
-from core.models import app
+from core.model import app
 
-from .exceptions import StopExecution
+from ..exceptions import StopExecution
 
 ADBOREDER = ""
 ADBPATH = ""

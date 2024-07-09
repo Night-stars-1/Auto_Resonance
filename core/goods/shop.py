@@ -5,16 +5,14 @@ import json
 from decimal import Decimal, ROUND_HALF_UP
 from typing import Dict, List
 
-from loguru import logger
-
-from core.models import app
-from core.models.city_goods import (
+from core.model import app
+from core.model.city_goods import (
     CityDataModel,
     RouteModel,
     RoutesModel,
 )
-from ..models.goods import GoodInfoModel, GoodModel, GoodsModel
-
+from core.model.goods import GoodInfoModel, GoodModel, GoodsModel
+from core.utils import read_json
 
 def round5(x):
     return int(Decimal(x).quantize(Decimal("1"), rounding=ROUND_HALF_UP))
@@ -68,20 +66,12 @@ def show(routes: RoutesModel):
     return message
 
 
-with open("resources/goods/CityGoodsData.json", "r", encoding="utf-8") as file:
-    city_goods_data = json.load(file)
+city_goods_data = read_json("resources/goods/CityGoodsData.json")
+city_data = read_json("resources/goods/CityData.json")
+attached_to_city_data: Dict[str, str] = read_json("resources/goods/AttachedToCityData.json")
+city_tired_data: dict = read_json("resources/goods/CityTiredData.json")
+skill_data: dict = read_json("resources/goods/SkillData.json")
 
-with open("resources/goods/CityData.json", "r", encoding="utf-8") as file:
-    city_data = json.load(file)
-
-with open("resources/goods/AttachedToCityData.json", "r", encoding="utf-8") as file:
-    attached_to_city_data: Dict[str, str] = json.load(file)
-
-with open("resources/goods/CityTiredData.json", "r", encoding="utf-8") as file:
-    city_tired_data: dict = json.load(file)
-
-with open("resources/goods/SkillData.json", "r", encoding="utf-8") as file:
-    skill_data: dict = json.load(file)
 
 class SHOP:
     def __init__(self, goods_data: GoodsModel) -> None:
@@ -243,8 +233,12 @@ class SHOP:
         )  # 按照是否特产排序
         speciality_num = len([good for good in goods.values() if good.isSpeciality])
         """
-        buy_argaining_num = self.negotiate_price.get_tired(buy_city_name, -1) # 购买议价次数
-        sell_argaining_num = self.negotiate_price.get_tired(sell_city_name, -1) # 出售议价次数
+        buy_argaining_num = self.negotiate_price.get_tired(
+            buy_city_name, -1
+        )  # 购买议价次数
+        sell_argaining_num = self.negotiate_price.get_tired(
+            sell_city_name, -1
+        )  # 出售议价次数
         # 总疲劳
         city_tired = (
             city_tired_data.get(f"{buy_city_name}-{sell_city_name}", 99999)
@@ -261,7 +255,7 @@ class SHOP:
             book=book,
         )
         if buy_argaining_num == -1 or sell_argaining_num == -1:
-            return None # 当议价次数为-1时候，过滤该路线方案
+            return None  # 当议价次数为-1时候，过滤该路线方案
         sorted_good_info = self.get_goods_profit(goods, buy_city_name, sell_city_name)
         for good_info in sorted_good_info:
             num = min(
@@ -281,7 +275,7 @@ class SHOP:
 
         # 计算所有商品附税购买价
         tax_rate = self.all_city_info[buy_city_name].revenue  # 税率
-        route_data.buy_price = round5((1+tax_rate) * route_data.buy_price)
+        route_data.buy_price = round5((1 + tax_rate) * route_data.buy_price)
 
         route_data.tired_profit = round5(route_data.profit / city_tired)
         # 通过缓存利润计算单书利润
@@ -316,7 +310,7 @@ class SHOP:
                         if (route := self.get_need_buy_use_first(city1, city2, book))
                     ),
                     key=lambda route: route.tired_profit,
-                    default=None
+                    default=None,
                 )
                 target2 = max(
                     (
@@ -325,10 +319,10 @@ class SHOP:
                         if (route := self.get_need_buy_use_first(city2, city1, book))
                     ),
                     key=lambda route: route.tired_profit,
-                    default=None
+                    default=None,
                 )
                 if target1 is None or target2 is None:
-                    continue # 该路线无有效线路，过滤
+                    continue  # 该路线无有效线路，过滤
                 city_routes.city_data = [target1, target2]
                 # 总计
                 city_routes.book = (

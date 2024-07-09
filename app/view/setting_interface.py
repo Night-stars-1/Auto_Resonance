@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-07 23:14:47
-LastEditTime: 2024-06-12 22:51:45
+LastEditTime: 2024-07-09 15:12:31
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -11,11 +11,12 @@ from qfluentwidgets import ExpandLayout
 from qfluentwidgets import FluentIcon as FIF
 from qfluentwidgets import ScrollArea, SettingCardGroup, SwitchSettingCard
 
-from core.models.config import config
+from core.model.config import config
 
-from ..common.config import cfg
-from ..common.style_sheet import StyleSheet
-from ..components.settings.line_edit_setting_card import LineEditSettingCard
+from app.common.config import cfg
+from app.common.style_sheet import StyleSheet
+from app.components.settings.line_edit_setting_card import LineEditSettingCard
+from app.components.settings.custom_text_setting_card import CustomAdbSettingCard
 
 
 class SettingInterface(ScrollArea):
@@ -53,13 +54,20 @@ class SettingInterface(ScrollArea):
         #     "ADB程序路径",
         #     parent=self.musicInThisPCGroup,
         # )
-        self.adbOrderCard = LineEditSettingCard(
+        self.adbOrderCard = CustomAdbSettingCard(
             cfg.adbOrder,
-            "ADB地址",
             FIF.PALETTE,
+            "ADB地址",
             "ADB地址",
             parent=self.musicInThisPCGroup,
         )
+        # self.adbOrderCard = LineEditSettingCard(
+        #     cfg.adbOrder,
+        #     "ADB地址",
+        #     FIF.PALETTE,
+        #     "ADB地址",
+        #     parent=self.musicInThisPCGroup,
+        # )
         self.isSpeedCard = SwitchSettingCard(
             FIF.PALETTE,
             "是否自动加速",

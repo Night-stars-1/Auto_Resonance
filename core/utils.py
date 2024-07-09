@@ -9,8 +9,7 @@ import json
 from typing import List, Tuple, Union
 
 
-
-def read_json(file_path):
+def read_json(file_path: str):
     with open(file_path, "r", encoding="utf-8") as f:
         return json.load(f)
 

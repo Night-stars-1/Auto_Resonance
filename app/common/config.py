@@ -57,7 +57,7 @@ class Config(RunningBusinessConfig):
     goodsType = ConfigItem("Global", "goodsType", False, BoolValidator())
     adbPath = ConfigItem("Global", "adbPath", "resources\\lib\\adb", None)
     adbOrder = ConfigItem("Global", "adbOrder", "127.0.0.1:7555", None)
-
+    
     # 我建我路
     thisRoadThatBoss = ConfigItem("ThisRoadThat", "boss", 10, None)
     thisRoadThatAttackOne = ConfigItem(

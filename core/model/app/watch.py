@@ -4,8 +4,8 @@ from pathlib import Path
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
-from core.models.app.index import APP_PATH
-from core.models.app.index import Config, app
+from core.model.app.index import APP_PATH
+from core.model.app.index import Config, app
 
 class FileHandler(FileSystemEventHandler):
     """监听文本改动"""

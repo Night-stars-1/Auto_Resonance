@@ -7,12 +7,12 @@ from typing import Dict, List
 
 from loguru import logger
 
-from core.models.city_goods import (
+from core.model.city_goods import (
     CityDataModel,
     RouteModel,
     RoutesModel,
 )
-from ..models.goods import GoodsModel
+from ..model.goods import GoodsModel
 
 
 def round5(x):

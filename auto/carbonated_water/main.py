@@ -9,8 +9,8 @@ import time
 from datetime import datetime
 from loguru import logger
 
-from core.models.config import config
-from core.presets import click, go_home, go_outlets, ocr_click, wait, wait_time
+from core.model.config import config
+from core.preset import click, go_home, go_outlets, ocr_click, wait, wait_time
 
 
 def join():

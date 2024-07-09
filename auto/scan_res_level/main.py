@@ -9,11 +9,11 @@ import time
 
 from loguru import logger
 
-from core.adb import connect, input_swipe, input_tap, screenshot
+from core.adb.adb import connect, input_swipe, input_tap, screenshot
 from core.image import get_bgr, get_bgrs
 from core.module.bgr import BGR
 from core.ocr import predict
-from core.presets import go_home
+from core.preset import go_home
 
 
 def get_skill_level_list():

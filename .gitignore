@@ -112,6 +112,7 @@ gui/
 examples/
 test.*
 config*
+!config.py
 temp/
 .pdm-build/
 *.prof

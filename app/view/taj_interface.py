@@ -11,7 +11,7 @@ from qfluentwidgets import ExpandLayout
 from qfluentwidgets import FluentIcon as FIF
 from qfluentwidgets import ScrollArea, SettingCardGroup
 
-from core.models.config import config
+from core.model.config import config
 
 from ..common.style_sheet import StyleSheet
 from ..common.utils import debounce

@@ -12,7 +12,7 @@ from pathlib import Path
 project_root = Path(__file__).resolve().parent.parent
 sys.path.append(str(project_root))
 
-from core.adb import connect, screenshot
+from core.adb.adb import connect, screenshot
 from core.image import crop_image, show_image
 from core.ocr import predict
 

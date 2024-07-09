@@ -17,7 +17,7 @@ from app.common.config import cfg
 
 cfg.save()  # 生成配置文件
 from app.view.main_window import MainWindow
-from core.adb import kill
+from core.adb.adb import kill
 
 
 def close_service():

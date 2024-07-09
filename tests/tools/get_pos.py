@@ -14,7 +14,7 @@ sys.path.append(str(project_root))
 
 import cv2
 
-from core.adb import connect, screenshot
+from core.adb.adb import connect, screenshot
 
 connect("127.0.0.1:16384")
 

@@ -9,12 +9,12 @@ import time
 
 from loguru import logger
 
+from core.adb.adb import input_swipe, input_tap, screenshot
+from core.image import get_all_color_pos, get_bgrs, match_screenshot
 from core.module.bgr import BGRGroup
+from core.ocr import predict
+from core.preset import blurry_ocr_click, wait
 
-from ..adb import input_swipe, input_tap, screenshot
-from ..image import get_all_color_pos, get_bgrs, match_screenshot
-from ..ocr import predict
-from ..presets import blurry_ocr_click, wait
 from .control import click_image
 from .station import STATION
 

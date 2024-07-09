@@ -9,9 +9,9 @@ import time
 
 from loguru import logger
 
-from core.adb import input_tap, screenshot
+from core.adb.adb import input_tap, screenshot
 from core.image import get_bgr, get_bgrs, match_screenshot
-from core.models.config import config
+from core.model.config import config
 from core.module.bgr import BGRGroup
 
 FIGHT_TIME = 300

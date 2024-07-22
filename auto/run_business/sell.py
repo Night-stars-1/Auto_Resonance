@@ -93,7 +93,7 @@ def click_sell_button():
         input_tap((1056, 647))
         time.sleep(1)
         image = screenshot()
-        bgr = get_bgr(image, (1175, 470))
+        bgr = get_bgr(image, (1175, 470), 5)
         logger.debug(f"出售物品界面颜色检查: {bgr}")
         if bgr == [227, 131, 82]:
             logger.info("检测到包含本地商品")

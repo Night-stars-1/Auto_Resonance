@@ -8,6 +8,7 @@ LastEditors: Night-stars-1 nujj1042633805@gmail.com
 from pathlib import Path
 from typing import Tuple, Union
 
+from loguru import logger
 import numpy as np
 from cnocr import CnOcr
 from PIL import Image
@@ -65,7 +66,9 @@ def predict(
             cropped_pos1[1] : cropped_pos2[1], cropped_pos1[0] : cropped_pos2[0]
         ]
     out = ocr.ocr(img_fp)
-    return ocrout2result(out, cropped_pos1)
+    result = ocrout2result(out, cropped_pos1)
+    logger.debug(result)
+    return result
 
 
 def number_predict(
@@ -85,4 +88,6 @@ def number_predict(
             cropped_pos1[1] : cropped_pos2[1], cropped_pos1[0] : cropped_pos2[0]
         ]
     out = number_ocr.ocr(img_fp)
-    return ocrout2result(out, cropped_pos1)
+    result = ocrout2result(out, cropped_pos1)
+    logger.debug(result)
+    return result

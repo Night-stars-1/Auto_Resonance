@@ -257,7 +257,7 @@ def click_buy_button():
         input_tap((1056, 647))
         time.sleep(1)
         image = screenshot()
-        bgr = get_bgr(image, (1177, 459))
+        bgr = get_bgr(image, (1177, 459), 5)
         logger.debug(f"购买物品界面颜色检查: {bgr}")
         if bgr != [2, 133, 253] and bgr != [251, 253, 253]:
             return True

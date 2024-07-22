@@ -78,6 +78,7 @@ def get_bgr(
     pos=(0, 0),
     cropped_pos1: Tuple[int, int] = (0, 0),
     cropped_pos2: Tuple[int, int] = (0, 0),
+    offset=0,
 ):
     """
     说明:
@@ -94,7 +95,7 @@ def get_bgr(
         ]
         pos = (pos[0] - cropped_pos1[0], pos[1] - cropped_pos1[1])
     color = image[pos[1], pos[0]]
-    return BGR(*color, offset=0)
+    return BGR(*color, offset=offset)
 
 
 def get_hsv(

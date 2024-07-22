@@ -1,5 +1,12 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
+Date: 2024-04-25 23:03:03
+LastEditors: Night-stars-1 nujj1042633805@gmail.com
+LastEditTime: 2024-07-22 18:33:47
+"""
+
+"""
+Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-01 23:06:19
 LastEditTime: 2024-05-04 15:03:42
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
@@ -14,9 +21,9 @@ sys.path.append(str(project_root))
 
 import cv2
 
-from core.adb.adb import connect, screenshot
+# from core.adb.adb import connect, screenshot
 
-connect("127.0.0.1:16384")
+# connect("127.0.0.1:16384")
 
 
 # 澄明数据中心 (1049, 345) 7号自由港 (665, 577) 阿妮塔战备工厂 (832, 664) 阿妮塔发射中心 (164, 420+577) 阿妮塔能源研究所 (614, 454+577)
@@ -33,8 +40,8 @@ def click_event(event, x, y, flags, param):
         print("Color (HSV): ", color_hsv.tolist())
 
 
-image = screenshot()
-# image = cv2.imread("resources/test/MuMu12-20240422-002758.png")
+# image = screenshot()
+image = cv2.imread("resources/test/ae930c5ab35cd1fcda946fe4e74f8896.png")
 """
 Clicked at:  (626, 273)
 Color (BGR):  [181, 199, 14]

@@ -37,10 +37,10 @@ class BGR:
         self.offset = offset
 
     def __str__(self):
-        return f"B: {self.b}, G: {self.g}, R: {self.r}"
+        return f"B: {self.b}, G: {self.g}, R: {self.r}, O: {self.offset}"
 
     def __repr__(self):
-        return f"BGR({self.b}, {self.g}, {self.r})"
+        return f"BGR({self.b}, {self.g}, {self.r}, O: {self.offset})"
 
     def __eq__(self, other: Union["BGR", Tuple[int, int, int], List[int]]):
         """

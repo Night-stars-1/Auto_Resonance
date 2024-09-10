@@ -5,6 +5,8 @@ import json
 from decimal import Decimal, ROUND_HALF_UP
 from typing import Dict, List
 
+from loguru import logger
+
 from core.model import app
 from core.model.city_goods import (
     CityDataModel,
@@ -195,7 +197,7 @@ class SHOP:
         good_info: List[GoodInfoModel] = []
         for good_name, good in goods.items():
             if good_name not in self.sell_goods[sell_city_name]:
-                # logger.error(f"{sell_city_name}没有{name}的数据")
+                # logger.error(f"{sell_city_name}没有{good_name}的数据")
                 continue
             buy_price, buy_num = self.get_good_buy_price(
                 good.price, good.num, buy_city_name, good_name

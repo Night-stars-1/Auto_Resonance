@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-11 20:58:19
-LastEditTime: 2024-04-27 21:49:52
+LastEditTime: 2024-09-10 20:08:58
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -53,6 +53,7 @@ class RunningBusinessConfig(QConfig):
     铁盟哨站砍抬次数 = ConfigItem("NegotiatePrice", "铁盟哨站", 0, None)
     修格里城砍抬次数 = ConfigItem("NegotiatePrice", "修格里城", 0, None)
     阿妮塔发射中心砍抬次数 = ConfigItem("NegotiatePrice", "阿妮塔发射中心", 0, None)
+    海角城砍抬次数 = ConfigItem("NegotiatePrice", "海角城", 0, None)
     buyTired = ConfigItem("NegotiatePrice", "buyTired", 8, None)
     sellTired = ConfigItem("NegotiatePrice", "sellTired", 8, None)
 
@@ -61,3 +62,4 @@ class RunningBusinessConfig(QConfig):
     曼德矿场声望 = ConfigItem("StationLevel", "曼德矿场", 0, None)
     修格里城声望 = ConfigItem("StationLevel", "修格里城", 0, None)
     阿妮塔发射中心声望 = ConfigItem("StationLevel", "阿妮塔发射中心", 0, None)
+    海角城声望 = ConfigItem("StationLevel", "海角城", 0, None)

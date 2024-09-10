@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-08 17:45:06
-LastEditTime: 2024-06-13 16:17:25
+LastEditTime: 2024-09-10 20:22:52
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -71,6 +71,8 @@ class NegotiatePriceModel(BaseModel):
     阿妮塔战备工厂: int = 2
     """阿妮塔战备工厂"""
     阿妮塔能源研究所: int = 2
+    """阿妮塔能源研究所"""
+    海角城: int = 2
     """阿妮塔能源研究所"""
 
     def get_tired(self, station_name: str, default: int) -> int:

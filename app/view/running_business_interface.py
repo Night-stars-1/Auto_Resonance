@@ -115,7 +115,7 @@ class RunningBusinessInterface(ScrollArea):
             "最大商品数量",
             "最大商品数量",
             spin_box_min=0,
-            spin_box_max=1000,
+            spin_box_max=1500,
             parent=self.scrollWidget,
         )
         self.tiredProfitThresholdCard = SpinBoxSettingCard(

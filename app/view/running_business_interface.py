@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-10 22:54:08
-LastEditTime: 2024-05-28 21:04:01
+LastEditTime: 2024-09-15 15:09:06
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -115,7 +115,7 @@ class RunningBusinessInterface(ScrollArea):
             "最大商品数量",
             "最大商品数量",
             spin_box_min=0,
-            spin_box_max=1000,
+            spin_box_max=1500,
             parent=self.scrollWidget,
         )
         self.tiredProfitThresholdCard = SpinBoxSettingCard(
@@ -150,15 +150,15 @@ class RunningBusinessInterface(ScrollArea):
             spin_box_max=500000,
             parent=self.bookGroup,
         )
-        self.priceThresholdCard = SpinBoxSettingCard(
-            cfg.priceThreshold,
-            FIF.ACCEPT,
-            "价格阈值",
-            "低价值商品统计阈值",
-            spin_box_min=0,
-            spin_box_max=1000,
-            parent=self.bookGroup,
-        )
+        # self.priceThresholdCard = SpinBoxSettingCard(
+        #     cfg.priceThreshold,
+        #     FIF.ACCEPT,
+        #     "价格阈值",
+        #     "低价值商品统计阈值",
+        #     spin_box_min=0,
+        #     spin_box_max=1000,
+        #     parent=self.bookGroup,
+        # )
 
         self.skillGroup = ExpandSettingCard(
             FIF.BRUSH, "共振等级", parent=self.scrollWidget

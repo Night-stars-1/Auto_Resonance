@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:24:47
-LastEditTime: 2024-09-15 15:05:37
+LastEditTime: 2024-09-15 15:11:45
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -45,6 +45,7 @@ STATION_POS_DATA = {
     "荒原站": (753 + 1049, 121 + 345),
     "曼德矿场": (602 + 1049, 322 + 345),
     "淘金乐园": (701 + 1049, 604 + 345),
+    "海角城": (164 + 293, 420 + 577 + 569),
 }
 
 

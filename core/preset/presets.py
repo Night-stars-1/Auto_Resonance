@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:24:47
-LastEditTime: 2024-05-04 15:32:49
+LastEditTime: 2024-09-15 15:05:37
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -31,6 +31,7 @@ STATION_NAME2PNG = {
     "荒原站": "hyz.png",
     "铁盟哨站": "tmsz.png",
     "修格里城": "xglc.png",
+    "海角城": "hjc.png",
 }
 
 STATION_POS_DATA = {
@@ -65,7 +66,7 @@ STATION_DIFFERENCES = calculate_station_differences(STATION_POS_DATA)
 def click_station(name: str):
     """
     说明:
-        点击站点
+        点击站点, 该滑动通过站点间相对距离完成
     参数:
         :param name: 目标站点
     """
@@ -85,6 +86,8 @@ def click_station(name: str):
     input_tap((1201, 666))
     time.sleep(1)
 
+    if name not in STATION_NAME2PNG:
+        raise ValueError(f"未找到站点 {name} 的图片")
     city_differences = STATION_DIFFERENCES.get((source, name))
     if city_differences:
         source_x = 640
@@ -126,6 +129,34 @@ def click_station(name: str):
             return STATION(True)
     return multiple_slide_click_station(name)
 
+def swipe_station(n: int):
+    """
+    多地图进行多次移动
+    
+    :param n: 移动次数
+
+    程序会根据移动的次数，进行不同方向的移动
+    """
+    if 0 <= n <= 1:
+        # 地图向上移动 ^
+        input_swipe((599, 656), (600, 129), time=500)
+        time.sleep(0.5)
+    elif 2 <= n <= 3:
+        # >
+        input_swipe((999, 388), (191, 367), time=500)
+        time.sleep(0.5)
+    elif 4 <= n <= 6:
+        # 向下
+        input_swipe((600, 129), (599, 656), time=500)
+        time.sleep(0.5)
+    elif 7 <= n <= 10:
+        # <
+        input_swipe((191, 367), (999, 388), time=500)
+        time.sleep(0.5)
+    else:
+        # 向下
+        input_swipe((599, 656), (600, 129), time=500)
+        time.sleep(0.5)
 
 def multiple_slide_click_station(name: str):
     """
@@ -146,8 +177,7 @@ def multiple_slide_click_station(name: str):
         time.sleep(1)
 
     def select_station(name):
-        n = 0
-        for _ in range(12):
+        for n in range(13):
             logger.info(f"尝试点击站点 => {n}")
             result = match_screenshot(
                 screenshot(), f"resources/stations/{STATION_NAME2PNG[name]}"
@@ -155,21 +185,7 @@ def multiple_slide_click_station(name: str):
             if result["max_val"] > 0.95:
                 input_tap(result["max_loc"])
                 break
-            if 0 <= n <= 1:
-                input_swipe((599, 656), (600, 129), time=500)
-                time.sleep(0.5)
-            elif n == 2:
-                input_swipe((999, 388), (191, 367), time=500)
-                time.sleep(0.5)
-            elif 3 <= n <= 5:
-                input_swipe((600, 129), (599, 656), time=500)
-                time.sleep(0.5)
-            elif 6 <= n <= 9:
-                input_swipe((191, 367), (999, 388), time=500)
-                time.sleep(0.5)
-            else:
-                input_swipe((599, 656), (600, 129), time=500)
-                time.sleep(0.5)
+            swipe_station(n)
             n += 1
 
     select_station(name)
@@ -200,8 +216,7 @@ def click_station_ocr(name: str):
         time.sleep(1)
 
     def select_station(name):
-        n = 0
-        for _ in range(10):
+        for n in range(13):
             logger.info(f"尝试点击站点 => {n}")
             all_pos = get_all_color_pos(screenshot())
             for pos in all_pos:
@@ -217,21 +232,7 @@ def click_station_ocr(name: str):
                     else:
                         input_tap((86, 415))
                         time.sleep(1.5)
-            if 0 <= n <= 1:
-                input_swipe((599, 656), (600, 129), time=500)
-                time.sleep(0.5)
-            elif n == 2:
-                input_swipe((999, 388), (191, 367), time=500)
-                time.sleep(0.5)
-            elif 3 <= n <= 5:
-                input_swipe((600, 129), (599, 656), time=500)
-                time.sleep(0.5)
-            elif 6 <= n <= 8:
-                input_swipe((191, 367), (999, 388), time=500)
-                time.sleep(0.5)
-            else:
-                input_swipe((599, 656), (600, 129), time=500)
-                time.sleep(0.5)
+            swipe_station(n)
             n += 1
 
     select_station(name)

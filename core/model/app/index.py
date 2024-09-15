@@ -85,8 +85,8 @@ class RunningBusinessModel(BaseModel):
 
     maxGoodsNum: int = 625
     """最大货物数量"""
-    priceThreshold: int = 1000
-    """价格阈值"""
+    # priceThreshold: int = 1000
+    # """价格阈值"""
     profitThreshold: int = 160000
     """利润阈值"""
     totalMaxBook: int = 4

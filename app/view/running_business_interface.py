@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-10 22:54:08
-LastEditTime: 2024-09-15 15:09:06
+LastEditTime: 2024-09-15 16:20:41
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -233,7 +233,7 @@ class RunningBusinessInterface(ScrollArea):
 
         self.bookGroup.viewLayout.addWidget(self.totalMaxBookCard)
         self.bookGroup.viewLayout.addWidget(self.profitThresholdCard)
-        self.bookGroup.viewLayout.addWidget(self.priceThresholdCard)
+        # self.bookGroup.viewLayout.addWidget(self.priceThresholdCard)
         self.bookGroup._adjustViewSize()
         self.skillGroup._adjustViewSize()
         self.tiredGroup._adjustViewSize()

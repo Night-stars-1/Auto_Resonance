@@ -1,21 +1,21 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-08 22:57:00
-LastEditTime: 2024-04-20 22:58:34
+LastEditTime: 2024-10-21 20:05:46
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
-import gzip
 from typing import Dict, Union
 
-import orjson
 import requests
+
+from core.model.kmou import KMouRequestModel
 
 from ..goods import SHOP
 from ..model.srap import SrapRequestGzipModel
 
 
-def get_goods_info():
+def get_goods_infov2():
     headers = {
         "accept": "application/json",
         "Content-Type": "application/json",
@@ -24,7 +24,7 @@ def get_goods_info():
 
     json_data = {
         "station_name": "all",
-        "gzip": True,
+        "gzip": False,
     }
 
     response = requests.post(
@@ -32,8 +32,14 @@ def get_goods_info():
     )
     if response.status_code != 200:
         raise Exception(f"请求失败: {response.text}")
-    result = gzip.decompress(response.content).decode("utf-8")
-    goods_data = SrapRequestGzipModel.model_validate(orjson.loads(result))
+    result = response.json()
+    goods_data = SrapRequestGzipModel.model_validate(result)
+    return SHOP(goods_data).get_optimal_route()
+
+def get_goods_info():
+    url = "https://goda.srap.link/api/fetch/goods_info"
+    response = requests.get(url, params={"uuid": ""})
+    goods_data = KMouRequestModel.model_validate(response.json())
     return SHOP(goods_data).get_optimal_route()
 
 

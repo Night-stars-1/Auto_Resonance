@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:24:47
-LastEditTime: 2024-11-06 23:00:12
+LastEditTime: 2024-11-06 23:15:20
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -34,6 +34,7 @@ STATION_NAME2PNG = {
     "海角城": "hjc.png",
 }
 
+# 站点坐标，左上角为(0, 0)
 STATION_POS_DATA = {
     "澄明数据中心": (1049, 345),
     "7号自由港": (665, 577),
@@ -330,10 +331,10 @@ def wait_fight_end():
             input_tap((1151, 626))
             continue
         elif (
-            match_screenshot(image, "fight/end_fight.png", (1068, 611), (1251, 670))[
-                "max_val"
-            ]
-            > 0.95
+            match_screenshot(
+                image, "resources/fight/end_fight.png", (1070, 600), (1251, 670)
+            )["max_val"]
+            > 0.995
         ):
             logger.info("战斗结束")
             time.sleep(1.0)

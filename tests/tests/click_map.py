@@ -25,6 +25,6 @@ MAP_DATA = {
     "淘金乐园": (701 + 1049, 604 + 345),
 }
 
-
-connect("127.0.0.1:16384")
-click_station("7号自由港")
+if __name__ == "__main__":
+    connect()
+    click_station("7号自由港")

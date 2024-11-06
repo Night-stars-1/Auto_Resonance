@@ -126,8 +126,9 @@ class STATION:
         # 等待战斗结束
         start = time.perf_counter()
         while time.perf_counter() - start < FIGHT_TIME:
+            image = screenshot()
             bgrs = get_bgrs(
-                screenshot(), [(1114, 630), (1204, 624), (236, 26), (1134, 628)]
+                image, [(1114, 630), (1204, 624), (236, 26)]
             )
             if (
                 BGRGroup([198, 200, 200], [202, 204, 204]) == bgrs[0]
@@ -135,22 +136,19 @@ class STATION:
             ):
                 logger.info("检测到执照等级提升")
                 input_tap((1151, 626))
-            elif (
-                BGRGroup([245, 245, 245], [255, 255, 255]) == bgrs[0]
-                and BGRGroup([0, 0, 0], [10, 10, 10]) == bgrs[1]
-            ):
-                logger.info("战斗胜利")
+            elif match_screenshot(image, "fight/end_fight.png", (1068, 611), (1251, 670))["max_val"] > 0.95:
+                logger.info("战斗结束")
                 time.sleep(1.0)
                 input_tap((1151, 626))
                 return True
-            elif (
-                BGRGroup([245, 245, 245], [255, 255, 255]) == bgrs[0]
-                and BGRGroup([9, 9, 9], [10, 10, 10]) == bgrs[3]
-            ):
-                logger.info("战斗失败")
-                time.sleep(1.0)
-                input_tap((1151, 626))
-                return True
+            # elif (
+            #     BGRGroup([245, 245, 245], [255, 255, 255]) == bgrs[0]
+            #     and BGRGroup([9, 9, 9], [10, 10, 10]) == bgrs[3]
+            # ):
+            #     logger.info("战斗失败")
+            #     time.sleep(1.0)
+            #     input_tap((1151, 626))
+            #     return True
             elif bgrs[2] == [124, 126, 125]:
                 logger.info("开启自动战斗")
                 input_tap((233, 44))

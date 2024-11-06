@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:24:47
-LastEditTime: 2024-11-06 22:35:43
+LastEditTime: 2024-11-06 23:00:12
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -130,10 +130,11 @@ def click_station(name: str):
             return STATION(True)
     return multiple_slide_click_station(name)
 
+
 def swipe_station(n: int):
     """
     多地图进行多次移动
-    
+
     :param n: 移动次数
 
     程序会根据移动的次数，进行不同方向的移动
@@ -158,6 +159,7 @@ def swipe_station(n: int):
         # 向下
         input_swipe((599, 656), (600, 129), time=500)
         time.sleep(0.5)
+
 
 def multiple_slide_click_station(name: str):
     """
@@ -319,9 +321,7 @@ def wait_fight_end():
     start = time.perf_counter()
     while time.perf_counter() - start < FIGHT_TIME:
         image = screenshot()
-        bgrs = get_bgrs(
-            image, [(1114, 630), (1204, 624), (236, 26), (1134, 628)]
-        )
+        bgrs = get_bgrs(image, [(1114, 630), (1204, 624), (167, 29)])
         logger.debug(f"等待战斗结束颜色检查: {bgrs}")
         if BGRGroup([198, 200, 200], [202, 204, 204]) == bgrs[0] and BGRGroup(
             [183, 185, 185], [187, 189, 189] == bgrs[1]
@@ -329,19 +329,24 @@ def wait_fight_end():
             logger.info("检测到执照等级提升")
             input_tap((1151, 626))
             continue
-        elif match_screenshot(image, "fight/end_fight.png", (1068, 611), (1251, 670))["max_val"] > 0.95:
-            logger.info("战斗胜利")
-            time.sleep(1.0)
-            input_tap((1151, 626))
-            return True
         elif (
-            BGRGroup([245, 245, 245], [255, 255, 255]) == bgrs[0]
-            and BGRGroup([9, 9, 9], [10, 10, 10]) == bgrs[3]
+            match_screenshot(image, "fight/end_fight.png", (1068, 611), (1251, 670))[
+                "max_val"
+            ]
+            > 0.95
         ):
-            logger.info("战斗失败")
+            logger.info("战斗结束")
             time.sleep(1.0)
             input_tap((1151, 626))
             return True
+        # elif (
+        #     BGRGroup([245, 245, 245], [255, 255, 255]) == bgrs[0]
+        #     and BGRGroup([9, 9, 9], [10, 10, 10]) == bgrs[3]
+        # ):
+        #     logger.info("战斗失败")
+        #     time.sleep(1.0)
+        #     input_tap((1151, 626))
+        #     return True
         elif bgrs[2] == [124, 126, 125]:
             logger.info("开启自动战斗")
             input_tap((233, 44))

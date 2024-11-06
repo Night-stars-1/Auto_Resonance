@@ -42,7 +42,7 @@ class CustomAdbSettingCard(ExpandGroupSettingCard):
             "自定义ADB端口", self.radioWidget
         )
         self.defaultRadioButton.setProperty("option", self.defaultItem)
-        self.defaultRadioButton.setChecked(True) # self.configItem.value == self.defaultItem
+        self.defaultRadioButton.setChecked(self.configItem.value == self.defaultItem)
         # self.customRadioButton = RadioButton(self.tr("Custom color"), self.radioWidget)
         self.buttonGroup = QButtonGroup(self)
         for text, option in texts.items():

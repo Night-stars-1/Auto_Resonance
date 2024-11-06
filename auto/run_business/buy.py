@@ -143,9 +143,9 @@ def find_good(good, timeout=10):
     start = time.time()
     while (spend_time := time.time() - start) < timeout:
         if spend_time < timeout / 2:
-            input_swipe((678, 558), (693, 314))
+            input_swipe((678, 558), (693, 314), time=300)
         else:
-            input_swipe((693, 314), (678, 558))
+            input_swipe((693, 314), (678, 558), time=300)
         # 等待拖到动画结束
         time.sleep(1)
         result, image = find_text(

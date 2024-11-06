@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:24:47
-LastEditTime: 2024-09-15 15:11:45
+LastEditTime: 2024-11-06 22:35:43
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -307,7 +307,7 @@ def go_home():
     logger.info("返回主界面")
     while match_screenshot(screenshot(), "resources/main_map.png")["max_val"] < 0.96:
         time.sleep(1)
-        input_tap((228, 27))
+        input_tap((233, 56))
 
 
 def wait_fight_end():
@@ -318,8 +318,9 @@ def wait_fight_end():
     logger.info("等待战斗结束")
     start = time.perf_counter()
     while time.perf_counter() - start < FIGHT_TIME:
+        image = screenshot()
         bgrs = get_bgrs(
-            screenshot(), [(1114, 630), (1204, 624), (236, 26), (1134, 628)]
+            image, [(1114, 630), (1204, 624), (236, 26), (1134, 628)]
         )
         logger.debug(f"等待战斗结束颜色检查: {bgrs}")
         if BGRGroup([198, 200, 200], [202, 204, 204]) == bgrs[0] and BGRGroup(
@@ -328,10 +329,7 @@ def wait_fight_end():
             logger.info("检测到执照等级提升")
             input_tap((1151, 626))
             continue
-        elif (
-            BGRGroup([245, 245, 245], [255, 255, 255]) == bgrs[0]
-            and BGRGroup([0, 0, 0], [10, 10, 10]) == bgrs[1]
-        ):
+        elif match_screenshot(image, "fight/end_fight.png", (1068, 611), (1251, 670))["max_val"] > 0.95:
             logger.info("战斗胜利")
             time.sleep(1.0)
             input_tap((1151, 626))

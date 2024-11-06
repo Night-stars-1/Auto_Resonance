@@ -35,7 +35,7 @@ class SettingInterface(ScrollArea):
         self.goodsTypeCard = SwitchSettingCard(
             FIF.TAG,
             "数据源",
-            "On为 KMou，Off为 SRAP",
+            "开为 KMou，关为 SRAP",
             configItem=cfg.goodsType,
             parent=self.musicInThisPCGroup,
         )

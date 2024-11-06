@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-04 17:54:58
-LastEditTime: 2024-06-12 23:25:29
+LastEditTime: 2024-11-06 23:04:29
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -143,9 +143,9 @@ def find_good(good, timeout=10):
     start = time.time()
     while (spend_time := time.time() - start) < timeout:
         if spend_time < timeout / 2:
-            input_swipe((678, 558), (693, 314))
+            input_swipe((678, 558), (693, 314), time=500)
         else:
-            input_swipe((693, 314), (678, 558))
+            input_swipe((693, 314), (678, 558), time=500)
         # 等待拖到动画结束
         time.sleep(1)
         result, image = find_text(

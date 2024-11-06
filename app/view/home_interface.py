@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-02 19:12:22
-LastEditTime: 2024-07-08 23:23:19
+LastEditTime: 2024-11-06 22:40:25
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -43,15 +43,15 @@ class BannerWidget(QWidget):
         self.__initWidget()
         self.loadSamples()
 
-        self.worker = Worker(get_boss, get_boss)
-        self.worker.result.connect(self.updateProgress)
+        # self.worker = Worker(get_boss, get_boss)
+        # self.worker.result.connect(self.updateProgress)
 
         # 初始化定时器
-        QTimer.singleShot(0, self.startUpdatingProgress)  # 手动触发一次
-        self.timer = QTimer(self)
-        self.timer.setInterval(10000)  # 设置定时器周期为10000毫秒（10秒）
-        self.timer.timeout.connect(self.startUpdatingProgress)  # 连接定时器信号到槽函数
-        self.timer.start()  # 启动定时器
+        # QTimer.singleShot(0, self.startUpdatingProgress)  # 手动触发一次
+        # self.timer = QTimer(self)
+        # self.timer.setInterval(10000)  # 设置定时器周期为10000毫秒（10秒）
+        # self.timer.timeout.connect(self.startUpdatingProgress)  # 连接定时器信号到槽函数
+        # self.timer.start()  # 启动定时器
 
     def __initWidget(self):
         self.titleLabel.setObjectName("galleryLabel")

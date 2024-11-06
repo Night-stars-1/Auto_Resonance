@@ -15,9 +15,16 @@
     },
     {
         "name": "雷索纳斯-MuMu模拟器12",
-        "type": "MuMuPlayer",
+        "type": "Reso-MuMuPlayer",
         "path": "YXResonanceSolstice-12.0\\shell\\MuMuPlayer.exe",
         "VMS_path": "../vms/YXResonanceSolstice-12.0-0/YXResonanceSolstice-12.0-0.nemu",
+        "adb_key": "ADB_PORT"
+    },
+    {
+        "name": "MuMu模拟器12",
+        "type": "MuMuPlayer",
+        "path": "MuMuPlayer-12.0\\shell\\MuMuPlayer.exe",
+        "VMS_path": "../vms/MuMuPlayer-12.0-0/MuMuPlayer-12.0-0.nemu",
         "adb_key": "ADB_PORT"
     }
 ]

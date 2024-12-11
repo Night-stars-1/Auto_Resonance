@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:24:47
-LastEditTime: 2024-11-06 23:15:20
+LastEditTime: 2024-12-12 01:21:54
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -13,7 +13,7 @@ from core.adb.adb import input_swipe, input_tap, screenshot
 from core.image import get_all_color_pos, get_bgrs, match_screenshot
 from core.module.bgr import BGRGroup
 from core.ocr import predict
-from core.preset import blurry_ocr_click, wait
+from core.preset import blurry_ocr_click, go_home
 
 from .control import click_image
 from .station import STATION
@@ -77,14 +77,11 @@ def click_station(name: str):
     if match_screenshot(screenshot(), "resources/main_map.png")["max_val"] < 0.95:
         logger.info("未检测到主地图界面，返回主地图")
         go_home()
-    reslut = predict(screenshot(), cropped_pos1=(1131, 498), cropped_pos2=(1238, 516))
-    if len(reslut) > 0:
-        source = reslut[0]["text"]
-        logger.info(f"当前站点: {source}")
-        if name in [item["text"] for item in reslut]:
-            logger.info("已在目标站点")
-            return STATION(True, is_destine=True)
-    logger.info("检测到主地图界面，点击地图")
+    logger.info("检测到主地图界面，识别站点")
+    city = get_city()
+    if name == city:
+        logger.info("已在目标站点")
+        return STATION(True, is_destine=True)
     input_tap((1201, 666))
     time.sleep(1)
 
@@ -128,7 +125,14 @@ def click_station(name: str):
             cropped_pos2=(1218, 679),
             trynum=5,
         ):
-            return STATION(True)
+            time.sleep(1.0)
+            if click_image(
+                "map/join_station.png",
+                cropped_pos1=(719, 405),
+                cropped_pos2=(927, 485),
+                trynum=5,
+            ):
+                return STATION(True)
     return multiple_slide_click_station(name)
 
 
@@ -202,7 +206,14 @@ def multiple_slide_click_station(name: str):
         cropped_pos2=(1218, 679),
         trynum=5,
     ):
-        return STATION(True)
+        time.sleep(1.0)
+        if click_image(
+            "map/join_station.png",
+            cropped_pos1=(719, 405),
+            cropped_pos2=(927, 485),
+            trynum=5,
+        ):
+            return STATION(True)
     return click_station_ocr(name)
 
 
@@ -249,7 +260,14 @@ def click_station_ocr(name: str):
             cropped_pos1=(937, 605),
             cropped_pos2=(1218, 679),
         ):
-            return STATION(True)
+            time.sleep(1.0)
+            if click_image(
+                "map/join_station.png",
+                cropped_pos1=(719, 405),
+                cropped_pos2=(927, 485),
+                trynum=5,
+            ):
+                return STATION(True)
         time.sleep(0.5)
     return STATION(False)
 
@@ -260,7 +278,11 @@ def get_city():
         获取当前城市
     """
     go_home()
-    reslut = predict(screenshot(), cropped_pos1=(1131, 498), cropped_pos2=(1238, 516))
+    input_tap((1170, 493))
+    time.sleep(1.0)
+    reslut = predict(screenshot(), cropped_pos1=(166, 530), cropped_pos2=(428, 574))
+    if len(reslut) == 0:
+        raise ValueError("未识别到当前城市")
     logger.info(f"当前站点: {reslut[0]['text']}")
     return reslut[0]["text"]
 
@@ -300,17 +322,6 @@ def go_outlets(name: str):
     input_swipe((641, 246), (637, 615), time=500)
     if result := blurry_ocr_click(name, excursion_pos=(-2, 50)):
         return result
-
-
-def go_home():
-    """
-    说明:
-        返回主界面
-    """
-    logger.info("返回主界面")
-    while match_screenshot(screenshot(), "resources/main_map.png")["max_val"] < 0.96:
-        time.sleep(1)
-        input_tap((233, 56))
 
 
 def wait_fight_end():

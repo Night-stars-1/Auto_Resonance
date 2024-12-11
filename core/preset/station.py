@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:24:47
-LastEditTime: 2024-11-06 23:27:09
+LastEditTime: 2024-12-12 00:30:34
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -13,6 +13,7 @@ from core.adb.adb import input_tap, screenshot
 from core.image import get_bgr, get_bgrs, match_screenshot
 from core.model.config import config
 from core.module.bgr import BGRGroup
+from core.preset.control import go_home
 
 FIGHT_TIME = 300
 MAP_WAIT_TIME = 3000
@@ -69,7 +70,7 @@ class STATION:
             ):
                 logger.info("站点到达")
                 input_tap((877, 359))
-                self.wait_home()
+                go_home()
                 return True
             elif (
                 reach_bgrs[2] == [251, 253, 253]
@@ -158,14 +159,3 @@ class STATION:
             time.sleep(3)
         logger.error("战斗超时")
         return False
-
-    def wait_home(self):
-        """
-        说明:
-            等待返回主界面
-        """
-        while (
-            match_screenshot(screenshot(), "resources/main_map.png")["max_val"] < 0.95
-        ):
-            time.sleep(3)
-            input_tap((228, 27))

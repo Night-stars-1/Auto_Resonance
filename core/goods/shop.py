@@ -1,20 +1,12 @@
-# TODO: 1.数据模型化 2.提高可读性
-
 import itertools
-import json
-from decimal import Decimal, ROUND_HALF_UP
+from decimal import ROUND_HALF_UP, Decimal
 from typing import Dict, List
 
-from loguru import logger
-
 from core.model import app
-from core.model.city_goods import (
-    CityDataModel,
-    RouteModel,
-    RoutesModel,
-)
+from core.model.city_goods import CityDataModel, RouteModel, RoutesModel
 from core.model.goods import GoodInfoModel, GoodModel, GoodsModel
 from core.utils import read_json
+
 
 def round5(x):
     return int(Decimal(x).quantize(Decimal("1"), rounding=ROUND_HALF_UP))

@@ -41,7 +41,7 @@ def run(
     )
 
 
-def connect():
+def connect(adb_port: int = 0, name = "自定义"):
     """
     说明:
         连接ADB
@@ -49,7 +49,8 @@ def connect():
         :param order: ADB端口
     """
     global ADBOREDER, ADBPATH, STOP
-    adb_port, name = get_adb_port()
+    if adb_port == 0:
+        adb_port, name = get_adb_port()
     if adb_port is None:
         logger.info("未知ADB端口信息")
         return False

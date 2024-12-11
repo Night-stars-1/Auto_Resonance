@@ -2,7 +2,7 @@
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-25 23:03:03
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
-LastEditTime: 2024-09-15 15:11:18
+LastEditTime: 2024-12-12 00:06:31
 """
 
 import sys
@@ -16,7 +16,7 @@ import cv2
 
 from core.adb.adb import connect, screenshot
 
-connect()
+connect(16448)
 
 
 # 澄明数据中心 (1049, 345) 7号自由港 (665, 577) 阿妮塔战备工厂 (832, 664) 阿妮塔发射中心 (164, 420+577) 阿妮塔能源研究所 (614, 454+577)

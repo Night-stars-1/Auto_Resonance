@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-04 18:06:25
-LastEditTime: 2024-04-19 14:57:32
+LastEditTime: 2024-12-12 00:28:30
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -90,6 +90,7 @@ def click_image(
     cropped_pos2: Tuple[int, int] = (0, 0),
     excursion_pos: Tuple[int, int] = (0, 0),
     trynum=10,
+    check_err=True,
 ):
     """
     说明:
@@ -100,6 +101,7 @@ def click_image(
         :param cropped_pos2: 裁剪坐标2
         :param excursion_pos: 点击偏移坐标
         :param trynum: 尝试次数
+        :param check_err: 是否检测未点击的错误
     """
     time.sleep(0.5)
     for _ in range(trynum):
@@ -111,8 +113,9 @@ def click_image(
             )
             input_tap(pos)
             return True
-    logger.error(f"未找到指定图片 => {image}")
-    logger.info(get_excption())
+    if check_err:
+        logger.error(f"未找到指定图片 => {image}")
+        logger.info(get_excption())
     return False
 
 
@@ -234,3 +237,19 @@ def find_text(
     if return_image:
         return None, None
     return None
+
+def go_home():
+    """
+    说明:
+        返回主界面
+    """
+    logger.info("返回主界面")
+    while match_screenshot(screenshot(), "resources/main_map.png")["max_val"] < 0.96:
+        time.sleep(1)
+        click_image(
+            "go_home.png",
+            (154, 9),
+            (243, 67),
+            trynum=1,
+            check_err=False,
+        )

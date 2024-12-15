@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:24:47
-LastEditTime: 2024-12-12 01:21:54
+LastEditTime: 2024-12-15 20:58:26
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -284,6 +284,8 @@ def get_city():
     if len(reslut) == 0:
         raise ValueError("未识别到当前城市")
     logger.info(f"当前站点: {reslut[0]['text']}")
+    # 返回主界面，回溯进入城市地图操作
+    go_home()
     return reslut[0]["text"]
 
 

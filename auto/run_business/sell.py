@@ -39,6 +39,9 @@ def sell_business(num=0):
         click_bargain_button(num)
         click_sell_button()
         time.sleep(0.5)
+        input_tap((896, 676))
+        time.sleep(0.5)
+        input_tap((896, 676))
         return input_tap((896, 676))
 
 

@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-11 20:58:19
-LastEditTime: 2024-12-27 23:50:07
+LastEditTime: 2024-12-27 23:51:26
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -53,10 +53,10 @@ class RunningBusinessConfig(QConfig):
 
     for city in CITYS:
         # 特殊适配7号自由港
-        locals()[city] = ConfigItem("NegotiatePrice", city.replace("七号自由港", "7号自由港"), 0, None)
+        locals()[f"{city}砍抬次数"] = ConfigItem("NegotiatePrice", city.replace("七号自由港", "7号自由港"), 0, None)
     buyTired = ConfigItem("NegotiatePrice", "buyTired", 8, None)
     sellTired = ConfigItem("NegotiatePrice", "sellTired", 8, None)
 
     for station in STATIONS:
         # 特殊适配7号自由港
-        locals()[station] = ConfigItem("StationLevel", station.replace("七号自由港", "7号自由港"), 0, None)
+        locals()[f"{station}声望"] = ConfigItem("StationLevel", station.replace("七号自由港", "7号自由港"), 0, None)

@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-28 22:46:58
-LastEditTime: 2024-05-10 23:18:06
+LastEditTime: 2024-12-28 01:23:41
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -12,6 +12,8 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QHBoxLayout, QWidget
 from qfluentwidgets import CheckBox, ConfigItem, FluentIconBase, SettingCard, qconfig
 
+from app.components.layout.flow_layout import FlowLayout
+
 
 class CheckboxGroup(QWidget):
     """水平复选框群组"""
@@ -19,23 +21,36 @@ class CheckboxGroup(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.checkConfigItems: Dict[str, ConfigItem] = {}
-        self.hBoxLayout = QHBoxLayout(self)
-        self.hBoxLayout.setContentsMargins(0, 0, 5, 0)
-        self.hBoxLayout.setSpacing(5)
-        self.hBoxLayout.setAlignment(Qt.AlignLeft)
+        self.checkboxGroup: List[CheckBox] = []
+        self.flowLayout = FlowLayout(self)
+        self.flowLayout.setSpacing(5)  # 控件间距
+        # 更新自身高度
+        self.flowLayout.layoutChanged.connect(self.updateFlowLayoutHeight)
+
+    def updateFlowLayoutHeight(self):
+        """更新 FlowLayout 高度"""
+        self.setFixedHeight(self.flowLayout.sizeHint().height())
 
     def addCheckbox(self, text: str, configItem: ConfigItem = None, parent=None):
         checkbox = CheckBox(text=text, parent=parent)
-        self.hBoxLayout.addWidget(checkbox)
+        self.checkboxGroup.append(checkbox)
+        self.flowLayout.addWidget(checkbox)
 
-        self.checkConfigItems[text] = configItem
-        checkbox.setChecked(configItem.value)
-        checkbox.stateChanged.connect(
-            lambda: self.onCheckStateChanged(checkbox, configItem)
-        )
+        if configItem:
+            self.checkConfigItems[text] = configItem
+            checkbox.setChecked(configItem.value)
+            checkbox.stateChanged.connect(
+                lambda: self.onCheckStateChanged(checkbox, configItem)
+            )
+        else:
+            checkbox.setChecked(False)
+        return checkbox
 
     def onCheckStateChanged(self, checkbox: CheckBox, configItem: ConfigItem):
         qconfig.set(configItem, checkbox.isChecked())
+
+    def count(self):
+        return sum(1 for checkbox in self.checkboxGroup if checkbox.isChecked())
 
     def getAllAccept(self):
         return {

@@ -126,13 +126,13 @@ def click_station(name: str):
             trynum=5,
         ):
             time.sleep(1.0)
-            if click_image(
+            click_image(
                 "map/join_station.png",
                 cropped_pos1=(719, 405),
                 cropped_pos2=(927, 485),
                 trynum=5,
-            ):
-                return STATION(True)
+            )
+            return STATION(True)
     return multiple_slide_click_station(name)
 
 
@@ -207,13 +207,13 @@ def multiple_slide_click_station(name: str):
         trynum=5,
     ):
         time.sleep(1.0)
-        if click_image(
+        click_image(
             "map/join_station.png",
             cropped_pos1=(719, 405),
             cropped_pos2=(927, 485),
             trynum=5,
-        ):
-            return STATION(True)
+        )
+        return STATION(True)
     return click_station_ocr(name)
 
 
@@ -261,13 +261,13 @@ def click_station_ocr(name: str):
             cropped_pos2=(1218, 679),
         ):
             time.sleep(1.0)
-            if click_image(
+            click_image(
                 "map/join_station.png",
                 cropped_pos1=(719, 405),
                 cropped_pos2=(927, 485),
                 trynum=5,
-            ):
-                return STATION(True)
+            )
+            return STATION(True)
         time.sleep(0.5)
     return STATION(False)
 

@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-02 19:27:03
-LastEditTime: 2024-05-05 20:19:52
+LastEditTime: 2024-12-27 23:59:46
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -30,6 +30,7 @@ from app.common.icon import FluentIconBase
 from app.common.signal_bus import signalBus
 from app.view.daily_task_interface import DailyTaskInterface
 from app.view.running_business_interface import RunningBusinessInterface
+from app.view.two_city_run_business_interface import TwoRunBusinessInterface
 from updater import Updater, UpdateStatus
 
 from .home_interface import HomeInterface
@@ -54,6 +55,7 @@ class MainWindow(MSFluentWindow):
         self.settingInterface = SettingInterface(self)
         self.daily_task_interface = DailyTaskInterface(self)
         self.running_business_interface = RunningBusinessInterface(self)
+        self.two_run_business_interface = TwoRunBusinessInterface(self)
         self.this_road_that_interface = ThisRoadThatInterface(self)
 
         self.connectSignalToSlot()
@@ -75,6 +77,7 @@ class MainWindow(MSFluentWindow):
         self.addSubInterface(self.tajInterface, FIF.AIRPLANE, "铁安局")
         self.addSubInterface(self.daily_task_interface, FIF.CALENDAR, "每日任务")
         self.addSubInterface(self.running_business_interface, FIF.TRAIN, "跑商配置")
+        self.addSubInterface(self.two_run_business_interface, FIF.TRAIN, "端点跑商")
         self.addSubInterface(self.this_road_that_interface, FIF.TRAIN, "我建我路")
 
         # add custom widget to bottom

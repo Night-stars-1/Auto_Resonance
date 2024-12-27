@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-10 22:54:08
-LastEditTime: 2024-09-15 16:20:41
+LastEditTime: 2024-12-27 23:50:15
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -14,6 +14,7 @@ from qfluentwidgets import Dialog, ExpandLayout, ExpandSettingCard
 from qfluentwidgets import FluentIcon as FIF
 from qfluentwidgets import ScrollArea
 
+from app.common.running_business_config import CITYS, SKILLS, STATIONS
 from core.api.kmou import get_goods_info as get_goods_info_kmou
 from core.api.srap import get_goods_info as get_goods_info_srap
 
@@ -23,62 +24,6 @@ from ..common.style_sheet import StyleSheet
 from ..common.worker import Worker
 from ..components.primary_push_load_card import PrimaryPushLoadCard
 from ..components.settings.spin_box_setting_card import SpinBoxSettingCard
-
-SKILLS = [
-    "朱利安",
-    "狮鬃",
-    "魇",
-    "塞西尔",
-    "雷火",
-    "黛丝莉",
-    "艾略特",
-    "静流",
-    "多萝西",
-    "卡莲",
-    "星花",
-    "瑞秋",
-    "菲妮娅",
-    "瓦伦汀",
-    "阿知波",
-    "闻笙",
-    "山岚",
-    "叶珏",
-    "隼",
-    "奈弥",
-    "伊尔",
-    "甘雅",
-    "妮蔻拉",
-    "卡洛琳",
-    "夏尔",
-    "海因里希",
-    "苔妮",
-    "安菲娅",
-    "静流·逐夏",
-    "雅莱",
-    "帕拉笛",
-    "佩罗塔",
-]
-CITYS = [
-    "七号自由港",
-    "澄明数据中心",
-    "阿妮塔战备工厂",
-    "阿妮塔能源研究所",
-    "淘金乐园",
-    "曼德矿场",
-    "荒原站",
-    "铁盟哨站",
-    "修格里城",
-    "阿妮塔发射中心",
-    "海角城",
-]
-STATIONS = [
-    "七号自由港",
-    "澄明数据中心",
-    "曼德矿场",
-    "修格里城",
-    "阿妮塔发射中心",
-    "海角城",
-]
 
 
 class RunningBusinessInterface(ScrollArea):
@@ -217,6 +162,7 @@ class RunningBusinessInterface(ScrollArea):
                 FIF.ACCEPT,
                 city,
                 f"{city}砍抬成功次数",
+                spin_box_max=4,
                 parent=self.tiredGroup,
                 spin_box_min=-1,
             )
@@ -231,6 +177,7 @@ class RunningBusinessInterface(ScrollArea):
                 FIF.ACCEPT,
                 station,
                 f"{station}声望",
+                spin_box_max=20,
                 parent=self.levelGroup,
             )
             self.levelGroup.viewLayout.addWidget(bookCard)

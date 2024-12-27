@@ -10,21 +10,19 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from pydantic import BaseModel, Field, RootModel
 
+class GoodsData(BaseModel):
+    """商品数据"""
 
+    num: int = 0
+    """数量"""
+    buy_price: int = 0
+    """购买价格"""
+    sell_price: int = 0
+    """出售价格"""
+    profit: int = 0
+    """利润"""
 class RouteModel(BaseModel):
     """目标商品模型"""
-
-    class GoodsData(BaseModel):
-        """商品数据"""
-
-        num: int = 0
-        """数量"""
-        buy_price: int = 0
-        """购买价格"""
-        sell_price: int = 0
-        """出售价格"""
-        profit: int = 0
-        """利润"""
 
     buy_city_name: str = ""
     """购买城市"""

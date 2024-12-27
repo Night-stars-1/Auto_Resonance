@@ -1,12 +1,12 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:14:29
-LastEditTime: 2024-12-28 02:19:25
+LastEditTime: 2024-12-28 02:52:00
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
 import time
-from typing import Literal, Dict, Union
+from typing import Dict, Literal, Union
 
 from loguru import logger
 
@@ -19,7 +19,7 @@ from core.exceptions import StopExecution
 from core.goods import show
 from core.image import get_bgr
 from core.model import app
-from core.model.city_goods import RoutesModel, RouteModel, GoodsData
+from core.model.city_goods import GoodsData, RouteModel, RoutesModel
 from core.module.bgr import BGR, BGRGroup
 from core.preset import click_station, get_city, go_home, go_outlets, wait_gbr
 from core.utils import read_json
@@ -105,6 +105,7 @@ def two_city_run(buy_city_name: str, sell_city_name: str):
                 sell_city_name=sell_city_name,
                 sell_argaining_num=4,
                 book=2,
+                profit=-999,  # 无需构建
                 goods_data=city_sell_data[buy_city_name],
             ),
             RouteModel(
@@ -113,14 +114,16 @@ def two_city_run(buy_city_name: str, sell_city_name: str):
                 sell_city_name=buy_city_name,
                 sell_argaining_num=4,
                 book=2,
+                profit=-999,  # 无需构建
                 goods_data=city_sell_data[sell_city_name],
             ),
         ],
-        profit=0,  # 无需构建
+        profit=-999,  # 无需构建
         tired_profit=0,  # 无需构建
         book_profit=0,  # 无需构建
         book=0,  # 无需构建
     )
+    logger.info("当前未端点跑商，下方输出的内容为假信息")
     run(routes)
 
 

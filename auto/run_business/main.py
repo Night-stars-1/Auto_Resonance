@@ -1,12 +1,12 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:14:29
-LastEditTime: 2024-07-08 21:15:53
+LastEditTime: 2024-12-28 02:19:25
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
 import time
-from typing import Literal
+from typing import Literal, Dict, Union
 
 from loguru import logger
 
@@ -19,9 +19,18 @@ from core.exceptions import StopExecution
 from core.goods import show
 from core.image import get_bgr
 from core.model import app
-from core.model.city_goods import RoutesModel
+from core.model.city_goods import RoutesModel, RouteModel, GoodsData
 from core.module.bgr import BGR, BGRGroup
 from core.preset import click_station, get_city, go_home, go_outlets, wait_gbr
+from core.utils import read_json
+
+city_sell_data: Dict[str, Dict[str, int]] = read_json(
+    "resources/goods/CityGoodsSellData.json"
+)
+city_sell_data = {
+    city: dict(sorted(goods.items(), key=lambda item: not item[1]["price"]))
+    for city, goods in city_sell_data.items()
+}
 
 
 def go_business(type: Literal["buy", "sell"] = "buy"):
@@ -85,6 +94,34 @@ def run(routes: RoutesModel):
         sell_business(city.sell_argaining_num)
     logger.info("运行完成")
     return True
+
+
+def two_city_run(buy_city_name: str, sell_city_name: str):
+    routes = RoutesModel(
+        city_data=[
+            RouteModel(
+                buy_city_name=buy_city_name,
+                buy_argaining_num=4,
+                sell_city_name=sell_city_name,
+                sell_argaining_num=4,
+                book=2,
+                goods_data=city_sell_data[buy_city_name],
+            ),
+            RouteModel(
+                buy_city_name=sell_city_name,
+                buy_argaining_num=4,
+                sell_city_name=buy_city_name,
+                sell_argaining_num=4,
+                book=2,
+                goods_data=city_sell_data[sell_city_name],
+            ),
+        ],
+        profit=0,  # 无需构建
+        tired_profit=0,  # 无需构建
+        book_profit=0,  # 无需构建
+        book=0,  # 无需构建
+    )
+    run(routes)
 
 
 def stop():

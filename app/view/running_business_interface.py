@@ -162,6 +162,7 @@ class RunningBusinessInterface(ScrollArea):
                 FIF.ACCEPT,
                 city,
                 f"{city}砍抬成功次数",
+                spin_box_max=4,
                 parent=self.tiredGroup,
                 spin_box_min=-1,
             )
@@ -176,6 +177,7 @@ class RunningBusinessInterface(ScrollArea):
                 FIF.ACCEPT,
                 station,
                 f"{station}声望",
+                spin_box_max=20,
                 parent=self.levelGroup,
             )
             self.levelGroup.viewLayout.addWidget(bookCard)

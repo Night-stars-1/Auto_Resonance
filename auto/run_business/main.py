@@ -1,12 +1,12 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:14:29
-LastEditTime: 2024-12-28 02:52:00
+LastEditTime: 2024-12-28 14:48:21
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
 import time
-from typing import Dict, Literal, Union
+from typing import Dict, Literal
 
 from loguru import logger
 
@@ -19,7 +19,7 @@ from core.exceptions import StopExecution
 from core.goods import show
 from core.image import get_bgr
 from core.model import app
-from core.model.city_goods import GoodsData, RouteModel, RoutesModel
+from core.model.city_goods import RouteModel, RoutesModel
 from core.module.bgr import BGR, BGRGroup
 from core.preset import click_station, get_city, go_home, go_outlets, wait_gbr
 from core.utils import read_json

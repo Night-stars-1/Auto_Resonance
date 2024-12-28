@@ -60,6 +60,7 @@ jobs:
         run: |
           Rename-Item -Path .\dist\heiyue -NewName Auto_Resonance_${{ github.ref_name }}
           Compress-Archive -Path .\dist\Auto_Resonance_${{ github.ref_name }}\ -DestinationPath .\dist\Auto_Resonance_${{ github.ref_name }}.zip -Force
+          Compress-Archive -Path .\dist\Auto_Resonance_${{ github.ref_name }}\HeiYue.exe -DestinationPath .\dist\Auto_Resonance_Incremental_${{ github.ref_name }}.zip -Force
 
       - name: Create release
         if: startsWith(github.ref, 'refs/tags/')
@@ -69,4 +70,5 @@ jobs:
           body: ${{ steps.generate_changelog.outputs.changelog }}
           files: |
             ./dist/Auto_Resonance_${{ github.ref_name }}.zip
+            ./dist/Auto_Resonance_Incremental_${{ github.ref_name }}.zip
           make_latest: true

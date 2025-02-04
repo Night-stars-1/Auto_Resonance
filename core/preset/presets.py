@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:24:47
-LastEditTime: 2025-02-04 23:33:08
+LastEditTime: 2025-02-04 23:39:11
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -81,16 +81,17 @@ def click_station(name: str):
     if name == city:
         logger.info("已在目标站点")
         return STATION(True, is_destine=True)
-    # 点击地图
-    input_tap((1201, 666))
-    # 等待地图打开
-    time.sleep(0.5)
-    wait_static(threshold=6000000)
 
     if name not in STATION_NAME2PNG:
         raise ValueError(f"未找到站点 {name} 的图片")
     city_differences = STATION_DIFFERENCES.get((city, name))
     if city_differences:
+        # 点击地图
+        input_tap((1201, 666))
+        # 等待地图打开
+        time.sleep(0.5)
+        wait_static(threshold=6000000)
+
         source_x = 640
         source_y = 360
         # 如果有路线则进行寻找
@@ -288,7 +289,7 @@ def get_city():
     go_home()
     input_tap((1170, 493))
     time.sleep(1.0)
-    reslut = predict(screenshot(), cropped_pos1=(166, 520), cropped_pos2=(470, 560))
+    reslut = predict(screenshot(), cropped_pos1=(166, 520), cropped_pos2=(470, 600))
     if len(reslut) == 0:
         raise ValueError("未识别到当前城市")
     logger.info(f"当前站点: {reslut[0]['text']}")

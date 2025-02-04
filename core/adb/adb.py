@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-03-20 22:24:35
-LastEditTime: 2024-07-09 17:36:17
+LastEditTime: 2025-02-04 23:24:50
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -93,24 +93,25 @@ def input_swipe(pos1=(919, 617), pos2=(919, 908), time: int = 100):
     global ADBOREDER, ADBPATH
     pos_x1 = pos1[0] + random.randint(*EXCURSIONX)
     if pos_x1 > 1280:
-        pos_x1 = 1280
+        pos_x1 = 1200
     elif pos_x1 < 0:
-        pos_x1 = 0
+        pos_x1 = 20
     pos_y1 = pos1[1] + random.randint(*EXCURSIONY)
-    if pos_y1 > 720:
-        pos_y1 = 720
+    if pos_y1 > 700:
+        pos_y1 = 700
     elif pos_y1 < 0:
-        pos_y1 = 0
+        pos_y1 = 70
     pos_x2 = pos2[0] + random.randint(*EXCURSIONX)
     if pos_x2 > 1280:
-        pos_x2 = 1280
+        pos_x2 = 1200
     elif pos_x2 < 0:
-        pos_x2 = 0
+        pos_x2 = 20
     pos_y2 = pos2[1] + random.randint(*EXCURSIONY)
-    if pos_y2 > 720:
-        pos_y2 = 720
+    if pos_y2 > 700:
+        pos_y2 = 700
     elif pos_y2 < 0:
-        pos_y2 = 0
+        pos_y2 = 70
+    logger.debug(f"滑动 ({pos_x1}, {pos_y1}) -> ({pos_x2}, {pos_y2})")
     shell = [
         ADBPATH,
         "-s",

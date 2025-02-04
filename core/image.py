@@ -1,16 +1,18 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-01 23:18:15
-LastEditTime: 2024-04-29 19:43:59
+LastEditTime: 2025-02-04 23:18:27
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
+import time
 from typing import List, Tuple
 
 import cv2 as cv
 import numpy as np
 from loguru import logger
 
+from core.adb.adb import screenshot
 from core.module.bgr import BGR
 from core.module.hsv import HSV
 
@@ -243,3 +245,28 @@ def find_icons_coordinates(image, icon_path, threshold=0.8, min_distance=10):
         if not too_close:
             filtered.append(coord)
     return filtered
+
+def wait_static(threshold=6000000):
+    """
+    等待画面静止
+    参数:
+        :param threshold: 参数阈值
+    """
+    logger.info("等待图像静止")
+    while True:
+        # 截图并转换为灰度图像
+        gray1 = cv.cvtColor(screenshot(), cv.COLOR_BGR2GRAY)
+        # 等待画面变动，并再次截图
+        time.sleep(0.5)
+        gray2 = cv.cvtColor(screenshot(), cv.COLOR_BGR2GRAY)
+        
+        # 计算两帧之间的绝对差异
+        diff = cv.absdiff(gray1, gray2)
+        
+        # 计算差异图像的总像素差异值
+        diff_sum = np.sum(diff)
+        logger.debug(f"画面差异 {diff_sum}")
+        # 如果差异值小于阈值，则认为图像是静止的
+        if diff_sum < threshold:
+            break
+        time.sleep(1)

@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:14:29
-LastEditTime: 2024-12-28 14:48:21
+LastEditTime: 2025-02-04 23:41:51
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -123,7 +123,7 @@ def two_city_run(buy_city_name: str, sell_city_name: str):
         book_profit=0,  # 无需构建
         book=0,  # 无需构建
     )
-    logger.info("当前未端点跑商，下方输出的内容为假信息")
+    logger.info("当前为端点跑商，下方输出的内容为假信息")
     run(routes)
 
 

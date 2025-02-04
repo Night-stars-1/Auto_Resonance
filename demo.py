@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-04 17:56:16
-LastEditTime: 2024-09-10 20:16:50
+LastEditTime: 2025-02-04 23:36:58
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -77,4 +77,4 @@ if __name__ == "__main__":
 
     # start()
 
-    click_station("海角城")
+    click_station("曼德矿场")

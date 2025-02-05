@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-07 23:14:47
-LastEditTime: 2024-07-09 17:55:56
+LastEditTime: 2025-02-05 18:41:58
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -124,3 +124,9 @@ class SettingInterface(ScrollArea):
         self.expandLayout.setSpacing(28)
         self.expandLayout.setContentsMargins(36, 10, 36, 0)
         self.expandLayout.addWidget(self.musicInThisPCGroup)
+
+    def showEvent(self, event):
+        """当切换到该页面时，触发这个事件"""
+        super().showEvent(event)
+        # 刷新adb设置
+        self.adbOrderCard.update()

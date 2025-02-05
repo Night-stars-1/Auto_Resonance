@@ -72,7 +72,8 @@ class ButtonCardView(QWidget):
         self.flowLayout.setVerticalSpacing(12)
 
         self.vBoxLayout.addWidget(self.titleLabel)
-        self.vBoxLayout.addWidget(header)
+        if header:
+            self.vBoxLayout.addWidget(header)
         self.vBoxLayout.addLayout(self.flowLayout, 1)
 
         self.titleLabel.setObjectName("viewTitleLabel")
@@ -83,3 +84,17 @@ class ButtonCardView(QWidget):
         card = SampleCard(icon, title, content, func, routekey, self)
         self.flowLayout.addWidget(card)
         return card
+
+    def removeAllSampleCards(self):
+        """删除所有卡片"""
+        for i in reversed(range(self.flowLayout.count())):
+            item = self.flowLayout.itemAt(i)
+            if item is not None:
+                widget = item.widget()
+                if widget is not None:
+                    self.flowLayout.removeWidget(widget)
+                    widget.setParent(None)
+                    widget.deleteLater()
+
+    def set_title(self, title: str):
+        self.titleLabel.setText(title)

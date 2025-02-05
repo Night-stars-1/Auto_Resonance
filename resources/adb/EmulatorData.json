@@ -24,7 +24,9 @@
         "name": "MuMu模拟器12",
         "type": "MuMuPlayer",
         "path": "MuMuPlayer-12.0\\shell\\MuMuPlayer.exe",
+        "VMS_folder_path": "vms/MuMuPlayer-12.0",
         "VMS_path": "../vms/MuMuPlayer-12.0-0/MuMuPlayer-12.0-0.nemu",
+        "VMS_file": "{VMS_folder_name}.nemu",
         "adb_key": "ADB_PORT"
     }
 ]

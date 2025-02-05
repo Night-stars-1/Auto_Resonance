@@ -1,7 +1,7 @@
 # coding:utf-8
 from typing import Union
-from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtGui import QIcon, QColor
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import (
     QWidget,
     QLabel,
@@ -33,14 +33,11 @@ class CustomAdbSettingCard(ExpandGroupSettingCard):
         self.configItem = configItem
         self.customConfigItem = customConfigItem
         self.defaultItem = "Custom"
-        self.customItem = qconfig.get(configItem)
 
         self.choiceLabel = QLabel(self)
         self.radioWidget = QWidget(self.view)
         self.radioLayout = QVBoxLayout(self.radioWidget)
-        self.defaultRadioButton = RadioButton(
-            "自定义ADB端口", self.radioWidget
-        )
+        self.defaultRadioButton = RadioButton("自定义ADB端口", self.radioWidget)
         self.defaultRadioButton.setProperty("option", self.defaultItem)
         self.defaultRadioButton.setChecked(self.configItem.value == self.defaultItem)
         # self.customRadioButton = RadioButton(self.tr("Custom color"), self.radioWidget)
@@ -50,13 +47,12 @@ class CustomAdbSettingCard(ExpandGroupSettingCard):
             self.buttonGroup.addButton(button)
             self.radioLayout.addWidget(button)
             button.setProperty("option", option)
-            button.setChecked(option == self.configItem.value)
+            # button.setChecked(option == self.configItem.value)
 
         self.customItemWidget = QWidget(self.view)
         self.customItemLayout = QHBoxLayout(self.customItemWidget)
         self.customLabel = QLabel("自定义ADB端口", self.customItemWidget)
         self.chooseItemLineEdit = LineEdit(self.customItemWidget)
-        self.chooseItemLineEdit.setText(self.customConfigItem.value)
 
         self.__initLayout()
 
@@ -68,7 +64,7 @@ class CustomAdbSettingCard(ExpandGroupSettingCard):
         self.radioLayout.setContentsMargins(48, 18, 0, 18)
         self.buttonGroup.addButton(self.defaultRadioButton)
         self.radioLayout.addWidget(self.defaultRadioButton)
-        
+
         self.radioLayout.setSizeConstraint(QVBoxLayout.SetMinimumSize)
 
         self.customItemLayout.setContentsMargins(48, 18, 44, 18)
@@ -84,10 +80,17 @@ class CustomAdbSettingCard(ExpandGroupSettingCard):
         self.__initWidget()
 
     def __initWidget(self):
-        if self.defaultItem == self.customItem:
+        customItem = qconfig.get(self.configItem)
+        # 更新ADB端口输入状态
+        if self.defaultItem == customItem:
             self.chooseItemLineEdit.setEnabled(True)
         else:
             self.chooseItemLineEdit.setEnabled(False)
+
+        # 更新模拟器选项
+        for button in self.buttonGroup.buttons():
+            option = button.property("option")
+            button.setChecked(option == self.configItem.value)
 
         self.choiceLabel.setText(self.buttonGroup.checkedButton().text())
         self.choiceLabel.adjustSize()
@@ -96,6 +99,8 @@ class CustomAdbSettingCard(ExpandGroupSettingCard):
 
         self.buttonGroup.buttonClicked.connect(self.__onRadioButtonClicked)
         self.chooseItemLineEdit.textChanged.connect(self.__onChooseItemTextChanged)
+        # adb端口文本
+        self.chooseItemLineEdit.setText(self.customConfigItem.value)
 
     def __onRadioButtonClicked(self, button: RadioButton):
         """radio button clicked slot"""
@@ -113,3 +118,6 @@ class CustomAdbSettingCard(ExpandGroupSettingCard):
 
     def __onChooseItemTextChanged(self, text):
         qconfig.set(self.customConfigItem, text)
+
+    def update(self):
+        self.__initWidget()

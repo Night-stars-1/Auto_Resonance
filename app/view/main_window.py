@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-02 19:27:03
-LastEditTime: 2024-12-27 23:59:46
+LastEditTime: 2025-02-05 17:31:12
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -37,7 +37,7 @@ from .home_interface import HomeInterface
 from .logger_interface import LoggerInterface
 from .setting_interface import SettingInterface
 from .taj_interface import TajInterface
-from .this_road_that_interface import ThisRoadThatInterface
+from .adb_data_interface import ADBDataInterface
 
 
 class MainWindow(MSFluentWindow):
@@ -56,7 +56,7 @@ class MainWindow(MSFluentWindow):
         self.daily_task_interface = DailyTaskInterface(self)
         self.running_business_interface = RunningBusinessInterface(self)
         self.two_run_business_interface = TwoRunBusinessInterface(self)
-        self.this_road_that_interface = ThisRoadThatInterface(self)
+        self.adb_data_interface = ADBDataInterface(self)
 
         self.connectSignalToSlot()
 
@@ -78,7 +78,7 @@ class MainWindow(MSFluentWindow):
         self.addSubInterface(self.daily_task_interface, FIF.CALENDAR, "每日任务")
         self.addSubInterface(self.running_business_interface, FIF.TRAIN, "跑商配置")
         self.addSubInterface(self.two_run_business_interface, FIF.TRAIN, "端点跑商")
-        self.addSubInterface(self.this_road_that_interface, FIF.TRAIN, "我建我路")
+        self.addSubInterface(self.adb_data_interface, FIF.TRAIN, "ADB信息")
 
         # add custom widget to bottom
         self.addSubInterface(

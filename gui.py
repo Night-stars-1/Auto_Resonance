@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-02 18:52:36
-LastEditTime: 2025-02-05 17:59:05
+LastEditTime: 2025-02-10 23:06:52
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -59,7 +59,7 @@ app.installTranslator(galleryTranslator)
 
 # create main window
 w = MainWindow()
-# from main import run, stop
+from main import run, stop
 
 w.show()
 

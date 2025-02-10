@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-03-20 22:24:35
-LastEditTime: 2025-02-04 23:24:50
+LastEditTime: 2025-02-10 22:59:27
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -84,48 +84,45 @@ def kill():
 def input_swipe(pos1=(919, 617), pos2=(919, 908), time: int = 100):
     """
     说明:
-        滑动屏幕
+        滑动屏幕(可超出屏幕)
     参数:
         :param pos1: 坐标1
         :param pos2: 坐标2
         :param time: 操作时间(毫秒)
     """
     global ADBOREDER, ADBPATH
+    # 添加随机值
     pos_x1 = pos1[0] + random.randint(*EXCURSIONX)
-    if pos_x1 > 1280:
-        pos_x1 = 1200
-    elif pos_x1 < 0:
-        pos_x1 = 20
     pos_y1 = pos1[1] + random.randint(*EXCURSIONY)
-    if pos_y1 > 700:
-        pos_y1 = 700
-    elif pos_y1 < 0:
-        pos_y1 = 70
     pos_x2 = pos2[0] + random.randint(*EXCURSIONX)
-    if pos_x2 > 1280:
-        pos_x2 = 1200
-    elif pos_x2 < 0:
-        pos_x2 = 20
     pos_y2 = pos2[1] + random.randint(*EXCURSIONY)
-    if pos_y2 > 700:
-        pos_y2 = 700
-    elif pos_y2 < 0:
-        pos_y2 = 70
+
     logger.debug(f"滑动 ({pos_x1}, {pos_y1}) -> ({pos_x2}, {pos_y2})")
-    shell = [
-        ADBPATH,
-        "-s",
-        ADBOREDER,
-        "shell",
-        "input",
-        "swipe",
-        str(pos_x1),
-        str(pos_y1),
-        str(pos_x2),
-        str(pos_y2),
-        str(int(time)),
-    ]
-    run(shell, check=False)
+    while pos_x1 > 0 or pos_y1 > 0 or pos_x2 > 0 or pos_y2 > 0:
+        limit_pos_x1 = max(20, min(pos_x1, 1200))
+        limit_pos_y1 = max(70, min(pos_y1, 700))
+        limit_pos_x2 = max(20, min(pos_x2, 1200))
+        limit_pos_y2 = max(70, min(pos_y2, 700))
+        
+        shell = [
+            ADBPATH,
+            "-s",
+            ADBOREDER,
+            "shell",
+            "input",
+            "swipe",
+            str(limit_pos_x1),
+            str(limit_pos_y1),
+            str(limit_pos_x2),
+            str(limit_pos_y2),
+            str(int(time)),
+        ]
+        run(shell, check=False)
+        # 减去当前执行的距离
+        pos_x1 -= limit_pos_x1
+        pos_y1 -= limit_pos_y1
+        pos_x2 -= limit_pos_x2
+        pos_y2 -= limit_pos_y2
 
 
 def input_tap(pos: Tuple[int, int] = (880, 362)):

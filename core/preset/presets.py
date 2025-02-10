@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:24:47
-LastEditTime: 2025-02-04 23:39:11
+LastEditTime: 2025-02-10 22:55:33
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -96,19 +96,19 @@ def click_station(name: str):
         source_y = 360
         # 如果有路线则进行寻找
         x1 = source_x + city_differences[0] / 2
-        if (x_distance := x1 - 1280) > 0:
-            x1 = 1280
-            source_x = source_x - x_distance
-        elif (x_distance := x1 - 0) < 0:
-            x1 = 0
-            source_x = source_x - x_distance
+        # if (x_distance := x1 - 1280) > 0:
+        #     x1 = 1280
+        #     source_x = source_x - x_distance
+        # elif (x_distance := x1 - 0) < 0:
+        #     x1 = 0
+        #     source_x = source_x - x_distance
         y1 = source_y + city_differences[1] / 2
-        if (y_distance := y1 - 720) > 0:
-            y1 = 720
-            source_y = source_y - y_distance
-        elif (y_distance := y1 - 78) < 0:
-            y1 = 78
-            source_y = source_y - y_distance
+        # if (y_distance := y1 - 720) > 0:
+        #     y1 = 720
+        #     source_y = source_y - y_distance
+        # elif (y_distance := y1 - 78) < 0:
+        #     y1 = 78
+        #     source_y = source_y - y_distance
 
         # 滑动到目标站点
         input_swipe((x1, y1), (source_x, source_y), time=500)

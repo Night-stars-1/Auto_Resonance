@@ -143,9 +143,9 @@ def find_good(good, timeout=10):
     start = time.time()
     while (spend_time := time.time() - start) < timeout:
         if spend_time < timeout / 2:
-            input_swipe((678, 558), (693, 314), time=500)
+            input_swipe((678, 558), (693, 314), swipe_time=500)
         else:
-            input_swipe((693, 314), (678, 558), time=500)
+            input_swipe((693, 314), (678, 558), swipe_time=500)
         # 等待拖到动画结束
         time.sleep(1)
         result, image = find_text(
@@ -245,6 +245,7 @@ def click_bargain_button(num=0):
         else:
             logger.info("降价失败")
     return False
+
 
 def click_buy_button():
     """

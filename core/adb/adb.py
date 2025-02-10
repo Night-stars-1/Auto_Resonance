@@ -1,12 +1,13 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-03-20 22:24:35
-LastEditTime: 2025-02-10 22:59:27
+LastEditTime: 2025-02-11 00:36:33
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
 import platform
 import random
+import time
 from subprocess import DEVNULL, CompletedProcess
 from subprocess import run as _run
 from typing import Tuple
@@ -41,7 +42,7 @@ def run(
     )
 
 
-def connect(adb_port: int = 0, name = "自定义"):
+def connect(adb_port: int = 0, name="自定义"):
     """
     说明:
         连接ADB
@@ -81,7 +82,7 @@ def kill():
     run(shell, stdout=DEVNULL, check=False)
 
 
-def input_swipe(pos1=(919, 617), pos2=(919, 908), time: int = 100):
+def input_swipe(pos1=(919, 617), pos2=(919, 908), swipe_time: int = 100):
     """
     说明:
         滑动屏幕(可超出屏幕)
@@ -103,7 +104,10 @@ def input_swipe(pos1=(919, 617), pos2=(919, 908), time: int = 100):
         limit_pos_y1 = max(70, min(pos_y1, 700))
         limit_pos_x2 = max(20, min(pos_x2, 1200))
         limit_pos_y2 = max(70, min(pos_y2, 700))
-        
+        logger.debug(
+            f"滑动 ({limit_pos_x1}, {limit_pos_y1}) -> ({limit_pos_x2}, {limit_pos_y2})"
+        )
+
         shell = [
             ADBPATH,
             "-s",
@@ -115,9 +119,10 @@ def input_swipe(pos1=(919, 617), pos2=(919, 908), time: int = 100):
             str(limit_pos_y1),
             str(limit_pos_x2),
             str(limit_pos_y2),
-            str(int(time)),
+            str(int(swipe_time)),
         ]
         run(shell, check=False)
+        time.sleep(swipe_time / 1000)
         # 减去当前执行的距离
         pos_x1 -= limit_pos_x1
         pos_y1 -= limit_pos_y1

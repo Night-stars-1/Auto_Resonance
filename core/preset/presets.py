@@ -1,11 +1,12 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:24:47
-LastEditTime: 2025-02-10 22:55:33
+LastEditTime: 2025-02-11 00:26:51
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
 import time
+from typing import Dict, Tuple
 
 from loguru import logger
 
@@ -14,40 +15,34 @@ from core.image import get_all_color_pos, get_bgrs, match_screenshot, wait_stati
 from core.module.bgr import BGRGroup
 from core.ocr import predict
 from core.preset import blurry_ocr_click, go_home
+from core.utils import read_json
 
 from .control import click_image
 from .station import STATION
 
 FIGHT_TIME = 1000
 
-STATION_NAME2PNG = {
-    "7号自由港": "qhzyg.png",
-    "澄明数据中心": "cmsjzx.png",
-    "阿妮塔战备工厂": "antzbgc.png",
-    "阿妮塔能源研究所": "antnyyjs.png",
-    "阿妮塔发射中心": "antfszx.png",
-    "淘金乐园": "tjly.png",
-    "曼德矿场": "mdkc.png",
-    "荒原站": "hyz.png",
-    "铁盟哨站": "tmsz.png",
-    "修格里城": "xglc.png",
-    "海角城": "hjc.png",
-}
+STATION_NAME2PNG: Dict[str, str] = read_json(
+    "resources/stations/name2id.json"
+)
 
 # 站点坐标，左上角为(0, 0)
-STATION_POS_DATA = {
-    "澄明数据中心": (1049, 345),
-    "7号自由港": (665, 577),
-    "阿妮塔战备工厂": (832, 664),
-    "阿妮塔发射中心": (164, 420 + 577),
-    "阿妮塔能源研究所": (614, 454 + 577),
-    "修格里城": (285 + 1049, 121 + 345),
-    "铁盟哨站": (501 + 1049, 122 + 345),
-    "荒原站": (753 + 1049, 121 + 345),
-    "曼德矿场": (602 + 1049, 322 + 345),
-    "淘金乐园": (701 + 1049, 604 + 345),
-    "海角城": (164 + 293, 420 + 577 + 569),
-}
+# STATION_POS_DATA = {
+#     "澄明数据中心": (1049, 345),
+#     "7号自由港": (665, 577),
+#     "阿妮塔战备工厂": (832, 664),
+#     "阿妮塔发射中心": (164, 420 + 577),
+#     "阿妮塔能源研究所": (614, 454 + 577),
+#     "修格里城": (285 + 1049, 121 + 345),
+#     "铁盟哨站": (501 + 1049, 122 + 345),
+#     "荒原站": (753 + 1049, 121 + 345),
+#     "曼德矿场": (602 + 1049, 322 + 345),
+#     "淘金乐园": (701 + 1049, 604 + 345),
+#     "海角城": (164 + 293, 420 + 577 + 569),
+# }
+STATION_POS_DATA: Dict[str, Tuple[int, int]] = read_json(
+    "resources/goods/CityPosData.json"
+)
 
 
 def calculate_station_differences(station_map_data: dict):
@@ -56,7 +51,7 @@ def calculate_station_differences(station_map_data: dict):
         for site2, coords2 in station_map_data.items():
             if site1 != site2:
                 x_diff = coords2[0] - coords1[0]
-                y_diff = coords2[1] - coords1[1]
+                y_diff = coords1[1] - coords2[1]
                 differences[(site1, site2)] = (x_diff, y_diff)
     return differences
 
@@ -95,14 +90,14 @@ def click_station(name: str):
         source_x = 640
         source_y = 360
         # 如果有路线则进行寻找
-        x1 = source_x + city_differences[0] / 2
+        x1 = source_x + city_differences[0] / 2.5
         # if (x_distance := x1 - 1280) > 0:
         #     x1 = 1280
         #     source_x = source_x - x_distance
         # elif (x_distance := x1 - 0) < 0:
         #     x1 = 0
         #     source_x = source_x - x_distance
-        y1 = source_y + city_differences[1] / 2
+        y1 = source_y + city_differences[1] / 2.5
         # if (y_distance := y1 - 720) > 0:
         #     y1 = 720
         #     source_y = source_y - y_distance
@@ -111,9 +106,9 @@ def click_station(name: str):
         #     source_y = source_y - y_distance
 
         # 滑动到目标站点
-        input_swipe((x1, y1), (source_x, source_y), time=500)
+        input_swipe((x1, y1), (source_x, source_y), swipe_time=500)
         # 向回拖动避免画面长时间移动
-        input_swipe((x1, y1), (x1 - 10, y1 - 10), time=500)
+        input_swipe((source_x, source_y), (source_x - 10, source_y - 10), swipe_time=500)
         wait_static(threshold=6000000)  # 等待滑动完成
 
         result = match_screenshot(
@@ -139,7 +134,8 @@ def click_station(name: str):
                 trynum=5,
             )
             return STATION(True)
-    logger.error("没有该站点的坐标信息")
+    else:
+        logger.error("没有该站点的坐标信息")
     return STATION(False)
     # 暂时不使用其他寻找方式
     # return multiple_slide_click_station(name)
@@ -327,10 +323,10 @@ def go_outlets(name: str):
     logger.info(f"前往 => {name}")
     if result := blurry_ocr_click(name, excursion_pos=(-2, 50), log=False):
         return result
-    input_swipe((969, 369), (457, 340), time=500)
+    input_swipe((969, 369), (457, 340), swipe_time=500)
     if result := blurry_ocr_click(name, excursion_pos=(-2, 50), log=False):
         return result
-    input_swipe((641, 246), (637, 615), time=500)
+    input_swipe((641, 246), (637, 615), swipe_time=500)
     if result := blurry_ocr_click(name, excursion_pos=(-2, 50)):
         return result
 

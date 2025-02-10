@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-10 22:54:08
-LastEditTime: 2024-12-28 02:25:06
+LastEditTime: 2025-02-10 23:25:35
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -86,6 +86,7 @@ class TwoRunBusinessInterface(ScrollArea):
     def runBusiness(self):
         from auto.run_business import two_city_run
 
+        # 获取勾选的城市
         checkbox = [checkbox for checkbox in self.cityCheckboxGroup.checkboxGroup if checkbox.isChecked()]
         buy_city_name = checkbox[0].text()
         sell_city_name = checkbox[1].text()

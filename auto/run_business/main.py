@@ -24,12 +24,12 @@ from core.module.bgr import BGR, BGRGroup
 from core.preset import click_station, get_city, go_home, go_outlets, wait_gbr
 from core.utils import read_json
 
-city_sell_data: Dict[str, Dict[str, int]] = read_json(
+_city_sell_data: Dict[str, Dict[str, int]] = read_json(
     "resources/goods/CityGoodsSellData.json"
 )
 city_sell_data = {
     city: dict(sorted(goods.items(), key=lambda item: not item[1]["price"]))
-    for city, goods in city_sell_data.items()
+    for city, goods in _city_sell_data.items()
 }
 
 

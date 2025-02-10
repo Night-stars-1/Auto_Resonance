@@ -48,7 +48,7 @@ def get_pid2title():
         _, found_pid = win32process.GetWindowThreadProcessId(hwnd)
 
         window_title = win32gui.GetWindowText(hwnd)
-        if found_pid not in pid2title:
+        if found_pid not in pid2title or "模拟器" in window_title:
             pid2title[found_pid] = window_title
         return True
 

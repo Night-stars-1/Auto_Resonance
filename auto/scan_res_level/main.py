@@ -63,7 +63,7 @@ def get_skill_level():
                 logger.info(f"发现重复角色可能已经识别完成，停止识别")
                 return skill_level
             logger.info(f"{role_name}: {len(levels)}")
-        input_swipe((658, 359), (116, 374), time=500)
+        input_swipe((658, 359), (116, 374), swipe_time=500)
         time.sleep(0.5)
     return skill_level
 

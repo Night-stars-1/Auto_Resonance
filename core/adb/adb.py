@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-03-20 22:24:35
-LastEditTime: 2025-02-11 00:36:33
+LastEditTime: 2025-02-11 16:56:45
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -99,13 +99,13 @@ def input_swipe(pos1=(919, 617), pos2=(919, 908), swipe_time: int = 100):
     pos_y2 = pos2[1] + random.randint(*EXCURSIONY)
 
     logger.debug(f"滑动 ({pos_x1}, {pos_y1}) -> ({pos_x2}, {pos_y2})")
-    while pos_x1 > 0 or pos_y1 > 0 or pos_x2 > 0 or pos_y2 > 0:
+    while abs(pos_x2 - pos_x1) > 10 or abs(pos_y2 - pos_y1) > 10:
         limit_pos_x1 = max(20, min(pos_x1, 1200))
         limit_pos_y1 = max(70, min(pos_y1, 700))
         limit_pos_x2 = max(20, min(pos_x2, 1200))
         limit_pos_y2 = max(70, min(pos_y2, 700))
         logger.debug(
-            f"滑动 ({limit_pos_x1}, {limit_pos_y1}) -> ({limit_pos_x2}, {limit_pos_y2})"
+            f"多次滑动 ({limit_pos_x1}, {limit_pos_y1}) -> ({limit_pos_x2}, {limit_pos_y2})"
         )
 
         shell = [
@@ -124,10 +124,10 @@ def input_swipe(pos1=(919, 617), pos2=(919, 908), swipe_time: int = 100):
         run(shell, check=False)
         time.sleep(swipe_time / 1000)
         # 减去当前执行的距离
-        pos_x1 -= limit_pos_x1
-        pos_y1 -= limit_pos_y1
-        pos_x2 -= limit_pos_x2
-        pos_y2 -= limit_pos_y2
+        pos_x1 -= (limit_pos_x1 - limit_pos_x2)
+        pos_y1 -= (limit_pos_y1 - limit_pos_y2)
+        # pos_x2 -= limit_pos_x2
+        # pos_y2 -= limit_pos_y2
 
 
 def input_tap(pos: Tuple[int, int] = (880, 362)):

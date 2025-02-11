@@ -2,14 +2,14 @@
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-25 23:03:03
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
-LastEditTime: 2025-01-04 22:16:57
+LastEditTime: 2025-02-11 17:28:55
 """
 
 import sys
 from pathlib import Path
 
 # 添加项目根目录到 sys.path
-project_root = Path(__file__).resolve().parent.parent.parent
+project_root = Path(__file__).resolve().parent.parent
 sys.path.append(str(project_root))
 
 import cv2
@@ -27,7 +27,7 @@ def click_event(event, x, y, flags, param):
     if event == cv2.EVENT_LBUTTONDOWN:
         color = param[y, x]
         color_bgr = color.tolist()  # 将颜色值转换为列表形式
-        color_hsv = cv2.cvtColor(param, cv2.COLOR_RGB2HSV)[y, x]
+        color_hsv = cv2.cvtColor(param, cv2.COLOR_BGR2HSV)[y, x]
         print("Clicked at: ", (x, y))
         print("Color (BGR): ", color_bgr)
         print("Color (HSV): ", color_hsv.tolist())

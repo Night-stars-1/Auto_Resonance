@@ -23,7 +23,7 @@ MAP_WAIT_TIME = 3000
 class STATION:
 
 
-    def __init__(self, station: bool, is_destine: bool = False, cur_station: Optional[str] = None, tar_station: Optional[str] = None) -> None:
+    def __init__(self, station: bool, is_destine: bool = False) -> None:
         """
         站点类
         
@@ -34,8 +34,6 @@ class STATION:
         """
         self.station = station
         self.is_destine = is_destine
-        self.cur_station = cur_station
-        self.tar_station = tar_station
 
     def __bool__(self) -> bool:
         return self.station

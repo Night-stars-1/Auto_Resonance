@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:24:47
-LastEditTime: 2025-02-11 22:08:06
+LastEditTime: 2025-02-11 22:14:21
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -89,7 +89,7 @@ class STATION:
                 logger.info("点击加速弹丸")
                 input_tap((1061, 657))
                 time.sleep(0.5)
-            config.global_config.is_auto_pick and input_tap((674, 378))  # 捡垃圾
+            config.global_config.is_auto_pick and input_tap((680, 378))  # 捡垃圾
             time.sleep(0.3)
         logger.error("站点超时")
         return False

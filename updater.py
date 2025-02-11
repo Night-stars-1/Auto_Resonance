@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-29 12:51:19
-LastEditTime: 2024-05-06 23:12:56
+LastEditTime: 2025-02-11 23:21:55
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -28,6 +28,7 @@ HEIYUE_FILE_PATH = TEMP_PATH / "heiyue.zip"
 
 
 class AssetsModel(TypedDict):
+    name: str
     browser_download_url: str
 
 
@@ -54,9 +55,9 @@ class Updater:
         self.unzip_dir = TEMP_PATH
         self.api_urls = [
             "https://api.github.com/repos/Night-stars-1/Auto_Resonance/releases/latest",
-            "https://goda.srap.link/gitapi/https://api.github.com/repos/Night-stars-1/Auto_Resonance/releases/latest",
+            "https://goda.srap.link/Night-stars-1/Auto_Resonance",
         ]
-        self.mirror_urls = ["", "https://mirror.ghproxy.com/"]
+        self.mirror_urls = ["", "https://ghfast.top/"]
 
     async def find_fastest_mirror(self, url: str, timeout=5):
         """
@@ -141,7 +142,27 @@ class Updater:
             result = await self.get_first_valid_response()
             if result:
                 version = result["tag_name"]
-                download_url: str = result["assets"][0]["browser_download_url"]
+                # 检测是否有增量更新包
+                asset = next(
+                    (
+                        asset
+                        for asset in result["assets"]
+                        if asset["name"] == f"Auto_Resonance_{__version__}.zip"
+                    ),
+                    None,
+                )
+                if asset is None:
+                    asset = next(
+                        (
+                            asset
+                            for asset in result["assets"]
+                            if asset["name"] == f"Auto_Resonance_{version}.zip"
+                        ),
+                        None,
+                    )
+                if asset is None:
+                    raise Exception("未找到更新包")
+                download_url: str = asset["browser_download_url"]
                 self.unzip_dir = TEMP_PATH / f"Auto_Resonance_{version}"
                 return (
                     UpdateStatus.Latest

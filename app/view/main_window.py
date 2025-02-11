@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-02 19:27:03
-LastEditTime: 2025-02-05 17:31:12
+LastEditTime: 2025-02-11 19:11:04
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -76,9 +76,9 @@ class MainWindow(MSFluentWindow):
         self.addSubInterface(self.homeInterface, FIF.HOME, "主页")
         self.addSubInterface(self.tajInterface, FIF.AIRPLANE, "铁安局")
         self.addSubInterface(self.daily_task_interface, FIF.CALENDAR, "每日任务")
-        self.addSubInterface(self.running_business_interface, FIF.TRAIN, "跑商配置")
+        # self.addSubInterface(self.running_business_interface, FIF.TRAIN, "跑商配置")
         self.addSubInterface(self.two_run_business_interface, FIF.TRAIN, "端点跑商")
-        self.addSubInterface(self.adb_data_interface, FIF.TRAIN, "ADB信息")
+        self.addSubInterface(self.adb_data_interface, FIF.GAME, "ADB信息")
 
         # add custom widget to bottom
         self.addSubInterface(

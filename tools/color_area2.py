@@ -2,7 +2,7 @@
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2025-02-11 17:06:05
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
-LastEditTime: 2025-02-11 18:29:19
+LastEditTime: 2025-02-11 19:17:31
 """
 
 import sys
@@ -43,16 +43,24 @@ for contour in contours:
 
     # 计算该蓝色区域的蓝色像素数量
     color_pixels_in_contour = cv2.countNonZero(mask[contour[:, 0, 1], contour[:, 0, 0]])
-    
+
     # 计算蓝色区域的总像素数量
     total_area_pixels = cv2.contourArea(contour)
-    
+
     print(f"区域的像素数量: {color_pixels_in_contour}")
     print(f"区域的总像素数量: {total_area_pixels}")
     print("----------------------------------------------")
     cv2.drawContours(result_image, [contour], -1, (0, 255, 0), 2)
     cv2.rectangle(result_image, (x, y), (x + w, y + h), (0, 255, 0), 2)
-    cv2.putText(result_image, f"{color_pixels_in_contour}/{total_area_pixels}", (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+    cv2.putText(
+        result_image,
+        f"{color_pixels_in_contour}/{total_area_pixels}",
+        (x, y),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.5,
+        (0, 255, 0),
+        1,
+    )
 
 cv2.imshow("Color Area", result_image)
 cv2.waitKey(0)

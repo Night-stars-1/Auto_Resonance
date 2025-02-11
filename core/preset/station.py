@@ -1,13 +1,14 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:24:47
-LastEditTime: 2025-02-11 16:15:25
+LastEditTime: 2025-02-11 19:17:49
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
 import time
-from typing import Optional
 
+import cv2 as cv
+import numpy as np
 from loguru import logger
 
 from core.adb.adb import input_tap, screenshot
@@ -86,7 +87,7 @@ class STATION:
                 logger.info("点击加速弹丸")
                 input_tap((1061, 657))
                 time.sleep(0.5)
-            config.global_config.is_auto_pick and input_tap((781, 484))  # 捡垃圾
+            config.global_config.is_auto_pick and self.auto_pick()  # 捡垃圾
             time.sleep(0.3)
         logger.error("站点超时")
         return False
@@ -165,3 +166,32 @@ class STATION:
             time.sleep(3)
         logger.error("战斗超时")
         return False
+
+    def auto_pick(self):
+        """
+        捡垃圾
+        """
+        screenshot_cv = screenshot()
+
+        # 设置HSV范围
+        lower_color = np.array([100, 30, 170])
+        upper_color = np.array([110, 60, 220])
+
+        hsv_image = cv.cvtColor(screenshot_cv, cv.COLOR_BGR2HSV)
+
+        # 创建指定像素掩码
+        mask = cv.inRange(hsv_image, lower_color, upper_color)
+        # 高斯模糊以影响精度
+        mask = cv.GaussianBlur(mask, (5, 5), 0)
+        # 找到指定区域的连通区域
+        contours, _ = cv.findContours(mask, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+
+        for contour in contours:
+            x, y, w, h = cv.boundingRect(contour)
+            # 计算该区域的蓝色像素数量
+            blue_pixels_in_contour = cv.countNonZero(mask[contour[:, 0, 1], contour[:, 0, 0]])
+
+            if blue_pixels_in_contour < 40:
+                continue
+
+            input_tap((x + w // 2, y + h // 2))

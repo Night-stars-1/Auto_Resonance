@@ -31,7 +31,7 @@ hsv_image = cv2.cvtColor(screenshot_cv, cv2.COLOR_BGR2HSV)
 # 创建指定像素掩码
 mask = cv2.inRange(hsv_image, lower_color, upper_color)
 
-# 调整阈值以影响精度
+# 高斯模糊以影响精度
 mask = cv2.GaussianBlur(mask, (5, 5), 0)
 
 # 找到指定区域的连通区域

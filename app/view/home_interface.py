@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-02 19:12:22
-LastEditTime: 2025-02-05 17:46:18
+LastEditTime: 2025-02-11 19:08:33
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -163,7 +163,7 @@ class HomeInterface(ScrollArea):
         basicInputView.vBoxLayout.insertWidget(0, tipBar)
         self.taskCheckboxGroup.addCheckbox("购买桦石", cfg.huashi)
         self.taskCheckboxGroup.addCheckbox("刷铁安局", cfg.railwaySafetyBureau)
-        self.taskCheckboxGroup.addCheckbox("自动跑商", cfg.runBusiness)
+        # self.taskCheckboxGroup.addCheckbox("自动跑商", cfg.runBusiness)
 
         self.run = basicInputView.addSampleCard(
             icon=":/gallery/images/controls/Button.png",

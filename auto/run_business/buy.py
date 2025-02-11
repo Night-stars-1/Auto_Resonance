@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-04 17:54:58
-LastEditTime: 2024-11-06 23:04:29
+LastEditTime: 2025-02-11 19:29:24
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -19,7 +19,7 @@ from core.module.bgr import BGR, BGRGroup
 from core.module.hsv import HSV
 from core.ocr import predict
 from core.preset import click, find_text
-from core.preset.presets import go_home
+from core.preset import go_home
 
 
 def buy_business(
@@ -29,13 +29,12 @@ def buy_business(
     max_book: int = 0,
 ):
     """
-    说明:
-        购买商品
-    参数:
-        :param primary_goods: 主要商品列表
-        :param secondary_goods: 次要商品列表
-        :param num: 议价的次数
-        :param max_book: 最大使用进货书量
+    购买商品
+
+    :param primary_goods: 主要商品列表
+    :param secondary_goods: 次要商品列表
+    :param num: 议价的次数
+    :param max_book: 最大使用进货书量
     """
 
     def process_goods(book, good):

@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-07 23:14:47
-LastEditTime: 2025-02-05 18:41:58
+LastEditTime: 2025-02-11 19:20:13
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -42,7 +42,7 @@ class SettingInterface(ScrollArea):
         self.uuidCard = LineEditSettingCard(
             cfg.uuid,
             "KMou商品请求 UUID",
-            FIF.PALETTE,
+            FIF.LABEL,
             "KMou商品请求 UUID",
             parent=self.musicInThisPCGroup,
             isPassword=True,
@@ -57,7 +57,7 @@ class SettingInterface(ScrollArea):
         self.adbOrderCard = CustomAdbSettingCard(
             cfg.emulatorType,
             cfg.adbPort,
-            FIF.PALETTE,
+            FIF.GAME,
             "ADB地址",
             "只支持部分模拟器，如果连接失败请使用自定义ADB端口",
             texts=emulator_list.name2type,
@@ -71,13 +71,13 @@ class SettingInterface(ScrollArea):
         #     parent=self.musicInThisPCGroup,
         # )
         self.isSpeedCard = SwitchSettingCard(
-            FIF.PALETTE,
+            FIF.MARKET,
             "是否自动加速",
             "是否自动使用加速弹丸",
             parent=self.musicInThisPCGroup,
         )
         self.isAutoPickCard = SwitchSettingCard(
-            FIF.PALETTE,
+            FIF.TILES,
             "是否自动拾取",
             "是否自动拾取掉落物",
             parent=self.musicInThisPCGroup,

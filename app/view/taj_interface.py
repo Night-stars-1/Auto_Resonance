@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-06 19:32:25
-LastEditTime: 2024-04-14 16:02:34
+LastEditTime: 2025-02-11 19:21:32
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -64,7 +64,7 @@ class TajConfigInterface(ScrollArea):
         self.configGroup = SettingCardGroup("配置", self.scrollWidget)
 
         self.cityCard = ComboBoxTitleCard(
-            FIF.LANGUAGE,
+            FIF.SETTING,
             "城市",
             options=list(CITYDATA.keys()),
             default=config.rsb.city,
@@ -73,7 +73,7 @@ class TajConfigInterface(ScrollArea):
         )
         self.cityCard.comboBox.currentIndexChanged.connect(self.set_level_card)
         self.levelSerialNumber = ComboBoxTitleCard(
-            FIF.LANGUAGE,
+            FIF.SETTING,
             "关卡序号",
             options=["1", "2", "3"],
             default=POS2SERIAL_NUMBER.get(str(config.rsb.levelSerialPos)),
@@ -82,7 +82,7 @@ class TajConfigInterface(ScrollArea):
         )
         self.levelSerialNumber.comboBox.currentIndexChanged.connect(self.set_level_card)
         self.levelCard = ComboBoxTitleCard(
-            FIF.LANGUAGE,
+            FIF.SETTING,
             "关卡名称",
             options=CITYDATA.get(self.cityCard.value, {}).get(
                 self.levelSerialNumber.value, ["所有"]
@@ -94,7 +94,7 @@ class TajConfigInterface(ScrollArea):
         self.levelCard.comboBox.currentIndexChanged.connect(self.save_config)
 
         self.numCard = LineEditCard(
-            FIF.LANGUAGE,
+            FIF.SETTING,
             "刷取次数",
             "刷取次数",
             default=str(config.rsb.num),
@@ -179,5 +179,5 @@ class TajInterface(TabWidget):
 
     def __initWidget(self):
         self.addSubInterface(
-            self.tajConfigInterface, "TajConfigInterface", "铁安局配置1", FIF.LANGUAGE
+            self.tajConfigInterface, "TajConfigInterface", "铁安局配置1", FIF.AIRPLANE
         )

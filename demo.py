@@ -77,4 +77,4 @@ if __name__ == "__main__":
 
     # start()
 
-    click_station("岚心城")
+    click_station("阿妮塔发射中心")

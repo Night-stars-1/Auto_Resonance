@@ -1,6 +1,6 @@
-import auto.carbonated_water
-import auto.huashi
-import auto.railway_safety_bureau
-import auto.run_business
-import auto.scan_res_level
-import auto.this_road_that
+from .carbonated_water import *
+from .huashi import *
+from .railway_safety_bureau import *
+from .run_business import *
+from .scan_res_level import *
+from .this_road_that import *

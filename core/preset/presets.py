@@ -1,12 +1,12 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:24:47
-LastEditTime: 2025-02-11 00:26:51
+LastEditTime: 2025-02-11 19:26:36
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
 import time
-from typing import Dict, Tuple
+from typing import Dict, Optional, Tuple
 
 from loguru import logger
 
@@ -22,9 +22,7 @@ from .station import STATION
 
 FIGHT_TIME = 1000
 
-STATION_NAME2PNG: Dict[str, str] = read_json(
-    "resources/stations/name2id.json"
-)
+STATION_NAME2PNG: Dict[str, str] = read_json("resources/stations/name2id.json")
 
 # 站点坐标，左上角为(0, 0)
 # STATION_POS_DATA = {
@@ -60,26 +58,31 @@ def calculate_station_differences(station_map_data: dict):
 STATION_DIFFERENCES = calculate_station_differences(STATION_POS_DATA)
 
 
-def click_station(name: str):
+def click_station(name: str, cur_station: Optional[str] = None):
     """
-    说明:
-        点击站点, 该滑动通过站点间相对距离完成
-    参数:
-        :param name: 目标站点
+    点击站点, 该滑动通过站点间相对距离完成
+
+    :param name: 目标站点
+    :param cur_station: 当前站点
     """
     logger.info(f"点击站点 => {name}")
     if match_screenshot(screenshot(), "resources/main_map.png")["max_val"] < 0.95:
         logger.info("未检测到主地图界面，返回主地图")
         go_home()
     logger.info("检测到主地图界面，识别站点")
-    city = get_city()
-    if name == city:
+    if not cur_station:
+        station = get_station(is_go_home=False)
+    else:
+        station = cur_station
+    if name == station:
         logger.info("已在目标站点")
         return STATION(True, is_destine=True)
+    else:
+        go_home()
 
     if name not in STATION_NAME2PNG:
         raise ValueError(f"未找到站点 {name} 的图片")
-    city_differences = STATION_DIFFERENCES.get((city, name))
+    city_differences = STATION_DIFFERENCES.get((station, name))
     if city_differences:
         # 点击地图
         input_tap((1201, 666))
@@ -91,24 +94,14 @@ def click_station(name: str):
         source_y = 360
         # 如果有路线则进行寻找
         x1 = source_x + city_differences[0] / 2.5
-        # if (x_distance := x1 - 1280) > 0:
-        #     x1 = 1280
-        #     source_x = source_x - x_distance
-        # elif (x_distance := x1 - 0) < 0:
-        #     x1 = 0
-        #     source_x = source_x - x_distance
         y1 = source_y + city_differences[1] / 2.5
-        # if (y_distance := y1 - 720) > 0:
-        #     y1 = 720
-        #     source_y = source_y - y_distance
-        # elif (y_distance := y1 - 78) < 0:
-        #     y1 = 78
-        #     source_y = source_y - y_distance
 
         # 滑动到目标站点
         input_swipe((x1, y1), (source_x, source_y), swipe_time=500)
         # 向回拖动避免画面长时间移动
-        input_swipe((source_x, source_y), (source_x - 10, source_y - 10), swipe_time=500)
+        input_swipe(
+            (source_x, source_y), (source_x - 10, source_y - 10), swipe_time=500
+        )
         wait_static(threshold=6000000)  # 等待滑动完成
 
         result = match_screenshot(
@@ -137,150 +130,12 @@ def click_station(name: str):
     else:
         logger.error("没有该站点的坐标信息")
     return STATION(False)
-    # 暂时不使用其他寻找方式
-    # return multiple_slide_click_station(name)
 
-
-# def swipe_station(n: int):
-#     """
-#     对地图进行多次移动
-
-#     :param n: 移动次数
-
-#     程序会根据移动的次数，进行不同方向的移动
-#     """
-#     if 0 <= n <= 1:
-#         # 地图向上移动 ^
-#         input_swipe((599, 656), (600, 129), time=500)
-#         time.sleep(0.5)
-#     elif 2 <= n <= 3:
-#         # >
-#         input_swipe((999, 388), (191, 367), time=500)
-#         time.sleep(0.5)
-#     elif 4 <= n <= 6:
-#         # 向下
-#         input_swipe((600, 129), (599, 656), time=500)
-#         time.sleep(0.5)
-#     elif 7 <= n <= 10:
-#         # <
-#         input_swipe((191, 367), (999, 388), time=500)
-#         time.sleep(0.5)
-#     else:
-#         # 向下
-#         input_swipe((599, 656), (600, 129), time=500)
-#         time.sleep(0.5)
-
-
-# def multiple_slide_click_station(name: str):
-#     """
-#     说明:
-#         多次滑动点击站点
-#     参数:
-#         :param name: 站点名称
-#     """
-#     logger.info(f"多次滑动点击站点 => {name}")
-#     if match_screenshot(screenshot(), "resources/main_map.png")["max_val"] > 0.95:
-#         logger.info("检测到主地图界面，点击地图")
-#         input_tap((1201, 666))
-#         time.sleep(1)
-
-#     if match_screenshot(screenshot(), "resources/main_map.png")["max_val"] > 0.95:
-#         logger.info("检测到主地图界面，点击地图")
-#         input_tap((1201, 666))
-#         time.sleep(1)
-
-#     def select_station(name):
-#         for n in range(13):
-#             logger.info(f"尝试点击站点 => {n}")
-#             result = match_screenshot(
-#                 screenshot(), f"resources/stations/{STATION_NAME2PNG[name]}"
-#             )
-#             if result["max_val"] > 0.95:
-#                 input_tap(result["max_loc"])
-#                 break
-#             swipe_station(n)
-#             n += 1
-
-#     select_station(name)
-#     time.sleep(0.5)
-#     # 点击前往目的地按钮
-#     logger.info("点击前往目的地按钮")
-#     if click_image(
-#         "resources/map/go_station.png",
-#         cropped_pos1=(937, 605),
-#         cropped_pos2=(1218, 679),
-#         trynum=5,
-#     ):
-#         time.sleep(1.0)
-#         click_image(
-#             "map/join_station.png",
-#             cropped_pos1=(719, 405),
-#             cropped_pos2=(927, 485),
-#             trynum=5,
-#         )
-#         return STATION(True)
-#     return click_station_ocr(name)
-
-
-# def click_station_ocr(name: str):
-#     """
-#     说明:
-#         OCR点击指定站点
-#     参数:
-#         :param name: 站点名称
-#     """
-#     logger.info(f"通过OCR识别站点 => {name}")
-#     if match_screenshot(screenshot(), "resources/main_map.png")["max_val"] > 0.95:
-#         logger.info("检测到主地图界面，点击地图")
-#         input_tap((1201, 666))
-#         time.sleep(1)
-
-#     def select_station(name):
-#         for n in range(13):
-#             logger.info(f"尝试点击站点 => {n}")
-#             all_pos = get_all_color_pos(screenshot())
-#             for pos in all_pos:
-#                 input_tap(pos)
-#                 time.sleep(0.5)
-#                 data = predict(
-#                     screenshot(), cropped_pos1=(764, 100), cropped_pos2=(1070, 132)
-#                 )
-#                 logger.info([item["text"] for item in data])
-#                 for item in data:
-#                     if item["text"] == name:
-#                         return
-#                     else:
-#                         input_tap((86, 415))
-#                         time.sleep(1.5)
-#             swipe_station(n)
-#             n += 1
-
-#     select_station(name)
-#     time.sleep(0.5)
-#     # 点击前往目的地按钮
-#     logger.info("点击前往目的地按钮")
-#     for _ in range(3):
-#         if click_image(
-#             "resources/map/go_station.png",
-#             cropped_pos1=(937, 605),
-#             cropped_pos2=(1218, 679),
-#         ):
-#             time.sleep(1.0)
-#             click_image(
-#                 "map/join_station.png",
-#                 cropped_pos1=(719, 405),
-#                 cropped_pos2=(927, 485),
-#                 trynum=5,
-#             )
-#             return STATION(True)
-#         time.sleep(0.5)
-#     return STATION(False)
-
-
-def get_city():
+def get_station(is_go_home: bool = True):
     """
-    说明:
-        获取当前城市
+    获取当前站点
+
+    :param is_go_home: 是否返回主界面
     """
     go_home()
     input_tap((1170, 493))
@@ -289,8 +144,9 @@ def get_city():
     if len(reslut) == 0:
         raise ValueError("未识别到当前城市")
     logger.info(f"当前站点: {reslut[0]['text']}")
-    # 返回主界面，回溯进入城市地图操作
-    go_home()
+    if is_go_home:
+        # 返回主界面，回溯进入城市地图操作
+        go_home()
     return reslut[0]["text"]
 
 

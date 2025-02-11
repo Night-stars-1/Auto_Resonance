@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-29 12:51:19
-LastEditTime: 2025-02-11 23:21:55
+LastEditTime: 2025-02-12 00:39:08
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -147,7 +147,7 @@ class Updater:
                     (
                         asset
                         for asset in result["assets"]
-                        if asset["name"] == f"Auto_Resonance_{__version__}.zip"
+                        if asset["name"] == f"Auto_Resonance_Update_{__version__}.zip"
                     ),
                     None,
                 )

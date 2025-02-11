@@ -2,7 +2,7 @@
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-12-15 21:01:16
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
-LastEditTime: 2025-02-12 00:00:45
+LastEditTime: 2025-02-12 00:16:43
 """
 
 import hashlib
@@ -23,7 +23,7 @@ def get_latest_hash():
     """
     获取最新的release的hash文件
     """
-    response = requests.get("https://goda.srap.link/Night-stars-1/Auto_Resonance")
+    response = requests.get("https://api.github.com/repos/Night-stars-1/Auto_Resonance/releases/latest")
     print(response.text)
     result: dict = response.json()
     tag_name = result.get("tag_name")

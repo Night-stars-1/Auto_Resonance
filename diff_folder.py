@@ -2,7 +2,7 @@
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-12-15 21:01:16
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
-LastEditTime: 2025-02-12 00:16:43
+LastEditTime: 2025-02-12 00:57:30
 """
 
 import hashlib
@@ -119,9 +119,8 @@ def zip_files(differences, zip_filename, base_folder):
             else:
                 print(f"{file_path} 不存在")
 
-# 使用示例
 if __name__ == "__main__":
-    target_folder = "dist/HeiYue2"
+    target_folder = "dist/heiyue"
 
     differences, tag_name = compare_folders(target_folder)
     if tag_name:

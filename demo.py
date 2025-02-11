@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-04 17:56:16
-LastEditTime: 2025-02-11 00:38:28
+LastEditTime: 2025-02-12 00:42:56
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -77,4 +77,4 @@ if __name__ == "__main__":
 
     # start()
 
-    click_station("阿妮塔发射中心")
+    click_station("岚心城")

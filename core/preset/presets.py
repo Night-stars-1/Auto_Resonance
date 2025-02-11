@@ -22,9 +22,7 @@ from .station import STATION
 
 FIGHT_TIME = 1000
 
-STATION_NAME2PNG: Dict[str, str] = read_json(
-    "resources/stations/name2id.json"
-)
+STATION_NAME2PNG: Dict[str, str] = read_json("resources/stations/name2id.json")
 
 # 站点坐标，左上角为(0, 0)
 # STATION_POS_DATA = {
@@ -72,10 +70,12 @@ def click_station(name: str):
         logger.info("未检测到主地图界面，返回主地图")
         go_home()
     logger.info("检测到主地图界面，识别站点")
-    city = get_city()
+    city = get_city(is_go_home=False)
     if name == city:
         logger.info("已在目标站点")
         return STATION(True, is_destine=True)
+    else:
+        go_home()
 
     if name not in STATION_NAME2PNG:
         raise ValueError(f"未找到站点 {name} 的图片")
@@ -91,24 +91,14 @@ def click_station(name: str):
         source_y = 360
         # 如果有路线则进行寻找
         x1 = source_x + city_differences[0] / 2.5
-        # if (x_distance := x1 - 1280) > 0:
-        #     x1 = 1280
-        #     source_x = source_x - x_distance
-        # elif (x_distance := x1 - 0) < 0:
-        #     x1 = 0
-        #     source_x = source_x - x_distance
         y1 = source_y + city_differences[1] / 2.5
-        # if (y_distance := y1 - 720) > 0:
-        #     y1 = 720
-        #     source_y = source_y - y_distance
-        # elif (y_distance := y1 - 78) < 0:
-        #     y1 = 78
-        #     source_y = source_y - y_distance
 
         # 滑动到目标站点
         input_swipe((x1, y1), (source_x, source_y), swipe_time=500)
         # 向回拖动避免画面长时间移动
-        input_swipe((source_x, source_y), (source_x - 10, source_y - 10), swipe_time=500)
+        input_swipe(
+            (source_x, source_y), (source_x - 10, source_y - 10), swipe_time=500
+        )
         wait_static(threshold=6000000)  # 等待滑动完成
 
         result = match_screenshot(
@@ -277,10 +267,11 @@ def click_station(name: str):
 #     return STATION(False)
 
 
-def get_city():
+def get_city(is_go_home: bool = True):
     """
-    说明:
-        获取当前城市
+    获取当前城市
+
+    :param is_go_home: 是否返回主界面
     """
     go_home()
     input_tap((1170, 493))
@@ -289,8 +280,9 @@ def get_city():
     if len(reslut) == 0:
         raise ValueError("未识别到当前城市")
     logger.info(f"当前站点: {reslut[0]['text']}")
-    # 返回主界面，回溯进入城市地图操作
-    go_home()
+    if is_go_home:
+        # 返回主界面，回溯进入城市地图操作
+        go_home()
     return reslut[0]["text"]
 
 

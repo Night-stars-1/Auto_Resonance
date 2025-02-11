@@ -1,11 +1,12 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:24:47
-LastEditTime: 2024-12-12 00:30:34
+LastEditTime: 2025-02-11 16:15:25
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
 import time
+from typing import Optional
 
 from loguru import logger
 
@@ -20,14 +21,21 @@ MAP_WAIT_TIME = 3000
 
 
 class STATION:
-    """
-    说明:
-        站点类
-    """
 
-    def __init__(self, station: bool, is_destine: bool = False) -> None:
+
+    def __init__(self, station: bool, is_destine: bool = False, cur_station: Optional[str] = None, tar_station: Optional[str] = None) -> None:
+        """
+        站点类
+        
+        :param station: 是否操作成功
+        :param is_destine: 是否在目标站点
+        :param cur_station: 当前站点
+        :param tar_station: 目标站点
+        """
         self.station = station
         self.is_destine = is_destine
+        self.cur_station = cur_station
+        self.tar_station = tar_station
 
     def __bool__(self) -> bool:
         return self.station

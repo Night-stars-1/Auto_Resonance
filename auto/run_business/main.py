@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:14:29
-LastEditTime: 2025-02-04 23:41:51
+LastEditTime: 2025-02-11 16:21:09
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -78,7 +78,6 @@ def run(routes: RoutesModel):
             logger.info("没有数据")
             return False
         logger.info(f"{city.buy_city_name}->{city.sell_city_name}")
-        go_home()
         click_station(city.buy_city_name).wait()
         go_business("buy")
         goods_data = list(city.goods_data.keys())
@@ -88,7 +87,6 @@ def run(routes: RoutesModel):
             city.buy_argaining_num,
             max_book=city.book,
         )
-        go_home()
         click_station(city.sell_city_name).wait()
         go_business("sell")
         sell_business(city.sell_argaining_num)

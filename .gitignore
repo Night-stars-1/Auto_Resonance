@@ -116,3 +116,5 @@ config*
 temp/
 .pdm-build/
 *.prof
+diff.zip
+hash.json

@@ -55,6 +55,13 @@ jobs:
           Copy-Item -Path ".\README.md" -Destination ".\dist\heiyue\" -Force
           Copy-Item -Path ".\dist\updater\HeiYue Updater.exe" -Destination ".\dist\heiyue\HeiYue Updater.exe" -Recurse -Force
 
+      - name: Make increment zip
+        id: make_increment_zip
+        run: |
+          python diff_folder.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Create zip archive
         if: startsWith(github.ref, 'refs/tags/')
         run: |
@@ -71,4 +78,6 @@ jobs:
           files: |
             ./dist/Auto_Resonance_${{ github.ref_name }}.zip
             ./dist/Auto_Resonance_Incremental_${{ github.ref_name }}.zip
+            ./${{ steps.make_increment_zip.outputs.increment_zip }}
+            ./hash.json
           make_latest: true

@@ -24,7 +24,6 @@ def get_latest_hash():
     获取最新的release的hash文件
     """
     response = requests.get("https://api.github.com/repos/Night-stars-1/Auto_Resonance/releases/latest")
-    print(response.text)
     result: dict = response.json()
     tag_name = result.get("tag_name")
     asset = next((asset for asset in result["assets"] if asset["name"] == "hash.json"), None)

@@ -2,11 +2,13 @@
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-25 23:03:03
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
-LastEditTime: 2025-02-11 17:28:55
+LastEditTime: 2025-02-11 21:03:19
 """
 
 import sys
 from pathlib import Path
+
+import numpy as np
 
 # 添加项目根目录到 sys.path
 project_root = Path(__file__).resolve().parent.parent
@@ -18,11 +20,9 @@ from core.adb.adb import connect, screenshot
 
 connect(16384)
 
-
-# 澄明数据中心 (1049, 345) 7号自由港 (665, 577) 阿妮塔战备工厂 (832, 664) 阿妮塔发射中心 (164, 420+577) 阿妮塔能源研究所 (614, 454+577)
-# 修格里城 (285+1049, 121+345) 铁盟哨站 (501+1049, 122+345) 荒原站 (753+1049, 121+345)
-# 曼德矿场 (602+1049, 322+345) 淘金乐园 (701+1049, 604+345)
+# 定义鼠标点击事件处理函数
 def click_event(event, x, y, flags, param):
+    global zoom_mode, zoomed_image, original_image
     # 检查事件是否为左键点击
     if event == cv2.EVENT_LBUTTONDOWN:
         color = param[y, x]
@@ -32,32 +32,50 @@ def click_event(event, x, y, flags, param):
         print("Color (BGR): ", color_bgr)
         print("Color (HSV): ", color_hsv.tolist())
 
+        # 放大模式下显示点击区域的放大图
+        if zoom_mode:
+            # 获取区域的边界
+            zoomed_area = original_image[max(0, y-50):min(y+50, original_image.shape[0]),
+                                         max(0, x-50):min(x+50, original_image.shape[1])]
+            # 放大2倍
+            zoomed_image = cv2.resize(zoomed_area, (zoomed_area.shape[1]*5, zoomed_area.shape[0]*5))
 
-image = screenshot()
-# image = cv2.imread("resources/test/ae930c5ab35cd1fcda946fe4e74f8896.png")
-"""
-Clicked at:  (626, 273)
-Color (BGR):  [181, 199, 14]
-Color (HSV):  [33, 237, 199]
-Clicked at:  (636, 267)
-Color (BGR):  [178, 193, 11]
-Color (HSV):  [32, 240, 193]
-Clicked at:  (609, 289)
-Color (BGR):  [182, 195, 12]
-Color (HSV):  [32, 239, 195]
+            # 确保放大后的坐标不会超出放大区域的边界
+            zoomed_y = min(y*2, zoomed_image.shape[0] - 1)  # 防止超出放大图的y轴范围
+            zoomed_x = min(x*2, zoomed_image.shape[1] - 1)  # 防止超出放大图的x轴范围
 
-Clicked at:  (632, 267)
-Color (BGR):  [50, 69, 200]
-Color (HSV):  [116, 191, 200]
-Clicked at:  (626, 275)
-Color (BGR):  [46, 66, 196]
-Color (HSV):  [116, 195, 196]
-Clicked at:  (612, 286)
-Color (BGR):  [49, 65, 191]
-Color (HSV):  [117, 190, 191]
-"""
+            # 显示放大区域
+            cv2.imshow("Zoomed Area", zoomed_image)
+            cv2.setMouseCallback("Zoomed Area", click_event, param=zoomed_image)
+
+            # # 获取放大区域内的颜色值
+            # color_zoomed = zoomed_image[zoomed_y, zoomed_x]
+            # color_zoomed_bgr = color_zoomed.tolist()
+            # color_zoomed_hsv = cv2.cvtColor(np.uint8([[color_zoomed]]), cv2.COLOR_BGR2HSV)[0][0].tolist()
+            # print("Zoomed Color (BGR): ", color_zoomed_bgr)
+            # print("Zoomed Color (HSV): ", color_zoomed_hsv)
+
+# 全局变量
+zoom_mode = False  # 放大模式开关
+zoomed_image = None
+original_image = screenshot()
+
 cv2.namedWindow("image")
-cv2.setMouseCallback("image", click_event, param=image)
-cv2.imshow("image", image)
-cv2.waitKey(0)
+cv2.setMouseCallback("image", click_event, param=original_image)
+
+while True:
+    cv2.imshow("image", original_image)
+    
+    # 等待键盘事件
+    key = cv2.waitKey(1) & 0xFF
+    
+    # 按 'C' 键切换放大模式
+    if key == ord('c'):
+        zoom_mode = not zoom_mode  # 切换放大模式
+        print("Zoom mode:", "ON" if zoom_mode else "OFF")
+    
+    # 按 'q' 键退出
+    if key == ord('q'):
+        break
+
 cv2.destroyAllWindows()

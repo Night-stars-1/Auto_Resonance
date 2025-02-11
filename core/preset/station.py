@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:24:47
-LastEditTime: 2025-02-11 19:17:49
+LastEditTime: 2025-02-11 22:08:06
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -20,14 +20,16 @@ from core.preset.control import go_home
 FIGHT_TIME = 300
 MAP_WAIT_TIME = 3000
 
+# pick_mask = cv.imread("resources/mask/pick_mask.png", cv.IMREAD_GRAYSCALE)
+# _, pick_mask = cv.threshold(pick_mask, 128, 255, cv.THRESH_BINARY)
+
 
 class STATION:
-
 
     def __init__(self, station: bool, is_destine: bool = False) -> None:
         """
         站点类
-        
+
         :param station: 是否操作成功
         :param is_destine: 是否在目标站点
         :param cur_station: 当前站点
@@ -48,7 +50,7 @@ class STATION:
             return True
         logger.info("进入行车监听")
         start = time.perf_counter()
-        while time.perf_counter() - start < MAP_WAIT_TIME:
+        while (time_interval := time.perf_counter() - start) < MAP_WAIT_TIME:
             image = screenshot()
             # 0-2攻击检测，3-4拦截检测
             attack_bgrs = get_bgrs(
@@ -87,7 +89,7 @@ class STATION:
                 logger.info("点击加速弹丸")
                 input_tap((1061, 657))
                 time.sleep(0.5)
-            config.global_config.is_auto_pick and self.auto_pick()  # 捡垃圾
+            config.global_config.is_auto_pick and input_tap((674, 378))  # 捡垃圾
             time.sleep(0.3)
         logger.error("站点超时")
         return False
@@ -174,24 +176,28 @@ class STATION:
         screenshot_cv = screenshot()
 
         # 设置HSV范围
-        lower_color = np.array([100, 30, 170])
-        upper_color = np.array([110, 60, 220])
+        lower_color = np.array([100, 150, 200])
+        upper_color = np.array([120, 255, 255])
 
         hsv_image = cv.cvtColor(screenshot_cv, cv.COLOR_BGR2HSV)
 
         # 创建指定像素掩码
         mask = cv.inRange(hsv_image, lower_color, upper_color)
+        # mask = cv.bitwise_and(mask, mask, mask=pick_mask)
         # 高斯模糊以影响精度
-        mask = cv.GaussianBlur(mask, (5, 5), 0)
+        # mask = cv.GaussianBlur(mask, (5, 5), 0)
         # 找到指定区域的连通区域
         contours, _ = cv.findContours(mask, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
-
+        if contours is None:
+            return
         for contour in contours:
             x, y, w, h = cv.boundingRect(contour)
-            # 计算该区域的蓝色像素数量
-            blue_pixels_in_contour = cv.countNonZero(mask[contour[:, 0, 1], contour[:, 0, 0]])
+            if 10 < h < 80 and 20 < w < 100:
+                color_pixels_in_contour = cv.countNonZero(
+                    mask[contour[:, 0, 1], contour[:, 0, 0]]
+                )
 
-            if blue_pixels_in_contour < 40:
-                continue
-
-            input_tap((x + w // 2, y + h // 2))
+                if color_pixels_in_contour < 60 or color_pixels_in_contour > 200:
+                    continue
+                input_tap((x + w // 2, y + h // 2))
+                time.sleep(0.2)

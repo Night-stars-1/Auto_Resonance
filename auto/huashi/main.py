@@ -11,7 +11,15 @@ from datetime import datetime
 from loguru import logger
 
 from core.model.config import config
-from core.preset import click, get_city, go_home, go_outlets, ocr_click, wait, wait_time
+from core.preset import (
+    click,
+    get_station,
+    go_home,
+    go_outlets,
+    ocr_click,
+    wait,
+    wait_time,
+)
 
 CITYS = [
     "7号自由港",
@@ -31,7 +39,7 @@ def join():
 def start():
     logger.info(f"开始购买桦石")
     if time.time() - config.rest_area.huashi.runtime > 86400:
-        city = get_city()
+        city = get_station()
         if city in CITYS:
             join()
 

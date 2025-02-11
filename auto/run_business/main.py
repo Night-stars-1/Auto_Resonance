@@ -1,7 +1,7 @@
 """
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2024-04-05 17:14:29
-LastEditTime: 2025-02-11 16:21:09
+LastEditTime: 2025-02-11 19:26:08
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
@@ -21,7 +21,7 @@ from core.image import get_bgr
 from core.model import app
 from core.model.city_goods import RouteModel, RoutesModel
 from core.module.bgr import BGR, BGRGroup
-from core.preset import click_station, get_city, go_home, go_outlets, wait_gbr
+from core.preset import click_station, get_station, go_home, go_outlets, wait_gbr
 from core.utils import read_json
 
 _city_sell_data: Dict[str, Dict[str, int]] = read_json(
@@ -70,7 +70,7 @@ def run(routes: RoutesModel):
     if not status:
         logger.error("ADB连接失败")
         return False
-    city_name = get_city()
+    city_name = get_station()
     if routes.city_data[0].sell_city_name == city_name:
         routes.city_data = [routes.city_data[1], routes.city_data[0]]
     for city in routes.city_data:
@@ -78,7 +78,7 @@ def run(routes: RoutesModel):
             logger.info("没有数据")
             return False
         logger.info(f"{city.buy_city_name}->{city.sell_city_name}")
-        click_station(city.buy_city_name).wait()
+        click_station(city.buy_city_name, cur_station=city_name).wait()
         go_business("buy")
         goods_data = list(city.goods_data.keys())
         buy_business(
@@ -87,9 +87,11 @@ def run(routes: RoutesModel):
             city.buy_argaining_num,
             max_book=city.book,
         )
-        click_station(city.sell_city_name).wait()
+        click_station(city.sell_city_name, cur_station=city_name).wait()
         go_business("sell")
         sell_business(city.sell_argaining_num)
+        # 流程跑完，更改站点名称为当前出售商品的站点
+        city_name = city.sell_city_name
     logger.info("运行完成")
     return True
 

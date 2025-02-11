@@ -2,7 +2,7 @@
 Author: Night-stars-1 nujj1042633805@gmail.com
 Date: 2025-02-11 17:06:05
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
-LastEditTime: 2025-02-11 19:17:31
+LastEditTime: 2025-02-11 19:53:02
 """
 
 import sys
@@ -43,7 +43,8 @@ for contour in contours:
 
     # 计算该蓝色区域的蓝色像素数量
     color_pixels_in_contour = cv2.countNonZero(mask[contour[:, 0, 1], contour[:, 0, 0]])
-
+    if color_pixels_in_contour < 40:
+        continue
     # 计算蓝色区域的总像素数量
     total_area_pixels = cv2.contourArea(contour)
 

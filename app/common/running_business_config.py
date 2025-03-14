@@ -46,23 +46,9 @@ STATIONS = [
 class RunningBusinessConfig(QConfig):
     """Config of application"""
 
-    totalMaxBook = ConfigItem("RunningBusiness", "totalMaxBook", 4, None)
-    profitThreshold = ConfigItem("RunningBusiness", "profitThreshold", 100000, None)
-    priceThreshold = ConfigItem("RunningBusiness", "priceThreshold", 500, None)
-    maxGoodsNum = ConfigItem("RunningBusiness", "maxGoodsNum", 625, None)
-    tiredProfitThreshold = ConfigItem(
-        "RunningBusiness", "tiredProfitThreshold", 12000, None
-    )
-
-    for skill in SKILLS:
-        locals()[skill] = ConfigItem("SkillLevel", skill, 0, None)
-
+    BuyCount = ConfigItem("RunBuy", "BuyCount", 0, None)
+    
     for city in CITYS:
         # 特殊适配7号自由港
-        locals()[f"{city}砍抬次数"] = ConfigItem("NegotiatePrice", city.replace("七号自由港", "7号自由港"), 0, None)
-    buyTired = ConfigItem("NegotiatePrice", "buyTired", 8, None)
-    sellTired = ConfigItem("NegotiatePrice", "sellTired", 8, None)
-
-    for station in STATIONS:
-        # 特殊适配7号自由港
-        locals()[f"{station}声望"] = ConfigItem("StationLevel", station.replace("七号自由港", "7号自由港"), 0, None)
+        locals()[f"{city}进货书"] = ConfigItem("CityBook", city.replace("七号自由港", "7号自由港"), 0, None)
+        locals()[f"{city}议价次数"] = ConfigItem("CityHaggle", city.replace("七号自由港", "7号自由港"), 0, None)

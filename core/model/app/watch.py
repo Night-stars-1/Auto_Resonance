@@ -11,6 +11,7 @@ from pathlib import Path
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
+from core import logger
 from core.model.app.index import APP_PATH, Config, app
 
 

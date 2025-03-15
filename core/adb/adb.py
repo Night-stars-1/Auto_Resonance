@@ -64,7 +64,9 @@ def connect(adb_port: int = 0, name="自定义"):
     status = "already connected" in str(result.stdout) or "connected to" in str(
         result.stdout
     )
-    return status and stop
+    if not status:
+        logger.error(f"连接失败: {result.stdout.decode()}")
+    return status and STOP
 
 
 def stop():
@@ -124,8 +126,8 @@ def input_swipe(pos1=(919, 617), pos2=(919, 908), swipe_time: int = 100):
         run(shell, check=False)
         time.sleep(swipe_time / 1000)
         # 减去当前执行的距离
-        pos_x1 -= (limit_pos_x1 - limit_pos_x2)
-        pos_y1 -= (limit_pos_y1 - limit_pos_y2)
+        pos_x1 -= limit_pos_x1 - limit_pos_x2
+        pos_y1 -= limit_pos_y1 - limit_pos_y2
         # pos_x2 -= limit_pos_x2
         # pos_y2 -= limit_pos_y2
 

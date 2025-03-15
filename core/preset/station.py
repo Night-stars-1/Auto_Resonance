@@ -89,7 +89,7 @@ class STATION:
                 logger.info("点击加速弹丸")
                 input_tap((1061, 657))
                 time.sleep(0.5)
-            config.global_config.is_auto_pick and input_tap((680, 378))  # 捡垃圾
+            config.global_config.is_auto_pick and input_tap((781, 484))  # 捡垃圾
             time.sleep(0.3)
         logger.error("站点超时")
         return False

@@ -29,7 +29,6 @@ from app.common.config import VERSION, cfg
 from app.common.icon import FluentIconBase
 from app.common.signal_bus import signalBus
 from app.view.daily_task_interface import DailyTaskInterface
-from app.view.running_business_interface import RunningBusinessInterface
 from app.view.two_city_run_business_interface import TwoRunBusinessInterface
 from updater import Updater, UpdateStatus
 
@@ -54,7 +53,6 @@ class MainWindow(MSFluentWindow):
         self.loggerInterface = LoggerInterface(self)
         self.settingInterface = SettingInterface(self)
         self.daily_task_interface = DailyTaskInterface(self)
-        self.running_business_interface = RunningBusinessInterface(self)
         self.two_run_business_interface = TwoRunBusinessInterface(self)
         self.adb_data_interface = ADBDataInterface(self)
 
@@ -76,7 +74,6 @@ class MainWindow(MSFluentWindow):
         self.addSubInterface(self.homeInterface, FIF.HOME, "主页")
         self.addSubInterface(self.tajInterface, FIF.AIRPLANE, "铁安局")
         self.addSubInterface(self.daily_task_interface, FIF.CALENDAR, "每日任务")
-        # self.addSubInterface(self.running_business_interface, FIF.TRAIN, "跑商配置")
         self.addSubInterface(self.two_run_business_interface, FIF.TRAIN, "端点跑商")
         self.addSubInterface(self.adb_data_interface, FIF.GAME, "ADB信息")
 

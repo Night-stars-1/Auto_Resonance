@@ -11,12 +11,12 @@ from typing import Dict
 from loguru import logger
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QLabel, QWidget
-from qfluentwidgets import CheckBox, ExpandLayout
+from qfluentwidgets import CheckBox, ExpandLayout, ExpandSettingCard
 from qfluentwidgets import FluentIcon as FIF
 from qfluentwidgets import ScrollArea
 
 from app.common.config import cfg
-from app.common.running_business_config import CITYS
+from app.common.running_business_config import CITYS, STATIONS
 from app.common.signal_bus import signalBus
 from app.common.style_sheet import StyleSheet
 from app.common.worker import Worker
@@ -62,10 +62,43 @@ class TwoRunBusinessInterface(ScrollArea):
         self.testRunBusinessCard = PrimaryPushLoadCard(
             "测试", FIF.TAG, "跑商测试", "测试跑商功能", self.scrollWidget
         )
+        self.buyCountCard = SpinBoxSettingCard(
+            cfg.BuyCount,
+            FIF.ACCEPT,
+            "运行次数",
+            spin_box_max=20,
+            parent=self.scrollWidget,
+        )
         self.cityCheckboxGroup = CheckboxGroup(self.scrollWidget)
         for city in CITYS:
             checkbox = self.cityCheckboxGroup.addCheckbox(city)
             checkbox.toggled.connect(partial(self.check_checkbox, checkbox))
+
+        self.bookGroup = ExpandSettingCard(
+            FIF.BRUSH, "进货书设置", parent=self.scrollWidget
+        )
+        self.haggleGroup = ExpandSettingCard(
+            FIF.BRUSH, "议价设置", parent=self.scrollWidget
+        )
+        for city in CITYS:
+            bookCard = SpinBoxSettingCard(
+                getattr(cfg, f"{city}进货书"),
+                FIF.ACCEPT,
+                city,
+                f"{city}进货书",
+                spin_box_max=20,
+                parent=self.bookGroup,
+            )
+            self.bookGroup.viewLayout.addWidget(bookCard)
+            haggleCard = SpinBoxSettingCard(
+                getattr(cfg, f"{city}议价次数"),
+                FIF.ACCEPT,
+                city,
+                f"{city}议价次数",
+                spin_box_max=20,
+                parent=self.haggleGroup,
+            )
+            self.haggleGroup.viewLayout.addWidget(haggleCard)
 
     def check_checkbox(self, checkbox: CheckBox):
         if self.cityCheckboxGroup.count() > 2:
@@ -74,10 +107,16 @@ class TwoRunBusinessInterface(ScrollArea):
     def __initLayout(self):
         self.settingLabel.move(36, 30)
 
+        self.bookGroup._adjustViewSize()
+        self.haggleGroup._adjustViewSize()
+
         self.expandLayout.setContentsMargins(36, 0, 36, 0)
 
         self.expandLayout.addWidget(self.cityCheckboxGroup)
         self.expandLayout.addWidget(self.testRunBusinessCard)
+        self.expandLayout.addWidget(self.buyCountCard)
+        self.expandLayout.addWidget(self.bookGroup)
+        self.expandLayout.addWidget(self.haggleGroup)
 
     def __connectSignalToSlot(self):
         """connect signal to slot"""
@@ -87,7 +126,11 @@ class TwoRunBusinessInterface(ScrollArea):
         from auto.run_business import two_city_run
 
         # 获取勾选的城市
-        checkbox = [checkbox for checkbox in self.cityCheckboxGroup.checkboxGroup if checkbox.isChecked()]
+        checkbox = [
+            checkbox
+            for checkbox in self.cityCheckboxGroup.checkboxGroup
+            if checkbox.isChecked()
+        ]
         buy_city_name = checkbox[0].text()
         sell_city_name = checkbox[1].text()
 

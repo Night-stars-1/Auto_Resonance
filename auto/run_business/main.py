@@ -13,15 +13,11 @@ from loguru import logger
 from auto.run_business.buy import buy_business
 from auto.run_business.sell import sell_business
 from core.adb.adb import STOP, connect, input_tap, screenshot
-from core.api.kmou import get_goods_info as get_goods_info_kmou
-from core.api.srap import get_goods_info as get_goods_info_srap
-from core.exceptions import StopExecution
-from core.goods import show
 from core.image import get_bgr
 from core.model import app
 from core.model.city_goods import RouteModel, RoutesModel
 from core.module.bgr import BGR, BGRGroup
-from core.preset import click_station, get_station, go_home, go_outlets, wait_gbr
+from core.preset import click_station, get_station, go_outlets, wait_gbr
 from core.utils import read_json
 
 _city_sell_data: Dict[str, Dict[str, int]] = read_json(
@@ -31,6 +27,21 @@ city_sell_data = {
     city: dict(sorted(goods.items(), key=lambda item: not item[1]["price"]))
     for city, goods in _city_sell_data.items()
 }
+
+
+def show(routes: RoutesModel):
+    route = routes.city_data
+    message = f"""{route[0].buy_city_name}<->{route[0].sell_city_name}:
+{route[0].buy_city_name}:
+    商品顺序: {"->".join(route[0].goods_data.keys())}
+    议价次数: {route[0].haggle_num}
+    书本数量: {route[0].book}
+{route[0].sell_city_name}:
+    商品顺序: {"->".join(route[1].goods_data.keys())}
+    议价次数: {route[1].haggle_num}
+    书本数量: {route[1].book}"""
+
+    return message
 
 
 def go_business(type: Literal["buy", "sell"] = "buy"):
@@ -84,12 +95,12 @@ def run(routes: RoutesModel):
         buy_business(
             goods_data[:1],
             goods_data[1:],
-            city.buy_argaining_num,
+            city.haggle_num,
             max_book=city.book,
         )
         click_station(city.sell_city_name, cur_station=city_name).wait()
         go_business("sell")
-        sell_business(city.sell_argaining_num)
+        sell_business(city.haggle_num)
         # 流程跑完，更改站点名称为当前出售商品的站点
         city_name = city.sell_city_name
     logger.info("运行完成")
@@ -97,34 +108,32 @@ def run(routes: RoutesModel):
 
 
 def two_city_run(buy_city_name: str, sell_city_name: str):
+    count = app.RunBuy.BuyCount
+    buy_haggle_num = app.CityHaggle[buy_city_name]
+    sell_haggle_num = app.CityHaggle[sell_city_name]
+    buy_book_num = app.CityBook[buy_city_name]
+    sell_book_num = app.CityBook[sell_city_name]
     routes = RoutesModel(
         city_data=[
             RouteModel(
                 buy_city_name=buy_city_name,
-                buy_argaining_num=4,
                 sell_city_name=sell_city_name,
-                sell_argaining_num=4,
-                book=2,
-                profit=-999,  # 无需构建
+                haggle_num=buy_haggle_num,
+                book=buy_book_num,
                 goods_data=city_sell_data[buy_city_name],
             ),
             RouteModel(
                 buy_city_name=sell_city_name,
-                buy_argaining_num=4,
                 sell_city_name=buy_city_name,
-                sell_argaining_num=4,
-                book=2,
-                profit=-999,  # 无需构建
+                haggle_num=sell_haggle_num,
+                book=sell_book_num,
                 goods_data=city_sell_data[sell_city_name],
             ),
         ],
-        profit=-999,  # 无需构建
-        tired_profit=0,  # 无需构建
-        book_profit=0,  # 无需构建
-        book=0,  # 无需构建
     )
-    logger.info("当前为端点跑商，下方输出的内容为假信息")
-    run(routes)
+    logger.info(f"准备运行端点跑商，运行次数: {count}")
+    for i in range(count):
+        run(routes)
 
 
 def stop():
@@ -134,30 +143,3 @@ def stop():
     """
     global STOP
     STOP = True
-
-
-def start():
-    """
-    说明:
-        循环监听单位疲劳利润，达到阈值时进行跑商
-    """
-    global STOP
-    STOP = False
-    while True:
-        if STOP:
-            raise StopExecution()
-        if app.Global.goodsType:
-            routes = get_goods_info_kmou()
-        else:
-            routes = get_goods_info_srap()
-        if routes.tired_profit >= app.RunningBusiness.tiredProfitThreshold:
-            run(routes)
-        else:
-            logger.info(
-                f"疲劳利润: {routes.tired_profit} 阈值: {app.RunningBusiness.tiredProfitThreshold}，未达到阈值不跑商"
-            )
-            time.sleep(5)
-
-
-if __name__ == "__main__":
-    start()

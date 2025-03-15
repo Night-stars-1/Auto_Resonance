@@ -10,8 +10,10 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from pydantic import BaseModel, Field, RootModel
 
+
 class RouteModel(BaseModel):
     """目标商品模型"""
+
     class GoodsData(BaseModel):
         """商品数据"""
 
@@ -23,15 +25,13 @@ class RouteModel(BaseModel):
         """出售价格"""
         profit: int = 0
         """利润"""
-        
+
     buy_city_name: str = ""
     """购买城市"""
-    buy_argaining_num: int = 0
-    """购买议价次数"""
     sell_city_name: str = ""
     """出售城市"""
-    sell_argaining_num: int = 0
-    """出售议价次数"""
+    haggle_num: int = 0
+    """议价次数"""
     goods_data: Dict[str, GoodsData] = {}
     """商品数据"""
     buy_goods: Dict[str, int] = {}
@@ -42,8 +42,6 @@ class RouteModel(BaseModel):
     """总售价"""
     city_tired: int = 999
     """总疲劳"""
-    profit: int = 0
-    """总利润"""
     tired_profit: int = 0
     """单位利润"""
     book_profit: int = 0
@@ -59,22 +57,6 @@ class RoutesModel(BaseModel):
 
     city_data: List[RouteModel] = [RouteModel(), RouteModel()]
     """路线模型集合"""
-    profit: int = 0
-    """利润"""
-    city_tired: int = 0
-    """所需疲劳"""
-    tired_profit: int = 0
-    """疲劳利润"""
-    book_profit: int = 0
-    """单书利润"""
-    book: int = 0
-    """书本数量"""
-
-    def find(self, **kargs) -> Optional[RouteModel]:
-        for i in self.root:
-            if all(getattr(i, key) == value for key, value in kargs.items()):
-                return i
-        return None
 
 
 class CityDataModel(BaseModel):

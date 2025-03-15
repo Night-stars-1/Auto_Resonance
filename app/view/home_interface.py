@@ -25,7 +25,6 @@ from app.components.button_card import ButtonCardView
 from app.components.homes.title_brogress_bars_card import TitleProgressBarsCard
 from app.components.link_card import LinkCardView
 from app.components.settings.checkbox_group_card import CheckboxGroup
-from core.api.srap import get_boss
 
 
 class BannerWidget(QWidget):

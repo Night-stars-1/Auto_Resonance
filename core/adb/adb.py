@@ -66,7 +66,7 @@ def connect(adb_port: int = 0, name="自定义"):
     )
     if not status:
         logger.error(f"连接失败: {result.stdout.decode()}")
-    return status and STOP
+    return status
 
 
 def stop():

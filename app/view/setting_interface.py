@@ -32,21 +32,21 @@ class SettingInterface(ScrollArea):
 
         # music folders
         self.musicInThisPCGroup = SettingCardGroup("配置", self.scrollWidget)
-        self.goodsTypeCard = SwitchSettingCard(
-            FIF.TAG,
-            "数据源",
-            "开为 KMou，关为 SRAP",
-            configItem=cfg.goodsType,
-            parent=self.musicInThisPCGroup,
-        )
-        self.uuidCard = LineEditSettingCard(
-            cfg.uuid,
-            "KMou商品请求 UUID",
-            FIF.LABEL,
-            "KMou商品请求 UUID",
-            parent=self.musicInThisPCGroup,
-            isPassword=True,
-        )
+        # self.goodsTypeCard = SwitchSettingCard(
+        #     FIF.TAG,
+        #     "数据源",
+        #     "开为 KMou，关为 SRAP",
+        #     configItem=cfg.goodsType,
+        #     parent=self.musicInThisPCGroup,
+        # )
+        # self.uuidCard = LineEditSettingCard(
+        #     cfg.uuid,
+        #     "KMou商品请求 UUID",
+        #     FIF.LABEL,
+        #     "KMou商品请求 UUID",
+        #     parent=self.musicInThisPCGroup,
+        #     isPassword=True,
+        # )
         # self.adbPathCard = LineEditSettingCard(
         #     cfg.adbPath,
         #     "ADB路径",
@@ -113,8 +113,8 @@ class SettingInterface(ScrollArea):
         self.settingLabel.move(36, 30)
 
         # add cards to group
-        self.musicInThisPCGroup.addSettingCard(self.goodsTypeCard)
-        self.musicInThisPCGroup.addSettingCard(self.uuidCard)
+        # self.musicInThisPCGroup.addSettingCard(self.goodsTypeCard)
+        # self.musicInThisPCGroup.addSettingCard(self.uuidCard)
         # self.musicInThisPCGroup.addSettingCard(self.adbPathCard)
         self.musicInThisPCGroup.addSettingCard(self.adbOrderCard)
         self.musicInThisPCGroup.addSettingCard(self.isSpeedCard)

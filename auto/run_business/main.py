@@ -85,9 +85,6 @@ def run(routes: RoutesModel):
     if routes.city_data[0].sell_city_name == city_name:
         routes.city_data = [routes.city_data[1], routes.city_data[0]]
     for city in routes.city_data:
-        if city.profit == 0:
-            logger.info("没有数据")
-            return False
         logger.info(f"{city.buy_city_name}->{city.sell_city_name}")
         click_station(city.buy_city_name, cur_station=city_name).wait()
         go_business("buy")
@@ -108,6 +105,8 @@ def run(routes: RoutesModel):
 
 
 def two_city_run(buy_city_name: str, sell_city_name: str):
+    global STOP
+    STOP = False
     count = app.RunBuy.BuyCount
     buy_haggle_num = app.CityHaggle[buy_city_name]
     sell_haggle_num = app.CityHaggle[sell_city_name]
@@ -133,7 +132,8 @@ def two_city_run(buy_city_name: str, sell_city_name: str):
     )
     logger.info(f"准备运行端点跑商，运行次数: {count}")
     for i in range(count):
-        run(routes)
+        if not run(routes) or STOP:
+            break
 
 
 def stop():

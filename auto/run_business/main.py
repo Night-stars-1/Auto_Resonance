@@ -24,7 +24,7 @@ _city_sell_data: Dict[str, Dict[str, int]] = read_json(
     "resources/goods/CityGoodsSellData.json"
 )
 city_sell_data = {
-    city: dict(sorted(goods.items(), key=lambda item: not item[1]["price"]))
+    city: dict(sorted(goods.items(), key=lambda item: item[1]["price"], reverse=True))
     for city, goods in _city_sell_data.items()
 }
 

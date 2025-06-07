@@ -1,0 +1,21 @@
+name: mirrorchyan_release_note
+
+on:
+  workflow_dispatch:
+  release:
+    types: [edited]
+
+jobs:
+  mirrorchyan:
+    runs-on: macos-latest
+
+    steps:
+      - id: uploading
+        uses: MirrorChyan/release-note-action@v1
+        with:
+          mirrorchyan_rid: Auto_Resonance
+
+          upload_token: ${{ secrets.MirrorChyanUploadToken }}
+          owner: Night-stars-1
+          repo: Auto_Resonance
+          github_token: ${{ secrets.GITHUB_TOKEN }}

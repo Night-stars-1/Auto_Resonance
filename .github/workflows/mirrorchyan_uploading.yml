@@ -1,0 +1,20 @@
+name: mirrorchyan_uploading
+
+on:
+  workflow_dispatch:
+
+jobs:
+  mirrorchyan:
+    runs-on: macos-latest
+
+    steps:
+      - uses: MirrorChyan/uploading-action@v1
+        with:
+          filetype: latest-release
+          filename: "Auto_Resonance_v*.zip"
+          mirrorchyan_rid: Auto_Resonance
+
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          owner: Night-stars-1
+          repo: Auto_Resonance
+          upload_token: ${{ secrets.MirrorChyanUploadToken }}

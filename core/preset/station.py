@@ -149,7 +149,7 @@ class STATION:
                 input_tap((1151, 626))
             elif (
                 match_screenshot(
-                    image, "resources/fight/end_fight.png", (1070, 600), (1251, 670)
+                    image, "resources/fight/end_fight.png", (1137, 566), (1224, 652)
                 )["max_val"]
                 > 0.995
             ):

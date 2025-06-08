@@ -46,6 +46,9 @@ class STATION:
         说明:
             等待进入站点
         """
+        if self.station == False:
+            logger.error("进入列车行驶状态失败")
+            return False
         if self.is_destine:
             return True
         logger.info("进入行车监听")

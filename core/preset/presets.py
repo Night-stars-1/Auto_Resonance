@@ -110,6 +110,9 @@ def click_station(name: str, cur_station: Optional[str] = None):
         if result["max_val"] > 0.95:
             # 点击站点
             input_tap(result["max_loc"])
+        else:
+            logger.error(f"未找到站点: {name}")
+            return STATION(False)
         time.sleep(0.5)
         # 点击前往目的地按钮
         logger.info("点击前往目的地按钮")
@@ -127,6 +130,8 @@ def click_station(name: str, cur_station: Optional[str] = None):
                 trynum=5,
             )
             return STATION(True)
+        else:
+            logger.error(f"未找到前往目的地按钮: {name}")
     else:
         logger.error("没有该站点的坐标信息")
     return STATION(False)

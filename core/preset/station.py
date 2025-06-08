@@ -140,7 +140,7 @@ class STATION:
         start = time.perf_counter()
         while time.perf_counter() - start < FIGHT_TIME:
             image = screenshot()
-            bgrs = get_bgrs(image, [(1114, 630), (1204, 624), (236, 26)])
+            bgrs = get_bgrs(image, [(1114, 630), (1204, 624), (159, 26)])
             if (
                 BGRGroup([198, 200, 200], [202, 204, 204]) == bgrs[0]
                 and BGRGroup([183, 185, 185], [187, 189, 189]) == bgrs[1]

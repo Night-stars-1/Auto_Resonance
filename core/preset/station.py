@@ -155,7 +155,7 @@ class STATION:
                 > 0.995
             ):
                 logger.info("战斗结束")
-                time.sleep(1.0)
+                time.sleep(1.5)
                 input_tap((1151, 626))
                 return True
             # elif (

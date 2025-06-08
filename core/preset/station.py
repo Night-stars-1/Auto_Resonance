@@ -134,13 +134,14 @@ class STATION:
                 logger.info("加入攻击成功, 进入战斗监听")
                 break
             else:
-                logger.info("加入战斗失败")
+                logger.error("加入战斗失败")
             time.sleep(1)
         # 等待战斗结束
         start = time.perf_counter()
         while time.perf_counter() - start < FIGHT_TIME:
             image = screenshot()
             bgrs = get_bgrs(image, [(1114, 630), (1204, 624), (159, 26)])
+            logger.debug(f"战斗检测: {bgrs}")
             if (
                 BGRGroup([198, 200, 200], [202, 204, 204]) == bgrs[0]
                 and BGRGroup([183, 185, 185], [187, 189, 189]) == bgrs[1]
@@ -165,9 +166,9 @@ class STATION:
             #     time.sleep(1.0)
             #     input_tap((1151, 626))
             #     return True
-            elif bgrs[2] == [124, 126, 125]:
+            elif bgrs[2] == [126, 126, 126]:
                 logger.info("开启自动战斗")
-                input_tap((233, 44))
+                input_tap((159, 44))
             time.sleep(3)
         logger.error("战斗超时")
         return False

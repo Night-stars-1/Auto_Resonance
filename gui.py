@@ -9,9 +9,8 @@ import atexit
 import os
 import sys
 
-from PyQt5.QtCore import QLocale, Qt, QTranslator, QFile
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication
-from qfluentwidgets import FluentTranslator
 
 from app.common.config import cfg
 

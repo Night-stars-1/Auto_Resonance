@@ -1,12 +1,7 @@
-import time
-import requests
-from version import __version__
+from abc import ABC, abstractmethod
 
 from typing import Optional
 from pydantic import BaseModel
-
-RES_ID = "Auto_Resonance"
-LATEST_URL = f"https://mirrorchyan.com/api/resources/{RES_ID}/latest"
 
 class Data(BaseModel):
     """响应数据"""
@@ -43,11 +38,7 @@ class LatestInfoResponse(BaseModel):
     """响应数据"""
     data: Optional[Data] = None
 
-def get_latest_info(cdk: str):
-    query = {
-        "current_version": __version__,
-        "cdk": cdk,
-        "user_agent": RES_ID
-    }
-    resposne = requests.get(LATEST_URL, params=query)
-    return LatestInfoResponse.model_validate(resposne.json())
+class BaseUpdateUtils(ABC):
+    @abstractmethod
+    def get_latest_info(self):
+        pass

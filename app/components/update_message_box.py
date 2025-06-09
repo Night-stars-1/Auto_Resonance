@@ -2,7 +2,7 @@ from loguru import logger
 from qfluentwidgets import MessageBoxBase, SubtitleLabel, ProgressBar, BodyLabel
 
 from app.common.worker import Worker
-from core.utils.update_utils import get_latest_info, LatestInfoResponse
+from core.utils.update.mirror_update_utils import MirrorUpdateUtils, LatestInfoResponse
 
 class UpdateMessageBox(MessageBoxBase):
 
@@ -25,7 +25,7 @@ class UpdateMessageBox(MessageBoxBase):
 
     def show(self):
         super().show()
-        self.worker = Worker(get_latest_info, cdk="")
+        self.worker = Worker(MirrorUpdateUtils().get_latest_info, cdk="")
         self.worker.result.connect(self.show_release_note)
         self.worker.start()
 

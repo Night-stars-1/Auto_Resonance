@@ -18,7 +18,7 @@ from core.model import app
 from core.model.city_goods import RouteModel, RoutesModel
 from core.module.bgr import BGR, BGRGroup
 from core.preset import click_station, get_station, go_outlets, wait_gbr
-from core.utils import read_json
+from core.utils.utils import read_json
 
 _city_sell_data: Dict[str, Dict[str, int]] = read_json(
     "resources/goods/CityGoodsSellData.json"

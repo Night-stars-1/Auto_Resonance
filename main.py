@@ -15,7 +15,7 @@ from auto.run_business import stop as business_stop
 from core.adb.adb import connect
 from core.adb.adb import stop as adb_stop
 from core.analysis_tasks import AnalysisTasks
-from core.utils import read_json
+from core.utils.utils import read_json
 
 analysis = None
 

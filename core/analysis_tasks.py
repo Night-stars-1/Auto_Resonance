@@ -15,7 +15,7 @@ import core.preset
 from .preset import find_text
 from .adb.adb import input_tap, screenshot
 from .ocr import predict
-from .utils import read_json
+from core.utils.utils import read_json
 
 
 class AnalysisTasks:

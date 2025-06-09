@@ -15,7 +15,7 @@ from core.image import get_all_color_pos, get_bgrs, match_screenshot, wait_stati
 from core.module.bgr import BGRGroup
 from core.ocr import predict
 from core.preset import blurry_ocr_click, go_home
-from core.utils import read_json
+from core.utils.utils import read_json
 
 from .control import click_image
 from .station import STATION

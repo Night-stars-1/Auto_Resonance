@@ -14,9 +14,9 @@ from .config import cfg
 
 
 class Worker(QThread):
-    result = pyqtSignal(object)  # 使用 object 类型的信号，以便发送任何类型的数据
+    result = pyqtSignal(object)
 
-    def __init__(self, func, stop, **kargs):
+    def __init__(self, func, stop = lambda : None, **kargs):
         super(Worker, self).__init__()
         self.func = func
         self.stop_func = stop
@@ -35,3 +35,11 @@ class Worker(QThread):
 
     def stop(self):
         self.stop_func()
+
+class UpdateWorker(Worker):
+    progress_changed = pyqtSignal(int)
+    update_finished = pyqtSignal(bool)
+
+    def __init__(self, func, **kargs):
+        super(UpdateWorker, self).__init__(func, lambda: None, **kargs)
+

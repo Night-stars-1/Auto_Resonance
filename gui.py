@@ -9,7 +9,7 @@ import atexit
 import os
 import sys
 
-from PyQt5.QtCore import QLocale, Qt, QTranslator
+from PyQt5.QtCore import QLocale, Qt, QTranslator, QFile
 from PyQt5.QtWidgets import QApplication
 from qfluentwidgets import FluentTranslator
 
@@ -49,17 +49,9 @@ QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps)
 app = QApplication(sys.argv)
 app.setAttribute(Qt.AA_DontCreateNativeWidgetSiblings)
 
-# internationalization
-locale = QLocale(QLocale.Chinese, QLocale.China)
-translator = FluentTranslator(locale)
-galleryTranslator = QTranslator()
-galleryTranslator.load(locale, "gallery", ".", "app/resource/i18n")
-app.installTranslator(translator)
-app.installTranslator(galleryTranslator)
-
 # create main window
 w = MainWindow()
-from main import run, stop
+# from main import run, stop
 
 w.show()
 

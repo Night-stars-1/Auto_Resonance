@@ -11,7 +11,7 @@ from typing import Dict
 
 from pydantic import BaseModel, Field
 
-from core.utils import read_json
+from core.utils.utils import read_json
 
 ROOT_PATH = Path().resolve()
 """项目根目录路径"""

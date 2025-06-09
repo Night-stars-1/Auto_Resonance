@@ -11,7 +11,7 @@ from typing import List, Optional
 
 from pydantic import BaseModel, RootModel
 
-from core.utils import RESOURCES_PATH, read_json
+from core.utils.utils import RESOURCES_PATH, read_json
 
 emulator_list_json = read_json(RESOURCES_PATH / "adb" / "EmulatorData.json")
 

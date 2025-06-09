@@ -60,45 +60,47 @@ def get_all_port():
     """
     获取所有模拟器ADB端口信息
     """
+    time.sleep(1)
     data = {}
     pid2title = get_pid2title()
     emulator_names = emulator_list.exe_name2data.keys()
     for p in psutil.process_iter():
-        try:
-            vms_path = ""
-            exe_name = p.name()
-            if exe_name in emulator_names:
-                emulator_data = emulator_list.exe_name2data[exe_name]
-                if (
-                    emulator_data.VMS_folder_path is None
-                    or emulator_data.VMS_file is None
-                ):
-                    continue
-                for open_file in p.open_files():
-                    folder_path = open_file.path.replace("\\", "/")
-                    if emulator_data.VMS_folder_path in folder_path:
-                        folder_path_split = folder_path.split(
-                            emulator_data.VMS_folder_path
-                        )
-                        vms_path = path.join(
-                            folder_path_split[0],
-                            emulator_data.VMS_folder_path
-                            + folder_path_split[1].split("/")[0],
-                            emulator_data.VMS_file,
-                        )
-                        vms_folder_name = path.basename(
-                            emulator_data.VMS_folder_path
-                            + folder_path_split[1].split("/")[0]
-                        )
-                        vms_path = vms_path.format(VMS_folder_name=vms_folder_name)
-                        break
-                else:
-                    continue
-                adb_port = get_adb_by_VMS_path(vms_path, emulator_data.adb_key)
-                title = pid2title[p.pid]
-                data[title] = adb_port
-        except (PermissionError, psutil.AccessDenied, AttributeError):
-            pass
+        ...
+        # try:
+        #     vms_path = ""
+        #     exe_name = p.name()
+        #     if exe_name in emulator_names:
+        #         emulator_data = emulator_list.exe_name2data[exe_name]
+        #         if (
+        #             emulator_data.VMS_folder_path is None
+        #             or emulator_data.VMS_file is None
+        #         ):
+        #             continue
+        #         for open_file in p.open_files():
+        #             folder_path = open_file.path.replace("\\", "/")
+        #             if emulator_data.VMS_folder_path in folder_path:
+        #                 folder_path_split = folder_path.split(
+        #                     emulator_data.VMS_folder_path
+        #                 )
+        #                 vms_path = path.join(
+        #                     folder_path_split[0],
+        #                     emulator_data.VMS_folder_path
+        #                     + folder_path_split[1].split("/")[0],
+        #                     emulator_data.VMS_file,
+        #                 )
+        #                 vms_folder_name = path.basename(
+        #                     emulator_data.VMS_folder_path
+        #                     + folder_path_split[1].split("/")[0]
+        #                 )
+        #                 vms_path = vms_path.format(VMS_folder_name=vms_folder_name)
+        #                 break
+        #         else:
+        #             continue
+        #         adb_port = get_adb_by_VMS_path(vms_path, emulator_data.adb_key)
+        #         title = pid2title[p.pid]
+        #         data[title] = adb_port
+        # except (PermissionError, psutil.AccessDenied, AttributeError):
+        #     pass
     return data
 
 

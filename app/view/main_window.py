@@ -37,7 +37,7 @@ from .logger_interface import LoggerInterface
 from .setting_interface import SettingInterface
 from .taj_interface import TajInterface
 from .adb_data_interface import ADBDataInterface
-
+from app.components.update_message_box import UpdateMessageBox
 
 class MainWindow(MSFluentWindow):
 
@@ -55,6 +55,8 @@ class MainWindow(MSFluentWindow):
         self.daily_task_interface = DailyTaskInterface(self)
         self.two_run_business_interface = TwoRunBusinessInterface(self)
         self.adb_data_interface = ADBDataInterface(self)
+
+        self.update_message_box = UpdateMessageBox(self)
 
         self.connectSignalToSlot()
 
@@ -88,7 +90,7 @@ class MainWindow(MSFluentWindow):
             routeKey="Update",
             icon=FIF.UPDATE,
             text="更新",
-            onClick=self.Update,
+            onClick=self.update_message_box.show,
             selectable=False,
             position=NavigationItemPosition.BOTTOM,
         )

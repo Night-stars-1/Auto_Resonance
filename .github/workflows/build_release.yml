@@ -28,7 +28,7 @@ jobs:
       - name: Set up python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.12.8"
+          python-version: "3.11"
           cache: "pip"
 
       # 步骤3：安装依赖
@@ -44,7 +44,7 @@ jobs:
         shell: pwsh
         run: |
           $SITE_PACKAGES = python -c "import site; print(site.getsitepackages()[0])"
-          pyinstaller -D --distpath .\dist\ -i app\resource\images\logo.ico -n HeiYue gui.py -y -w --add-data "$SITE_PACKAGES\lib\site-packages\cnocr\label_cn.txt;cnocr" --add-data "$SITE_PACKAGES\lib\site-packages\cnocr\label_number.txt;cnocr" --add-data "$SITE_PACKAGES\lib\site-packages\onnxruntime\capi\onnxruntime_providers_shared.dll;onnxruntime\capi" --hidden-import=scipy.special._cdflib
+          pyinstaller -D --distpath .\dist\ -i app\resource\images\logo.ico -n HeiYue gui.py -y -w --add-data "$SITE_PACKAGES\lib\site-packages\cnocr\label_cn.txt;cnocr" --add-data "$SITE_PACKAGES\lib\site-packages\cnocr\label_number.txt;cnocr" --add-data "$SITE_PACKAGES\lib\site-packages\onnxruntime\capi\onnxruntime_providers_shared.dll;onnxruntime\capi" --hidden-import=scipy.special._cdflib --hidden-import=onnx.reference
           pyinstaller -F --distpath .\dist\updater -i app\resource\images\logo.ico -n "HeiYue Updater" updater.py -y
 
       - name: Move assets to dist directory

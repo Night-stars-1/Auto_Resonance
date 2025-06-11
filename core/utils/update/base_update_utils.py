@@ -112,14 +112,14 @@ class BaseUpdateUtils(ABC):
 
         logger.info(f"更新包解压完成: {self.zip_name}")
 
-    def get_update_status(self, cdk: str) -> UpdateStatus:
+    def get_update_status(self, cdk: str, reload: bool = False) -> UpdateStatus:
         """
         获取更新状态
         :return: 更新状态
         """
         if not getattr(sys, "frozen", False):
             return UpdateStatus.NOSUPPORT
-        if not self.data:
+        if not self.data or reload:
             self.data = self.get_latest_info(cdk=cdk)
         if not self.data:
             return UpdateStatus.FAILED

@@ -11,6 +11,7 @@ from typing import Union
 from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QWidget
+from loguru import logger
 from qfluentwidgets import DotInfoBadge
 from qfluentwidgets import FluentIcon as FIF
 from qfluentwidgets import (
@@ -65,7 +66,7 @@ class MainWindow(MSFluentWindow):
         self.initNavigation()
         self.splashScreen.finish()
         # 检查更新
-        self.update_status = None
+        self.updater = MirrorUpdateUtils()
         self.checkUpdate()
 
     def connectSignalToSlot(self):
@@ -149,9 +150,10 @@ class MainWindow(MSFluentWindow):
         说明:
             检查更新
         """
-        if self.update_status == UpdateStatus.UPDATE:
+        update_status = self.updater.get_update_status(cfg.mirrorCdk.value, reload=True)
+        if update_status == UpdateStatus.UPDATE:
             self.update_message_box.show(cfg.mirrorCdk.value)
-        elif self.update_status == UpdateStatus.FAILED:
+        elif update_status == UpdateStatus.FAILED:
             InfoBar.error(
                 title="检查更新失败",
                 content="请稍后重试",
@@ -161,7 +163,7 @@ class MainWindow(MSFluentWindow):
                 duration=1000,
                 parent=self,
             )
-        elif self.update_status == UpdateStatus.NOSUPPORT:
+        elif update_status == UpdateStatus.NOSUPPORT:
             InfoBar.error(
                 title="更新程序只支持打包成exe后运行",
                 content="",
@@ -171,7 +173,7 @@ class MainWindow(MSFluentWindow):
                 duration=1000,
                 parent=self,
             )
-        elif self.update_status == UpdateStatus.LATEST:
+        elif update_status == UpdateStatus.LATEST:
             InfoBar.success(
                 title="当前已是最新版本",
                 content="",
@@ -181,7 +183,7 @@ class MainWindow(MSFluentWindow):
                 duration=1000,
                 parent=self,
             )
-        elif self.update_status == UpdateStatus.FAILDCDK:
+        elif update_status == UpdateStatus.FAILDCDK:
             InfoBar.error(
                 title="Mirror CDK校验失败",
                 content="请检查Mirror CDK是否正确",
@@ -203,9 +205,8 @@ class MainWindow(MSFluentWindow):
             )
 
     def checkUpdate(self):
-        updater = MirrorUpdateUtils()
-        self.update_status = updater.get_update_status(cfg.mirrorCdk.value)
-        if self.update_status == UpdateStatus.UPDATE:
+        update_status = self.updater.get_update_status(cfg.mirrorCdk.value)
+        if update_status == UpdateStatus.UPDATE:
             self.updateBadge = DotInfoBadge.error(
                 parent=self.navigationInterface,
                 target=self.updateButton,

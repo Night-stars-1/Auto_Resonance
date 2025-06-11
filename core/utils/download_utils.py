@@ -8,6 +8,7 @@ from loguru import logger
 
 from core.utils.utils import StrPath
 
+
 def download_file(
     url: str,
     path: str,

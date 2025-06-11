@@ -1,13 +1,13 @@
+import os
 from abc import ABC, abstractmethod
 from enum import Enum
 from typing import Callable, Optional
-import os
 
 from loguru import logger
 from pydantic import BaseModel
 
 from core.utils.download_utils import delete_files, download_file, move_dir, unzip
-from core.utils.utils import TEMP_PATH, read_json
+from core.utils.utils import ROOT_PATH, TEMP_PATH, read_json
 
 
 class UpdateStatus(Enum):
@@ -61,7 +61,10 @@ class LatestInfoResponse(BaseModel):
 
 class BaseUpdateUtils(ABC):
     zip_name = "Auto_Resonance.zip"
+    exe_name = "HeiYue Updater.exe"
     zip_path = TEMP_PATH / zip_name
+    exe_path = ROOT_PATH / exe_name
+    exe_bak_name = exe_path.name + ".bak"
     data: LatestInfoResponse = None
 
     @abstractmethod
@@ -129,6 +132,10 @@ class BaseUpdateUtils(ABC):
         if not auto_resonance_path.exists():
             raise FileNotFoundError(f"更新文件不存在: {auto_resonance_path}")
         logger.info(f"开始移动更新文件: {auto_resonance_path} -> {dst_dir}")
+        # 更改更新器的名称，方便替代
+        if self.exe_path.exists():
+            self.exe_path.rename(self.exe_bak_name)
+            logger.info(f"更新器重命名完成: {self.exe_name}")
         if changes_path.exists():
             changes: dict[str, list[str]] = read_json(changes_path)
             deleted = [

@@ -90,6 +90,7 @@ jobs:
       - name: Make increment zip
         id: make_increment_zip
         run: |
+          iex (pdm venv activate)
           python diff_folder.py
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

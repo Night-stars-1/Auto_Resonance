@@ -37,9 +37,13 @@ jobs:
         run: |
           pdm run pyinstaller -F --distpath .\dist\updater -i app\resource\images\logo.ico -n "HeiYue Updater" updater.py -y -w
 
+      - name: Move assets to dist directory
+        run: |
+          Copy-Item -Path ".\dist\updater" -Destination ".\dist\Auto_Resonance_${{ github.ref_name }}" -Recurse -Force
+
       - name: Create zip archive
         run: |
-          7z a -tzip -mx=9 ".\dist\Auto_Resonance_Updater_${{ github.ref_name }}.zip" ".\dist\updater\*"
+          7z a -tzip -mx=9 ".\dist\Auto_Resonance_Updater_${{ github.ref_name }}.zip" ".\dist\Auto_Resonance_${{ github.ref_name }}"
 
       - name: Upload Auto_Resonance
         uses: actions/upload-artifact@v4
@@ -87,6 +91,7 @@ jobs:
           Copy-Item -Path ".\resources\" -Destination ".\dist\heiyue\resources\" -Recurse -Force
           Copy-Item -Path ".\app\resource\" -Destination ".\dist\heiyue\app\resource\" -Recurse -Force
           Copy-Item -Path ".\README.md" -Destination ".\dist\heiyue\" -Force
+          Copy-Item -Path ".\dist\heiyue" -Destination ".\dist\Auto_Resonance_${{ github.ref_name }}" -Recurse -Force
           Copy-Item -Path ".\dist\Auto_Resonance_Updater_${{ github.ref_name }}.zip" -Destination ".\dist\Auto_Resonance_${{ github.ref_name }}.zip" -Force
 
       - name: Make increment zip
@@ -99,7 +104,7 @@ jobs:
 
       - name: Add zip archive
         run: |
-          7z a ".\dist\Auto_Resonance_${{ github.ref_name }}.zip" ".\dist\heiyue\*"
+          7z a ".\dist\Auto_Resonance_${{ github.ref_name }}.zip" ".\dist\Auto_Resonance_${{ github.ref_name }}"
 
       - name: Upload Auto_Resonance.zip as artifact
         uses: actions/upload-artifact@v4

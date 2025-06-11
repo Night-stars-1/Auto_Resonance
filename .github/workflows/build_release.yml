@@ -103,7 +103,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Auto_Resonance_${{ github.ref_name }}.zip
-          path: .\dist\Auto_Resonance_${{ github.ref_name }}.zip
+          path: .\Auto_Resonance_${{ github.ref_name }}.zip
     outputs:
       increment_zip: ${{ steps.make_increment_zip.outputs.increment_zip }}
 

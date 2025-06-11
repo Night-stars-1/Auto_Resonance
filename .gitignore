@@ -118,3 +118,5 @@ temp/
 *.prof
 diff.zip
 hash.json
+pdm.lock
+.pdm-python

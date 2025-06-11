@@ -170,7 +170,7 @@ class UnzipProgressBar(MessageBoxBase):
         else:
             self.update_title("解压失败")
             self.set_progress(0)
-        # self.close()
+        self.close()
 
 class MoveFileProgressBar(MessageBoxBase):
     """解压更新包进度条对话框"""
@@ -214,4 +214,4 @@ class MoveFileProgressBar(MessageBoxBase):
         else:
             self.update_title("更新失败")
             self.set_progress(0)
-        # self.close()
+        self.close()

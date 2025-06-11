@@ -27,7 +27,9 @@ jobs:
           cache: true
 
       - name: Install dependencies
-        run: pdm install
+        run: |
+          pdm install
+          pdm venv activate
 
       - name: Set VERSION
         run: echo "__version__='${{ github.ref_name }}'" > version.py
@@ -69,7 +71,9 @@ jobs:
           cache: true
 
       - name: Install dependencies
-        run: pdm install
+        run: |
+          pdm install
+          pdm venv activate 
 
       - name: Set VERSION
         run: echo "__version__='${{ github.ref_name }}'" > version.py

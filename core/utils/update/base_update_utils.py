@@ -1,12 +1,13 @@
 from abc import ABC, abstractmethod
 from enum import Enum
 from typing import Callable, Optional
+import os
 
 from loguru import logger
 from pydantic import BaseModel
 
-from core.utils.download_utils import download_file, unzip
-from core.utils.utils import TEMP_PATH
+from core.utils.download_utils import delete_files, download_file, move_dir, unzip
+from core.utils.utils import TEMP_PATH, read_json
 
 
 class UpdateStatus(Enum):
@@ -16,6 +17,7 @@ class UpdateStatus(Enum):
     UPDATE = 2
     FAILURE = 0
     NOSUPPORT = 3
+    FAILDCDK = 4
 
 
 class Data(BaseModel):
@@ -103,12 +105,55 @@ class BaseUpdateUtils(ABC):
             raise FileNotFoundError(f"更新包不存在: {self.zip_path}")
         unzip(
             zip_path=self.zip_path,
-            extract_path=".",
+            extract_path=TEMP_PATH,
             progress_changed=progress_changed,
             update_finished=update_finished,
         )
 
         logger.info(f"更新包解压完成: {self.zip_name}")
+
+    def move_file(
+        self,
+        progress_changed: Optional[Callable[[int], None]] = None,
+        update_finished: Optional[Callable[[bool], None]] = None,
+    ):
+        """
+        移动文件到指定目录
+        :return: None
+        """
+        auto_resonance_path = (
+            TEMP_PATH / f"Auto_Resonance_{self.data.data.version_name}"
+        )
+        changes_path = TEMP_PATH / "changes.json"
+        dst_dir = os.path.abspath("./")
+        if not auto_resonance_path.exists():
+            raise FileNotFoundError(f"更新文件不存在: {auto_resonance_path}")
+        logger.info(f"开始移动更新文件: {auto_resonance_path} -> {dst_dir}")
+        if changes_path.exists():
+            changes: dict[str, list[str]] = read_json(changes_path)
+            deleted = [
+                os.path.join(dst_dir, "/".join(file.split("/")[1:]))
+                for file in changes["deleted"]
+            ]
+            logger.info(f"删除多余文件文件 {len(deleted)}")
+            delete_files(
+                files=deleted,
+                progress_changed=lambda x: progress_changed(x / 2),
+            )
+            move_dir(
+                src_dir=auto_resonance_path,
+                dst_dir=dst_dir,
+                progress_changed=lambda x: progress_changed(x / 2 + 50),
+                update_finished=update_finished,
+            )
+        else:
+            move_dir(
+                src_dir=auto_resonance_path,
+                dst_dir=dst_dir,
+                progress_changed=progress_changed,
+                update_finished=update_finished,
+            )
+        logger.info(f"更新文件移动完成: {auto_resonance_path} -> {dst_dir}")
 
     def get_update_status(self, cdk: str) -> UpdateStatus:
         """
@@ -117,8 +162,12 @@ class BaseUpdateUtils(ABC):
         """
         if not self.data:
             self.data = self.get_latest_info(cdk=cdk)
+        if not cdk:
+            return UpdateStatus.FAILDCDK
         if not self.data:
             return UpdateStatus.FAILURE
+        elif self.data.code == 7002:
+            return UpdateStatus.FAILDCDK
         elif self.data.code != 0:
             return UpdateStatus.FAILURE
         elif self.data.msg == "current version is latest":

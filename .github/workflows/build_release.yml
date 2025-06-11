@@ -39,7 +39,7 @@ jobs:
 
       - name: Create zip archive
         run: |
-          7z a -tzip -mx=9 ".\dist\Auto_Resonance_Updater_${{ github.ref_name }}.zip" ".\dist\updater\"
+          7z a -tzip -mx=9 ".\dist\Auto_Resonance_Updater_${{ github.ref_name }}.zip" ".\dist\updater\*"
 
       - name: Upload Auto_Resonance
         uses: actions/upload-artifact@v4

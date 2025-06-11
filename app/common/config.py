@@ -60,6 +60,9 @@ class Config(RunningBusinessConfig):
     adbOrder = ConfigItem("Global", "adbOrder", "127.0.0.1:7555", None)
     adbPort = ConfigItem("Global", "adbPort", "7555", None)
 
+    # Mirror酱
+    mirrorCdk = ConfigItem("Global", "mirrorCdk", "", None)
+
     # task
     huashi = ConfigItem("Task", "huashi", False, BoolValidator())  # 购买桦石
     railwaySafetyBureau = ConfigItem(

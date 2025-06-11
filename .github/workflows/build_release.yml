@@ -11,33 +11,65 @@ permissions:
   actions: write
 
 jobs:
-  build:
-    name: Build
+  build-updater:
+    name: Build Updater
     runs-on: windows-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4.1.1
         with:
-            fetch-depth: 0
-            fetch-tags: true
-      
-      - name: Generate Changelog
-        id: generate_changelog
-        uses: Night-stars-1/changelog-generator-action@main
+          ref: updater
 
-      - name: Set up python
-        uses: actions/setup-python@v4
+      - name: Set up pdm
+        uses: pdm-project/setup-pdm@v4.4
         with:
-          python-version: "3.11"
-          cache: "pip"
+          python-version: 3.11
+          cache: true
 
-      # 步骤3：安装依赖
-      - name: Pip Install
+      - name: Install dependencies
+        run: pdm install
+
+      - name: Set VERSION
+        run: echo "__version__='${{ github.ref_name }}'" > version.py
+
+      - name: Generate program
+        shell: pwsh
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install pyinstaller==6.13.0
+          $SITE_PACKAGES = python -c "import site; print(site.getsitepackages()[0])"
+          pyinstaller -F --distpath .\dist\updater -i app\resource\images\logo.ico -n "HeiYue Updater" updater.py -y
+
+      - name: Create zip archive
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          7z a -tzip -mx=9 ".\dist\Auto_Resonance_${{ github.ref_name }}.zip" ".\dist\updater\"
+
+      - name: Upload Auto_Resonance
+        uses: actions/upload-artifact@v4
+        with:
+          name: Auto_Resonance_${{ github.ref_name }}.zip
+          path: .\Auto_Resonance_${{ github.ref_name }}.zip
+
+  build:
+    name: Build
+    runs-on: windows-latest
+    needs: build-updater
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.1
+  
+      - name: Download Auto_Resonance
+        uses: actions/download-artifact@v4
+        with:
+          name: Auto_Resonance_${{ github.ref_name }}.zip
+
+      - name: Set up pdm
+        uses: pdm-project/setup-pdm@v4.4
+        with:
+          python-version: 3.11
+          cache: true
+
+      - name: Install dependencies
+        run: pdm install
 
       - name: Set VERSION
         run: echo "__version__='${{ github.ref_name }}'" > version.py
@@ -47,7 +79,6 @@ jobs:
         run: |
           $SITE_PACKAGES = python -c "import site; print(site.getsitepackages()[0])"
           pyinstaller -D --distpath .\dist\ -i app\resource\images\logo.ico -n HeiYue gui.py -y -w --add-data "$SITE_PACKAGES\lib\site-packages\cnocr\label_cn.txt;cnocr" --add-data "$SITE_PACKAGES\lib\site-packages\cnocr\label_number.txt;cnocr" --add-data "$SITE_PACKAGES\lib\site-packages\onnxruntime\capi\onnxruntime_providers_shared.dll;onnxruntime\capi" --hidden-import=scipy.special._cdflib
-          pyinstaller -F --distpath .\dist\updater -i app\resource\images\logo.ico -n "HeiYue Updater" updater.py -y
 
       - name: Move assets to dist directory
         run: |
@@ -55,7 +86,6 @@ jobs:
           Copy-Item -Path ".\resources\" -Destination ".\dist\heiyue\resources\" -Recurse -Force
           Copy-Item -Path ".\app\resource\" -Destination ".\dist\heiyue\app\resource\" -Recurse -Force
           Copy-Item -Path ".\README.md" -Destination ".\dist\heiyue\" -Force
-          Copy-Item -Path ".\dist\updater\HeiYue Updater.exe" -Destination ".\dist\heiyue\HeiYue Updater.exe" -Recurse -Force
 
       - name: Make increment zip
         id: make_increment_zip
@@ -67,27 +97,10 @@ jobs:
       - name: Create zip archive
         if: startsWith(github.ref, 'refs/tags/')
         run: |
-          Rename-Item -Path .\dist\heiyue -NewName Auto_Resonance_${{ github.ref_name }}
-          Compress-Archive -Path .\dist\Auto_Resonance_${{ github.ref_name }}\ -DestinationPath .\dist\Auto_Resonance_${{ github.ref_name }}.zip -Force
-          Compress-Archive -Path .\dist\Auto_Resonance_${{ github.ref_name }}\HeiYue.exe -DestinationPath .\dist\Auto_Resonance_Incremental_${{ github.ref_name }}.zip -Force
+          7z a "Auto_Resonance_${{ github.ref_name }}.zip" ".\dist\heiyue\"
 
-      - name: Create release
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v2.0.4
+      - name: Upload Auto_Resonance.zip as artifact
+        uses: actions/upload-artifact@v4
         with:
-          name: 黑月无人驾驶 ${{ github.ref_name }}
-          body: ${{ steps.generate_changelog.outputs.changelog }}
-          files: |
-            ./dist/Auto_Resonance_${{ github.ref_name }}.zip
-            ./dist/Auto_Resonance_Incremental_${{ github.ref_name }}.zip
-            ./${{ steps.make_increment_zip.outputs.increment_zip }}
-            ./hash.json
-          make_latest: true
-
-      - name: Trigger MirrorChyanUploading
-        shell: bash
-        run: |
-          gh workflow run --repo $GITHUB_REPOSITORY mirrorchyan_uploading
-          gh workflow run --repo $GITHUB_REPOSITORY mirrorchyan_release_note
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: Auto_Resonance_${{ github.ref_name }}.zip
+          path: .\dist\Auto_Resonance_${{ github.ref_name }}.zip

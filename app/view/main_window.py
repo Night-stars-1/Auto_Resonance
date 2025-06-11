@@ -6,7 +6,6 @@ LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
 import asyncio
-import subprocess
 from typing import Union
 
 from PyQt5.QtCore import QSize, Qt
@@ -15,9 +14,9 @@ from PyQt5.QtWidgets import QApplication, QWidget
 from qfluentwidgets import DotInfoBadge
 from qfluentwidgets import FluentIcon as FIF
 from qfluentwidgets import (
-    InfoBadgePosition,
     InfoBar,
     InfoBarPosition,
+    InfoBadgePosition,
     MSFluentWindow,
     NavigationBarPushButton,
     NavigationItemPosition,
@@ -30,7 +29,8 @@ from app.common.icon import FluentIconBase
 from app.common.signal_bus import signalBus
 from app.view.daily_task_interface import DailyTaskInterface
 from app.view.two_city_run_business_interface import TwoRunBusinessInterface
-from updater import Updater, UpdateStatus
+from core.utils.update.mirror_update_utils import MirrorUpdateUtils
+from core.utils.update.base_update_utils import UpdateStatus
 
 from .home_interface import HomeInterface
 from .logger_interface import LoggerInterface
@@ -38,6 +38,7 @@ from .setting_interface import SettingInterface
 from .taj_interface import TajInterface
 from .adb_data_interface import ADBDataInterface
 from app.components.update_message_box import UpdateMessageBox
+
 
 class MainWindow(MSFluentWindow):
 
@@ -64,8 +65,8 @@ class MainWindow(MSFluentWindow):
         self.initNavigation()
         self.splashScreen.finish()
         # 检查更新
-        self.is_updae = False
-        asyncio.run(self.checkUpdate())
+        self.update_status = None
+        self.checkUpdate()
 
     def connectSignalToSlot(self):
         signalBus.micaEnableChanged.connect(self.setMicaEffectEnabled)
@@ -90,7 +91,7 @@ class MainWindow(MSFluentWindow):
             routeKey="Update",
             icon=FIF.UPDATE,
             text="更新",
-            onClick=self.update_message_box.show,
+            onClick=self.Update,
             selectable=False,
             position=NavigationItemPosition.BOTTOM,
         )
@@ -149,10 +150,7 @@ class MainWindow(MSFluentWindow):
             检查更新
         """
         if self.update_status == UpdateStatus.UPDATE:
-            subprocess.Popen(
-                ["HeiYue Updater.exe"], creationflags=subprocess.DETACHED_PROCESS
-            )
-            exit()
+            self.update_message_box.show(cfg.mirrorCdk.value)
         elif self.update_status == UpdateStatus.FAILURE:
             InfoBar.error(
                 title="检查更新失败",
@@ -173,7 +171,7 @@ class MainWindow(MSFluentWindow):
                 duration=1000,
                 parent=self,
             )
-        else:
+        elif self.update_status == UpdateStatus.LATEST:
             InfoBar.success(
                 title="当前已是最新版本",
                 content="",
@@ -183,10 +181,20 @@ class MainWindow(MSFluentWindow):
                 duration=1000,
                 parent=self,
             )
+        else:
+            InfoBar.error(
+                title="检查更新失败",
+                content="请稍后重试",
+                orient=Qt.Horizontal,
+                isClosable=False,
+                position=InfoBarPosition.TOP,
+                duration=1000,
+                parent=self,
+            )
 
-    async def checkUpdate(self):
-        updater = Updater()
-        self.update_status, _ = await updater.get_update_status()
+    def checkUpdate(self):
+        updater = MirrorUpdateUtils()
+        self.update_status = updater.get_update_status(cfg.mirrorCdk.value)
         if self.update_status == UpdateStatus.UPDATE:
             self.updateBadge = DotInfoBadge.error(
                 parent=self.navigationInterface,

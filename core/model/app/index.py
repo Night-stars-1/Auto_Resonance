@@ -38,6 +38,8 @@ class GlobalModel(BaseModel):
     goodsType: bool = False
     """货物类型"""
     uuid: str = ""
+    mirrorCdk: str = ""
+    """Mirror酱CDK"""
 
 class RunBuyModel(BaseModel):
     """进货"""

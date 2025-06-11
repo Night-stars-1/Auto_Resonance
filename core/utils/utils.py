@@ -12,6 +12,10 @@ from typing import List, Tuple, Union
 ROOT_PATH = Path().resolve()
 """项目根目录路径"""
 RESOURCES_PATH = ROOT_PATH / "resources"
+"""资源路径"""
+TEMP_PATH = ROOT_PATH / "temp"
+"""临时路径，用于存放下载的文件"""
+
 
 def read_json(file_path: Union[str, Path]):
     if isinstance(file_path, Path):

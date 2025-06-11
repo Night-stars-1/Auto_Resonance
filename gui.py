@@ -50,7 +50,7 @@ app.setAttribute(Qt.AA_DontCreateNativeWidgetSiblings)
 
 # create main window
 w = MainWindow()
-import main
+# import main
 
 w.show()
 

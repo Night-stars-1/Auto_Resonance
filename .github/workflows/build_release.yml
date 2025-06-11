@@ -132,11 +132,6 @@ jobs:
         id: generate_changelog
         uses: Night-stars-1/changelog-generator-action@main
 
-      - name: Download Auto_Resonance
-        uses: actions/download-artifact@v4
-        with:
-          name: Auto_Resonance_${{ github.ref_name }}.zip
-
       - name: Create release
         uses: softprops/action-gh-release@v2.0.4
         with:

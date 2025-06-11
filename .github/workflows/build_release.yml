@@ -35,7 +35,6 @@ jobs:
       - name: Generate program
         shell: pwsh
         run: |
-          $SITE_PACKAGES = python -c "import site; print(site.getsitepackages()[0])"
           pdm run pyinstaller -F --distpath .\dist\updater -i app\resource\images\logo.ico -n "HeiYue Updater" updater.py -y
 
       - name: Create zip archive
@@ -76,7 +75,8 @@ jobs:
       - name: Generate program
         shell: pwsh
         run: |
-          $SITE_PACKAGES = pdm run python -c "import site; print(site.getsitepackages()[0])"
+          iex (pdm venv activate)
+          $SITE_PACKAGES = pdm venv --path in-project
           echo $SITE_PACKAGES
           pdm run pyinstaller -D --distpath .\dist\ -i app\resource\images\logo.ico -n HeiYue gui.py -y -w --add-data "$SITE_PACKAGES\lib\site-packages\cnocr\label_cn.txt;cnocr" --add-data "$SITE_PACKAGES\lib\site-packages\cnocr\label_number.txt;cnocr" --add-data "$SITE_PACKAGES\lib\site-packages\onnxruntime\capi\onnxruntime_providers_shared.dll;onnxruntime\capi" --hidden-import=scipy.special._cdflib
 

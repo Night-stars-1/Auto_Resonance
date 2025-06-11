@@ -59,7 +59,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: Auto_Resonance_Updater_${{ github.ref_name }}.zip
-          path: ./dist/Auto_Resonance_${{ github.ref_name }}.zip
+          path: ./dist
 
       - name: Set up pdm
         uses: pdm-project/setup-pdm@v4.4
@@ -87,6 +87,7 @@ jobs:
           Copy-Item -Path ".\resources\" -Destination ".\dist\heiyue\resources\" -Recurse -Force
           Copy-Item -Path ".\app\resource\" -Destination ".\dist\heiyue\app\resource\" -Recurse -Force
           Copy-Item -Path ".\README.md" -Destination ".\dist\heiyue\" -Force
+          Copy-Item -Path ".\dist\Auto_Resonance_Updater_${{ github.ref_name }}.zip" -Destination ".\dist\Auto_Resonance_${{ github.ref_name }}.zip" -Force
 
       - name: Make increment zip
         id: make_increment_zip
@@ -96,9 +97,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create zip archive
+      - name: Add zip archive
         run: |
-          7z a ".\dist\Auto_Resonance_${{ github.ref_name }}.zip" ".\dist\heiyue\"
+          7z a ".\dist\Auto_Resonance_${{ github.ref_name }}.zip" ".\dist\heiyue\*"
 
       - name: Upload Auto_Resonance.zip as artifact
         uses: actions/upload-artifact@v4

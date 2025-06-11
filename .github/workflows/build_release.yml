@@ -113,7 +113,7 @@ jobs:
         with:
           name: 黑月无人驾驶 ${{ github.ref_name }}
           files: |
-            ./Auto_Resonance_${{ github.ref_name }}.zip
+            ./dist/Auto_Resonance_${{ github.ref_name }}.zip
             ./${{ steps.make_increment_zip.outputs.increment_zip }}
             ./hash.json
 

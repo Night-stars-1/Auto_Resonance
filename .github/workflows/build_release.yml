@@ -46,7 +46,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Auto_Resonance_${{ github.ref_name }}.zip
-          path: .\Auto_Resonance_${{ github.ref_name }}.zip
+          path: .\dist\Auto_Resonance_${{ github.ref_name }}.zip
 
   build:
     name: Build
@@ -102,3 +102,36 @@ jobs:
         with:
           name: Auto_Resonance_${{ github.ref_name }}.zip
           path: .\dist\Auto_Resonance_${{ github.ref_name }}.zip
+    outputs:
+      increment_zip: ${{ steps.make_increment_zip.outputs.increment_zip }}
+
+  changelog:
+    name: Generate Changelog
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: windows-latest
+    needs: build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.1
+        with:
+            fetch-depth: 0
+            fetch-tags: true
+      
+      - name: Generate Changelog
+        id: generate_changelog
+        uses: Night-stars-1/changelog-generator-action@main
+
+      - name: Create release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2.0.4
+        with:
+          name: 黑月无人驾驶 ${{ github.ref_name }}
+          body: |
+            ${{ steps.generate_changelog.outputs.changelog }}
+            [已有 Mirror酱 CDK？点击前往高速下载](https://mirrorchyan.com/zh/projects?rid=Auto_Resonance&source=auto-resonance-release)  
+            <!--软件本体完全免费，认准唯一官网 1999.fan，若您有付费购买请立即退款并举报！-->
+          files: |
+            ./dist/Auto_Resonance_${{ github.ref_name }}.zip
+            ./${{ needs.build.outputs.increment_zip }}
+            ./hash.json
+          make_latest: true

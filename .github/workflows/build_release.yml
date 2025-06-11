@@ -68,7 +68,9 @@ jobs:
           cache: true
 
       - name: Install dependencies
-        run: pdm install
+        run: |
+          pdm install
+          pdm venv activate
 
       - name: Set VERSION
         run: echo "__version__='${{ github.ref_name }}'" > version.py
@@ -77,6 +79,7 @@ jobs:
         shell: pwsh
         run: |
           $SITE_PACKAGES = python -c "import site; print(site.getsitepackages()[0])"
+          echo $SITE_PACKAGES
           pdm run pyinstaller -D --distpath .\dist\ -i app\resource\images\logo.ico -n HeiYue gui.py -y -w --add-data "$SITE_PACKAGES\lib\site-packages\cnocr\label_cn.txt;cnocr" --add-data "$SITE_PACKAGES\lib\site-packages\cnocr\label_number.txt;cnocr" --add-data "$SITE_PACKAGES\lib\site-packages\onnxruntime\capi\onnxruntime_providers_shared.dll;onnxruntime\capi" --hidden-import=scipy.special._cdflib
 
       - name: Move assets to dist directory

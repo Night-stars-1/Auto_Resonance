@@ -1,20 +1,23 @@
+import sys
 from abc import ABC, abstractmethod
-
 from enum import Enum
 from typing import Callable, Optional
+
 from loguru import logger
 from pydantic import BaseModel
 
 from core.utils.download_utils import download_file, unzip
 from core.utils.utils import TEMP_PATH
 
+
 class UpdateStatus(Enum):
     """更新状态枚举类"""
 
     LATEST = 1
     UPDATE = 2
-    FAILURE = 0
+    FAILED = 0
     NOSUPPORT = 3
+    FAILDCDK = 4
 
 
 class Data(BaseModel):
@@ -117,12 +120,16 @@ class BaseUpdateUtils(ABC):
         if not self.data:
             self.data = self.get_latest_info(cdk=cdk)
         if not self.data:
-            return UpdateStatus.FAILURE
+            return UpdateStatus.FAILED
+        elif self.data.code == 7002:
+            return UpdateStatus.FAILDCDK
         elif self.data.code != 0:
-            return UpdateStatus.FAILURE
+            return UpdateStatus.FAILED
         elif self.data.msg == "current version is latest":
             return UpdateStatus.LATEST
         elif self.data.data.url:
             return UpdateStatus.UPDATE
-        else:
+        elif not getattr(sys, "frozen", False):
             return UpdateStatus.NOSUPPORT
+        else:
+            return UpdateStatus.FAILED

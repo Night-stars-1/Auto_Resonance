@@ -14,9 +14,9 @@ from PyQt5.QtWidgets import QApplication, QWidget
 from qfluentwidgets import DotInfoBadge
 from qfluentwidgets import FluentIcon as FIF
 from qfluentwidgets import (
+    InfoBadgePosition,
     InfoBar,
     InfoBarPosition,
-    InfoBadgePosition,
     MSFluentWindow,
     NavigationBarPushButton,
     NavigationItemPosition,
@@ -27,17 +27,17 @@ from app.common import resource  # 图标数据
 from app.common.config import VERSION, cfg
 from app.common.icon import FluentIconBase
 from app.common.signal_bus import signalBus
+from app.components.update_message_box import UpdateMessageBox
 from app.view.daily_task_interface import DailyTaskInterface
 from app.view.two_city_run_business_interface import TwoRunBusinessInterface
-from core.utils.update.mirror_update_utils import MirrorUpdateUtils
 from core.utils.update.base_update_utils import UpdateStatus
+from core.utils.update.mirror_update_utils import MirrorUpdateUtils
 
+from .adb_data_interface import ADBDataInterface
 from .home_interface import HomeInterface
 from .logger_interface import LoggerInterface
 from .setting_interface import SettingInterface
 from .taj_interface import TajInterface
-from .adb_data_interface import ADBDataInterface
-from app.components.update_message_box import UpdateMessageBox
 
 
 class MainWindow(MSFluentWindow):
@@ -151,7 +151,7 @@ class MainWindow(MSFluentWindow):
         """
         if self.update_status == UpdateStatus.UPDATE:
             self.update_message_box.show(cfg.mirrorCdk.value)
-        elif self.update_status == UpdateStatus.FAILURE:
+        elif self.update_status == UpdateStatus.FAILED:
             InfoBar.error(
                 title="检查更新失败",
                 content="请稍后重试",
@@ -175,6 +175,16 @@ class MainWindow(MSFluentWindow):
             InfoBar.success(
                 title="当前已是最新版本",
                 content="",
+                orient=Qt.Horizontal,
+                isClosable=False,
+                position=InfoBarPosition.TOP,
+                duration=1000,
+                parent=self,
+            )
+        elif self.update_status == UpdateStatus.FAILDCDK:
+            InfoBar.error(
+                title="Mirror CDK校验失败",
+                content="请检查Mirror CDK是否正确",
                 orient=Qt.Horizontal,
                 isClosable=False,
                 position=InfoBarPosition.TOP,

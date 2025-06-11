@@ -124,6 +124,7 @@ if __name__ == "__main__":
 
     differences, tag_name = compare_folders(target_folder)
     if tag_name:
+        print(tag_name)
         if os.environ.get("GITHUB_OUTPUT"):
             with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
                 print(f"increment_zip=Auto_Resonance_Update_{tag_name}.zip", file=f)

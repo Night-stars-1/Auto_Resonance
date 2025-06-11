@@ -1,0 +1,28 @@
+[project]
+name = "Auto_Resonance_Updater"
+version = "0.1.0"
+description = "Default template for PDM package"
+authors = [
+    {name = "Night-stars-1", email = "nujj1042633805@gmail.com"},
+]
+dependencies = [
+    "pyqt5-qt5==5.15.2",
+    "PyQt-Fluent-Widgets==1.5.4", 
+    "loguru>=0.7.3", 
+    "requests>=2.32.4", 
+    "pydantic>=2.11.5"
+]
+requires-python = "<3.13,>=3.11"
+readme = "README.md"
+license = {text = "MIT"}
+
+[tool.pdm.scripts]
+build-updater  = "pdm run pyinstaller -F --distpath ./dist/updater -i app/resource/images/logo.ico -n 'HeiYue Updater' updater.py -y"
+
+[tool.pdm]
+distribution = false
+
+[dependency-groups]
+dev = [
+    "pyinstaller>=6.14.1",
+]

@@ -38,7 +38,7 @@ jobs:
         shell: pwsh
         run: |
           $SITE_PACKAGES = python -c "import site; print(site.getsitepackages()[0])"
-          pyinstaller -F --distpath .\dist\updater -i app\resource\images\logo.ico -n "HeiYue Updater" updater.py -y
+          pdm run pyinstaller -F --distpath .\dist\updater -i app\resource\images\logo.ico -n "HeiYue Updater" updater.py -y
 
       - name: Create zip archive
         if: startsWith(github.ref, 'refs/tags/')

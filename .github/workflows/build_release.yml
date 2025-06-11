@@ -23,7 +23,7 @@ jobs:
       - name: Set up pdm
         uses: pdm-project/setup-pdm@v4.4
         with:
-          python-version: 3.11
+          python-version: 3.12
           cache: true
 
       - name: Install dependencies
@@ -65,7 +65,7 @@ jobs:
       - name: Set up pdm
         uses: pdm-project/setup-pdm@v4.4
         with:
-          python-version: 3.11
+          python-version: 3.12
           cache: true
 
       - name: Install dependencies

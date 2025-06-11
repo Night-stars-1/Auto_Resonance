@@ -35,7 +35,7 @@ jobs:
       - name: Generate program
         shell: pwsh
         run: |
-          pdm run pyinstaller -F --distpath .\dist\updater -i app\resource\images\logo.ico -n "HeiYue Updater" updater.py -y
+          pdm run pyinstaller -F --distpath .\dist\updater -i app\resource\images\logo.ico -n "HeiYue Updater" updater.py -y -w
 
       - name: Create zip archive
         run: |
@@ -130,8 +130,7 @@ jobs:
           name: 黑月无人驾驶 ${{ github.ref_name }}
           body: |
             ${{ steps.generate_changelog.outputs.changelog }}
-            [已有 Mirror酱 CDK？点击前往高速下载](https://mirrorchyan.com/zh/projects?rid=Auto_Resonance&source=auto-resonance-release)  
-            <!--软件本体完全免费，认准唯一官网 1999.fan，若您有付费购买请立即退款并举报！-->
+            [已有 Mirror酱 CDK？点击前往高速下载](https://mirrorchyan.com/zh/projects?rid=Auto_Resonance&source=auto-resonance-release)
           files: |
             ./dist/Auto_Resonance_${{ github.ref_name }}.zip
             ./${{ needs.build.outputs.increment_zip }}

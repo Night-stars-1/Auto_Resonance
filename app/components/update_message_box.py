@@ -8,6 +8,8 @@ from core.utils.update.mirror_update_utils import MirrorUpdateUtils, LatestInfoR
 
 
 class UpdateMessageBox(MessageBoxBase):
+    cdk: str = ""
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.titleLabel = SubtitleLabel("检测更新中", self)
@@ -28,6 +30,8 @@ class UpdateMessageBox(MessageBoxBase):
 
     def show(self, cdk: str):
         super().show()
+        self.cdk = cdk
+
         update_utils = MirrorUpdateUtils()
         self.updateProgress = UnzipProgressBar(update_utils, parent=self.parent())
 
@@ -41,12 +45,13 @@ class UpdateMessageBox(MessageBoxBase):
         logger.debug(result)
 
         # 绑定下载事件
-        self.yesButton.clicked.connect(self.update)
+        self.yesButton.clicked.connect(lambda: self.update(result))
         self.yesButton.setEnabled(True)
 
-    def update(self):
+    def update(self, data: LatestInfoResponse):
         subprocess.Popen(
-            ["HeiYue Updater.exe"], creationflags=subprocess.DETACHED_PROCESS
+            ["HeiYue Updater.exe", "--mirror_cdk", self.cdk, "--update_data", data.model_dump_json()],
+            creationflags=subprocess.DETACHED_PROCESS,
         )
         exit()
 

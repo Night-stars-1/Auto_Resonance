@@ -5,9 +5,10 @@ LastEditTime: 2025-02-11 19:20:13
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QUrl
+from PyQt5.QtGui import QDesktopServices
 from PyQt5.QtWidgets import QLabel, QWidget
-from qfluentwidgets import ExpandLayout
+from qfluentwidgets import ExpandLayout, PrimaryPushSettingCard
 from qfluentwidgets import FluentIcon as FIF
 from qfluentwidgets import ScrollArea, SettingCardGroup, SwitchSettingCard
 
@@ -17,6 +18,8 @@ from app.components.settings.custom_adb_setting_card import CustomAdbSettingCard
 from app.components.settings.line_edit_setting_card import LineEditSettingCard
 from core.model.config import config
 from core.model.emulator import emulator_list
+
+MIRROR_URL = "https://mirrorchyan.com/zh/projects?rid=Auto_Resonance&source=auto-resonance-release"
 
 
 class SettingInterface(ScrollArea):
@@ -32,6 +35,21 @@ class SettingInterface(ScrollArea):
 
         # music folders
         self.musicInThisPCGroup = SettingCardGroup("配置", self.scrollWidget)
+        self.mirrorCdkCard = LineEditSettingCard(
+            cfg.mirrorCdk,
+            "Mirror酱 CDK",
+            FIF.LABEL,
+            "Mirror酱 CDK",
+            parent=self.musicInThisPCGroup,
+            isPassword=True,
+        )
+        self.mirrorCard = PrimaryPushSettingCard(
+            "Mirror酱",
+            FIF.LABEL,
+            "浏览 Mirror 酱",
+            "在 Mirror 酱官网购买 CDK",
+            self.musicInThisPCGroup,
+        )
         # self.goodsTypeCard = SwitchSettingCard(
         #     FIF.TAG,
         #     "数据源",
@@ -86,6 +104,10 @@ class SettingInterface(ScrollArea):
         self.isSpeedCard.switchButton.checkedChanged.connect(self.__onCheckedChanged)
         self.isAutoPickCard.setValue(config.global_config.is_auto_pick)
         self.isAutoPickCard.switchButton.checkedChanged.connect(self.__onCheckedChanged)
+
+        self.mirrorCard.clicked.connect(
+            lambda: QDesktopServices.openUrl(QUrl(MIRROR_URL))
+        )
         self.__initWidget()
 
     def __onCheckedChanged(self):
@@ -116,6 +138,8 @@ class SettingInterface(ScrollArea):
         # self.musicInThisPCGroup.addSettingCard(self.goodsTypeCard)
         # self.musicInThisPCGroup.addSettingCard(self.uuidCard)
         # self.musicInThisPCGroup.addSettingCard(self.adbPathCard)
+        self.musicInThisPCGroup.addSettingCard(self.mirrorCdkCard)
+        self.musicInThisPCGroup.addSettingCard(self.mirrorCard)
         self.musicInThisPCGroup.addSettingCard(self.adbOrderCard)
         self.musicInThisPCGroup.addSettingCard(self.isSpeedCard)
         self.musicInThisPCGroup.addSettingCard(self.isAutoPickCard)

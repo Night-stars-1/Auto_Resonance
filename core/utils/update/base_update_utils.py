@@ -117,6 +117,8 @@ class BaseUpdateUtils(ABC):
         获取更新状态
         :return: 更新状态
         """
+        if not getattr(sys, "frozen", False):
+            return UpdateStatus.NOSUPPORT
         if not self.data:
             self.data = self.get_latest_info(cdk=cdk)
         if not self.data:
@@ -129,7 +131,5 @@ class BaseUpdateUtils(ABC):
             return UpdateStatus.LATEST
         elif self.data.data.url:
             return UpdateStatus.UPDATE
-        elif not getattr(sys, "frozen", False):
-            return UpdateStatus.NOSUPPORT
         else:
             return UpdateStatus.FAILED

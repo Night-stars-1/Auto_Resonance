@@ -214,4 +214,4 @@ class MoveFileProgressBar(MessageBoxBase):
         else:
             self.update_title("更新失败")
             self.set_progress(0)
-        self.close()
+        # self.close()

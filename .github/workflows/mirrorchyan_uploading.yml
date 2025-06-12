@@ -17,4 +17,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           owner: Night-stars-1
           repo: Auto_Resonance
+          os: windows
+          arch: x64
           upload_token: ${{ secrets.MirrorChyanUploadToken }}

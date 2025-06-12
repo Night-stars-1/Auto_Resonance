@@ -62,7 +62,7 @@ def get_all_port():
     获取所有模拟器ADB端口信息
     """
     time.sleep(1)
-    data = {}
+    data: dict[str, int] = {}
     pid2title = get_pid2title()
     emulator_names = emulator_list.exe_name2data.keys()
     for p in psutil.process_iter():
@@ -97,8 +97,9 @@ def get_all_port():
                 else:
                     continue
                 adb_port = get_adb_by_VMS_path(vms_path, emulator_data.adb_key)
-                title = pid2title[p.pid]
-                data[title] = adb_port
+                if adb_port is not None:
+                    title = pid2title[p.pid]
+                    data[title] = adb_port
         except (PermissionError, psutil.AccessDenied, AttributeError):
             pass
     return data

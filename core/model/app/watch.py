@@ -30,6 +30,7 @@ class FileHandler(FileSystemEventHandler):
 
     def on_modified(self, event):
         if not event.is_directory and event.src_path == str(self.file_path):
+            logger.debug(f"配置文件 {self.file_path} 已修改，重新加载...")
             _app = Config.model_validate(self.get_data)
             for attr_name in app.__dict__.keys():
                 setattr(app, attr_name, getattr(_app, attr_name))

@@ -10,7 +10,7 @@ import random
 import time
 from subprocess import DEVNULL, CompletedProcess
 from subprocess import run as _run
-from typing import Tuple
+from typing import Tuple, Union
 
 import cv2 as cv
 import numpy as np
@@ -42,7 +42,7 @@ def run(
     )
 
 
-def connect(adb_port: int = 0, name="自定义"):
+def connect(adb_port: int = 0):
     """
     说明:
         连接ADB
@@ -50,12 +50,13 @@ def connect(adb_port: int = 0, name="自定义"):
         :param order: ADB端口
     """
     global ADBOREDER, ADBPATH, STOP
+    name = "自定义ADB端口"
     if adb_port == 0:
         adb_port, name = get_adb_port()
     if adb_port is None:
-        logger.info("未知ADB端口信息")
+        logger.info(f"未知ADB端口信息 {name}，请检测ADB端口是否设置正确")
         return False
-    logger.info(f"ADB端口： {adb_port} 来自: {name}")
+    logger.info(f"ADB端口：{name}-{adb_port}")
     ADBOREDER = f"127.0.0.1:{adb_port}"
     ADBPATH = app.Global.adbPath
     STOP = False

@@ -42,6 +42,10 @@ class EmulatorListModel(RootModel):
     @cached_property
     def name2type(self):
         return {i.name: i.type for i in self.root}
+
+    @cached_property
+    def type2name(self):
+        return {i.type: i.name for i in self.root}
     
     @cached_property
     def exe_name2data(self):

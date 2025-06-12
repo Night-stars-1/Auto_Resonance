@@ -18,12 +18,12 @@ from core.utils.utils import read_json
 
 analysis = None
 
-NEW_UPDATER_PATH = Path("HeiYue Updater.exe.new")
-OLD_UPDATER_PATH = Path("HeiYue Updater.exe")
+# NEW_UPDATER_PATH = Path("HeiYue Updater.exe.new")
+# OLD_UPDATER_PATH = Path("HeiYue Updater.exe")
 
-# 检查是否存在HeiYue Updater.exe.new存在则覆盖HeiYue Updater.exe
-if NEW_UPDATER_PATH.exists():
-    NEW_UPDATER_PATH.replace(OLD_UPDATER_PATH)
+# # 检查是否存在HeiYue Updater.exe.new存在则覆盖HeiYue Updater.exe
+# if NEW_UPDATER_PATH.exists():
+#     NEW_UPDATER_PATH.replace(OLD_UPDATER_PATH)
 
 
 def stop():

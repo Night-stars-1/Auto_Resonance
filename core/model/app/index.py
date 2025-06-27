@@ -5,7 +5,6 @@ LastEditTime: 2024-09-10 20:22:52
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
-import json
 from pathlib import Path
 from typing import Dict
 
@@ -41,11 +40,13 @@ class GlobalModel(BaseModel):
     mirrorCdk: str = ""
     """Mirror酱CDK"""
 
+
 class RunBuyModel(BaseModel):
     """进货"""
 
     BuyCount: int = 0
     """运行次数"""
+
 
 class Config(BaseModel):
     """自动程序配置"""
@@ -59,7 +60,7 @@ class Config(BaseModel):
     RunBuy: RunBuyModel = RunBuyModel()
     """跑商配置"""
 
+
 if APP_PATH.exists() and APP_PATH.is_file():
-    with open(APP_PATH, "r", encoding="utf-8") as f:
-        data = json.load(f)
+    data = read_json(APP_PATH)
     app = Config.model_validate(data)

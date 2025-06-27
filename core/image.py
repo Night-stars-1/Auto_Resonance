@@ -246,7 +246,8 @@ def find_icons_coordinates(image, icon_path, threshold=0.8, min_distance=10):
             filtered.append(coord)
     return filtered
 
-def wait_static(threshold=6000000):
+
+def wait_stopped(threshold=7100000):
     """
     等待画面静止
     参数:
@@ -259,10 +260,10 @@ def wait_static(threshold=6000000):
         # 等待画面变动，并再次截图
         time.sleep(0.5)
         gray2 = cv.cvtColor(screenshot(), cv.COLOR_BGR2GRAY)
-        
+
         # 计算两帧之间的绝对差异
         diff = cv.absdiff(gray1, gray2)
-        
+
         # 计算差异图像的总像素差异值
         diff_sum = np.sum(diff)
         logger.debug(f"画面差异 {diff_sum}")

@@ -11,7 +11,7 @@ from typing import Dict, Optional, Tuple
 from loguru import logger
 
 from core.adb.adb import input_swipe, input_tap, screenshot
-from core.image import get_all_color_pos, get_bgrs, match_screenshot, wait_static
+from core.image import get_all_color_pos, get_bgrs, match_screenshot, wait_stopped
 from core.module.bgr import BGRGroup
 from core.ocr import predict
 from core.preset import blurry_ocr_click, go_home
@@ -88,7 +88,7 @@ def click_station(name: str, cur_station: Optional[str] = None):
         input_tap((1201, 666))
         # 等待地图打开
         time.sleep(0.5)
-        wait_static(threshold=6000000)
+        wait_stopped(threshold=7100000)
 
         source_x = 640
         source_y = 360
@@ -102,7 +102,7 @@ def click_station(name: str, cur_station: Optional[str] = None):
         input_swipe(
             (source_x, source_y), (source_x - 10, source_y - 10), swipe_time=500
         )
-        wait_static(threshold=6000000)  # 等待滑动完成
+        wait_stopped(threshold=7100000)  # 等待滑动完成
 
         result = match_screenshot(
             screenshot(), f"resources/stations/{STATION_NAME2PNG[name]}"
@@ -135,6 +135,7 @@ def click_station(name: str, cur_station: Optional[str] = None):
     else:
         logger.error("没有该站点的坐标信息")
     return STATION(False)
+
 
 def get_station(is_go_home: bool = True):
     """

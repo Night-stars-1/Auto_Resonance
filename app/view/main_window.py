@@ -29,7 +29,6 @@ from app.common.config import VERSION, cfg
 from app.common.icon import FluentIconBase
 from app.common.signal_bus import signalBus
 from app.components.update_message_box import UpdateMessageBox
-from app.view.daily_task_interface import DailyTaskInterface
 from app.view.two_city_run_business_interface import TwoRunBusinessInterface
 from core.utils.update.base_update_utils import UpdateStatus
 from core.utils.update.mirror_update_utils import MirrorUpdateUtils
@@ -38,7 +37,6 @@ from .adb_data_interface import ADBDataInterface
 from .home_interface import HomeInterface
 from .logger_interface import LoggerInterface
 from .setting_interface import SettingInterface
-from .taj_interface import TajInterface
 
 
 class MainWindow(MSFluentWindow):
@@ -51,10 +49,8 @@ class MainWindow(MSFluentWindow):
 
         # create sub interface
         self.homeInterface = HomeInterface(self)
-        self.tajInterface = TajInterface(self)
         self.loggerInterface = LoggerInterface(self)
         self.settingInterface = SettingInterface(self)
-        self.daily_task_interface = DailyTaskInterface(self)
         self.two_run_business_interface = TwoRunBusinessInterface(self)
         self.adb_data_interface = ADBDataInterface(self)
 
@@ -76,8 +72,6 @@ class MainWindow(MSFluentWindow):
     def initNavigation(self):
         # add navigation items
         self.addSubInterface(self.homeInterface, FIF.HOME, "主页")
-        self.addSubInterface(self.tajInterface, FIF.AIRPLANE, "铁安局")
-        self.addSubInterface(self.daily_task_interface, FIF.CALENDAR, "每日任务")
         self.addSubInterface(self.two_run_business_interface, FIF.TRAIN, "端点跑商")
         self.addSubInterface(self.adb_data_interface, FIF.GAME, "ADB信息")
 

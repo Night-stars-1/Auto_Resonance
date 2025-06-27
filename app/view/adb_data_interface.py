@@ -68,7 +68,7 @@ class ADBDataInterface(ScrollArea):
                 icon=":/gallery/images/controls/Button.png",
                 title=name,
                 content=f"127.0.0.1:{port}",
-                func=partial(self.set_port, port),
+                func=partial(self.set_port, str(port)),
             )
 
     def set_port(self, port: str):

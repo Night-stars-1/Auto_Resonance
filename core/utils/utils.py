@@ -16,13 +16,18 @@ RESOURCES_PATH = ROOT_PATH / "resources"
 TEMP_PATH = ROOT_PATH / "temp"
 """临时路径，用于存放下载的文件"""
 
+def save_json(path: str, data: Union[dict, list]):
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=4, ensure_ascii=False)
 
-def read_json(file_path: Union[str, Path]):
-    if isinstance(file_path, Path):
-        file_path = str(file_path)
-    with open(file_path, "r", encoding="utf-8") as f:
-        return json.load(f)
-
+def read_json(path: Union[str, Path], default: Union[dict, list] = {}) -> Union[dict, list]:
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except json.JSONDecodeError:
+        return default
+    except FileNotFoundError:
+        return default
 
 def compare_ranges(
     low: Union[Tuple[int, int, int], List[int]],

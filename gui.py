@@ -4,15 +4,14 @@ Date: 2024-04-02 18:52:36
 LastEditTime: 2025-02-10 23:06:52
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
-from app.common.utils import save_json
-from core.utils.utils import read_json
+from app.common.utils import save_json, read_json
 data = read_json("config/app.json")
 # 兼容1.4.4版本错误
 if data.get("Global", {}).get("adbPort") is not None and not isinstance(
     data["Global"]["adbPort"], str
 ):
     data["Global"]["adbPort"] = str(data["Global"]["adbPort"])
-save_json("config/app.json", data)
+    save_json("config/app.json", data)
 
 import atexit
 import os

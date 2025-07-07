@@ -10,7 +10,7 @@ from pathlib import Path
 
 import cv2 as cv
 
-from core.adb.adb import input_tap, screenshot
+from core.adb.control import input_tap, screenshot
 from core.image import crop_image, show_image
 from core.ocr import predict
 

@@ -12,7 +12,7 @@ import cv2 as cv
 import numpy as np
 from loguru import logger
 
-from core.adb.adb import input_swipe, input_tap, screenshot
+from core.adb.control import input_swipe, input_tap, screenshot
 from core.exception_handling import get_excption
 from core.image import get_bgr, get_hsv
 from core.module.bgr import BGR, BGRGroup

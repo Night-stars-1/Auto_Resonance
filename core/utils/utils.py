@@ -7,7 +7,7 @@ LastEditors: Night-stars-1 nujj1042633805@gmail.com
 
 import json
 from pathlib import Path
-from typing import List, Tuple, Union
+from typing import Any, List, Tuple, Union
 
 ROOT_PATH = Path().resolve()
 """项目根目录路径"""
@@ -20,7 +20,7 @@ def save_json(path: str, data: Union[dict, list]):
     with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
 
-def read_json(path: Union[str, Path], default: Union[dict, list] = {}) -> Union[dict, list]:
+def read_json(path: Union[str, Path], default: Union[dict, list] = {}) -> Any:
     try:
         with open(path, "r", encoding="utf-8") as f:
             return json.load(f)

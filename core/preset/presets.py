@@ -10,7 +10,7 @@ from typing import Dict, Optional, Tuple
 
 from loguru import logger
 
-from core.adb.adb import input_swipe, input_tap, screenshot
+from core.adb.control import input_swipe, input_tap, screenshot
 from core.image import get_all_color_pos, get_bgrs, match_screenshot, wait_stopped
 from core.module.bgr import BGRGroup
 from core.ocr import predict
@@ -165,8 +165,8 @@ def go_city():
         match_screenshot(
             screenshot(),
             "resources/fame.png",
-            cropped_pos1=[25, 634],
-            cropped_pos2=[99, 707],
+            cropped_pos1=(25, 634),
+            cropped_pos2=(99, 707),
         )["max_val"]
         < 0.95
     ):
@@ -204,8 +204,9 @@ def wait_fight_end():
         image = screenshot()
         bgrs = get_bgrs(image, [(1114, 630), (1204, 624), (167, 29)])
         logger.debug(f"等待战斗结束颜色检查: {bgrs}")
-        if BGRGroup([198, 200, 200], [202, 204, 204]) == bgrs[0] and BGRGroup(
-            [183, 185, 185], [187, 189, 189] == bgrs[1]
+        if (
+            BGRGroup([198, 200, 200], [202, 204, 204]) == bgrs[0]
+            and BGRGroup([183, 185, 185], [187, 189, 189]) == bgrs[1]
         ):
             logger.info("检测到执照等级提升")
             input_tap((1151, 626))

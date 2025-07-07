@@ -16,7 +16,7 @@ sys.path.append(str(project_root))
 
 import cv2
 
-from core.adb.adb import connect, screenshot
+from core.adb.control import connect, screenshot
 
 pick_mask = cv2.imread("resources/mask/pick_mask.png", cv2.IMREAD_GRAYSCALE)
 _, pick_mask = cv2.threshold(pick_mask, 128, 255, cv2.THRESH_BINARY)

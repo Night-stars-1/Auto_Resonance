@@ -9,7 +9,7 @@ import time
 
 from loguru import logger
 
-from core.adb.adb import connect, input_swipe, input_tap, screenshot
+from core.adb.control import connect, input_swipe, input_tap, screenshot
 from core.image import get_bgr, get_bgrs
 from core.module.bgr import BGR
 from core.ocr import predict

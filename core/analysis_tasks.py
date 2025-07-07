@@ -13,7 +13,7 @@ from loguru import logger
 import core.preset
 
 from .preset import find_text
-from .adb.adb import input_tap, screenshot
+from .adb.control import input_tap, screenshot
 from .ocr import predict
 from core.utils.utils import read_json
 

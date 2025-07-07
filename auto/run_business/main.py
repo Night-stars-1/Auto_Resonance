@@ -12,7 +12,7 @@ from loguru import logger
 
 from auto.run_business.buy import buy_business
 from auto.run_business.sell import sell_business
-from core.adb.adb import STOP, connect, input_tap, screenshot
+from core.adb.control import STOP, connect, input_tap, screenshot
 from core.image import get_bgr
 from core.model import app
 from core.model.city_goods import RouteModel, RoutesModel

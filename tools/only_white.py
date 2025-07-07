@@ -16,7 +16,7 @@ import numpy as np
 project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(project_root))
 
-from core.adb.adb import connect, screenshot
+from core.adb.control import connect, screenshot
 from core.image import crop_image, show_image
 
 connect()

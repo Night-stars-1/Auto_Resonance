@@ -6,7 +6,7 @@ from pathlib import Path
 project_root = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(project_root))
 
-from core.adb.adb import connect
+from core.adb.control import connect
 from core.preset.station import STATION
 
 if __name__ == "__main__":

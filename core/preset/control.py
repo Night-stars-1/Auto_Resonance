@@ -12,7 +12,7 @@ from loguru import logger
 
 from core.module.bgr import BGRGroup
 
-from ..adb.adb import input_tap, screenshot
+from ..adb.control import input_tap, screenshot
 from ..exception_handling import get_excption
 from ..image import get_bgr, match_screenshot
 from ..ocr import predict

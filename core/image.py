@@ -12,7 +12,7 @@ import cv2 as cv
 import numpy as np
 from loguru import logger
 
-from core.adb.adb import screenshot
+from core.adb.control import screenshot
 from core.module.bgr import BGR
 from core.module.hsv import HSV
 

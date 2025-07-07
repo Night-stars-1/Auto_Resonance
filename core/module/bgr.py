@@ -91,7 +91,7 @@ class BGR:
 class BGRGroup:
     """BGR 组"""
 
-    def __init__(self, low_bgr: Tuple[int, int, int], high_bgr: Tuple[int, int, int]):
+    def __init__(self, low_bgr: Union[Tuple[int, int, int], list[int]], high_bgr: Union[Tuple[int, int, int], list[int]]):
         self.low_bgr = low_bgr
         self.high_bgr = high_bgr
 

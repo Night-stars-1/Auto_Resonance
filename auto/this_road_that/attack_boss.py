@@ -3,7 +3,7 @@ from typing import Dict
 
 from loguru import logger
 
-from core.adb.adb import connect, input_tap, screenshot
+from core.adb.control import connect, input_tap, screenshot
 from core.image import get_bgr
 from core.module.bgr import BGR, BGRGroup
 from core.preset import (

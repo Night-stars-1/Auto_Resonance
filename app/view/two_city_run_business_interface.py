@@ -13,7 +13,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QLabel, QWidget
 from qfluentwidgets import CheckBox, ExpandLayout, ExpandSettingCard
 from qfluentwidgets import FluentIcon as FIF
-from qfluentwidgets import ScrollArea
+from qfluentwidgets import ScrollArea, InfoBar
 
 from app.common.config import cfg
 from app.common.running_business_config import CITYS, STATIONS
@@ -131,6 +131,16 @@ class TwoRunBusinessInterface(ScrollArea):
             for checkbox in self.cityCheckboxGroup.checkboxGroup
             if checkbox.isChecked()
         ]
+        if len(checkbox) != 2:
+            logger.error("请选择两个城市进行跑商")
+            InfoBar.warning(
+                title='',
+                content="请选择两个城市进行跑商",
+                orient=Qt.Horizontal,
+                isClosable=False,
+                parent=self
+            )
+            return
         buy_city_name = checkbox[0].text()
         sell_city_name = checkbox[1].text()
 

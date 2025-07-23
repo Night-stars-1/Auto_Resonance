@@ -5,68 +5,36 @@ LastEditTime: 2025-02-11 16:56:45
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
-import platform
 import random
 import time
-from subprocess import DEVNULL, CompletedProcess
-from subprocess import run as _run
-from typing import Tuple, Union
+from typing import Optional, Tuple
 
 import cv2 as cv
-import numpy as np
 from loguru import logger
 
-from core.adb.adb_port import get_adb_port
+from core.adb.adb import ADB
+from core.adb.base_control import IADB
 from core.model import app
 
 from ..exceptions import StopExecution
 
-ADBOREDER = ""
-ADBPATH = ""
 EXCURSIONX = [-10, 10]
 EXCURSIONY = [-10, 10]
 STOP = False
 
-
-def run(
-    *popenargs, input=None, capture_output=False, timeout=None, check=False, **kwargs
-) -> CompletedProcess:
-    return _run(
-        *popenargs,
-        shell=True if platform.system() == "Windows" else False,
-        input=input,
-        capture_output=capture_output,
-        timeout=timeout,
-        check=check,
-        **kwargs,
-    )
+control: IADB = ADB()
 
 
-def connect(adb_port: int = 0):
+def connect(adb_port: Optional[int] = None):
     """
-    说明:
-        连接ADB
-    参数:
-        :param order: ADB端口
+    连接ADB
+
+    :param order: ADB端口
     """
-    global ADBOREDER, ADBPATH, STOP
-    name = "自定义ADB端口"
-    if adb_port == 0:
-        adb_port, name = get_adb_port()
-    if adb_port is None:
-        logger.info(f"未知ADB端口信息 {name}，请检测ADB端口是否设置正确")
-        return False
-    logger.info(f"ADB端口：{name}-{adb_port}")
-    ADBOREDER = f"127.0.0.1:{adb_port}"
-    ADBPATH = app.Global.adbPath
-    STOP = False
-    shell = [ADBPATH, "connect", ADBOREDER]
-    result = run(shell, capture_output=True, check=False)
-    status = "already connected" in str(result.stdout) or "connected to" in str(
-        result.stdout
-    )
-    if not status:
-        logger.error(f"连接失败: {result.stdout.decode()}")
+    global control
+    control = ADB()
+
+    status = control.connect(adb_port)
     return status
 
 
@@ -77,24 +45,19 @@ def stop():
 
 def kill():
     """
-    说明:
-        关闭ADB
+    关闭连接
     """
-    global ADBOREDER, ADBPATH
-    shell = [ADBPATH, "kill-server"]
-    run(shell, stdout=DEVNULL, check=False)
+    control.kill()
 
 
 def input_swipe(pos1=(919, 617), pos2=(919, 908), swipe_time: int = 100):
     """
-    说明:
-        滑动屏幕(可超出屏幕)
-    参数:
-        :param pos1: 坐标1
-        :param pos2: 坐标2
-        :param time: 操作时间(毫秒)
+    滑动屏幕(可超出屏幕)
+
+    :param pos1: 坐标1
+    :param pos2: 坐标2
+    :param time: 操作时间(毫秒)
     """
-    global ADBOREDER, ADBPATH
     # 添加随机值
     pos_x1 = pos1[0] + random.randint(*EXCURSIONX)
     pos_y1 = pos1[1] + random.randint(*EXCURSIONY)
@@ -111,62 +74,34 @@ def input_swipe(pos1=(919, 617), pos2=(919, 908), swipe_time: int = 100):
             f"多次滑动 ({limit_pos_x1}, {limit_pos_y1}) -> ({limit_pos_x2}, {limit_pos_y2})"
         )
 
-        shell = [
-            ADBPATH,
-            "-s",
-            ADBOREDER,
-            "shell",
-            "input",
-            "swipe",
-            str(limit_pos_x1),
-            str(limit_pos_y1),
-            str(limit_pos_x2),
-            str(limit_pos_y2),
-            str(int(swipe_time)),
-        ]
-        run(shell, check=False)
+        control.input_swipe(
+            limit_pos_x1, limit_pos_y1, limit_pos_x2, limit_pos_y2, swipe_time
+        )
+
         time.sleep(swipe_time / 1000)
         # 减去当前执行的距离
         pos_x1 -= limit_pos_x1 - limit_pos_x2
         pos_y1 -= limit_pos_y1 - limit_pos_y2
-        # pos_x2 -= limit_pos_x2
-        # pos_y2 -= limit_pos_y2
 
 
 def input_tap(pos: Tuple[int, int] = (880, 362)):
     """
-    说明:
-        点击坐标
-    参数:
-        :param pos: 坐标
+    点击坐标
+
+    :param pos: 坐标
     """
-    global ADBOREDER, ADBPATH
-    shell = [
-        ADBPATH,
-        "-s",
-        ADBOREDER,
-        "shell",
-        "input",
-        "tap",
-        str(pos[0] + random.randint(*EXCURSIONX)),
-        str(pos[1] + random.randint(*EXCURSIONY)),
-    ]
-    run(shell, check=False)
+    control.input_tap(
+        pos[0] + random.randint(*EXCURSIONX), pos[1] + random.randint(*EXCURSIONY)
+    )
 
 
 def screenshot() -> cv.typing.MatLike:
     """
     截图
     """
-    global ADBOREDER, ADBPATH, STOP
     if STOP:
         raise StopExecution()
-    shell = [ADBPATH, "-s", ADBOREDER, "exec-out", "screencap", "-p"]
-    result = run(shell, capture_output=True, check=False)
 
-    # 将截图数据转换为 NumPy 数组
-    image_array = np.frombuffer(result.stdout, np.uint8)
-
-    screenshot = cv.imdecode(image_array, cv.IMREAD_COLOR)
+    screenshot = control.screenshot()
 
     return screenshot

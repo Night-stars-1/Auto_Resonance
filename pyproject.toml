@@ -16,7 +16,8 @@ dependencies = [
     "orjson>=3.10.0",
     "pydantic>=2.6.4",
     "watchdog>=4.0.0",
-    "onnx==1.17.0"
+    "onnx==1.17.0",
+    "adb-shell>=0.4.4"
 ]
 requires-python = "<3.13,>=3.11"
 readme = "README.md"

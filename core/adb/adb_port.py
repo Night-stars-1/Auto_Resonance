@@ -37,8 +37,8 @@ def get_adb_by_VMS_path(path: str, key: str):
     # 查找并打印ADB的hostport
     for forwarding in root.findall(".//NAT/Forwarding"):
         if forwarding.get("name") == key:
-            hostport = forwarding.get("hostport")
-            return int(hostport)
+            if hostport := forwarding.get("hostport"):
+                return int(hostport)
     return None
 
 

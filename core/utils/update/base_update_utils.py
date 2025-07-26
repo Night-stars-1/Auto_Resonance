@@ -65,6 +65,7 @@ class BaseUpdateUtils(ABC):
     zip_path = TEMP_PATH / zip_name
     exe_path = ROOT_PATH / exe_name
     exe_bak_name = exe_path.name + ".bak"
+    exe_bak_path = ROOT_PATH / exe_bak_name
     data: LatestInfoResponse = None
 
     @abstractmethod
@@ -132,6 +133,8 @@ class BaseUpdateUtils(ABC):
         if not auto_resonance_path.exists():
             raise FileNotFoundError(f"更新文件不存在: {auto_resonance_path}")
         logger.info(f"开始移动更新文件: {auto_resonance_path} -> {dst_dir}")
+        if self.exe_bak_path.exists():
+            os.remove(self.exe_bak_path)
         # 更改更新器的名称，方便替代
         if self.exe_path.exists():
             self.exe_path.rename(self.exe_bak_name)

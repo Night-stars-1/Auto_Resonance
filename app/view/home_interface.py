@@ -29,6 +29,7 @@ from app.common.style_sheet import StyleSheet
 from app.components.button_card import ButtonCardView
 from app.components.link_card import LinkCardView
 from app.components.settings.checkbox_group_card import CheckboxGroup
+from app.utils.constants import ICON_PATH
 from core.control.control import stop
 
 
@@ -41,7 +42,7 @@ class BannerWidget(QWidget):
 
         self.vBoxLayout = QVBoxLayout(self)
         self.titleLabel = QLabel("黑月无人驾驶", self)
-        self.banner = QPixmap(":/gallery/images/header1.png")
+        self.banner = QPixmap(ICON_PATH / "header.png")
         self.linkCardView = LinkCardView(self)
 
         self.__initWidget()
@@ -69,7 +70,7 @@ class BannerWidget(QWidget):
 
         path = QPainterPath()
         path.setFillRule(Qt.FillRule.WindingFill)
-        w, h = self.width(), self.height()  # 窗口的宽度和高度
+        w, h = self.width(), self.height()
         path.addRoundedRect(QRectF(0, 0, w, h), 10, 10)
         path.addRect(QRectF(0, h - 50, 50, 50))
         path.addRect(QRectF(w - 50, 0, 50, 50))
@@ -89,8 +90,8 @@ class BannerWidget(QWidget):
 
         painter.fillPath(path, QBrush(gradient))
 
-        # 绘制图片
-        pixmap = self.banner.scaled(self.size(), mode=Qt.TransformationMode.SmoothTransformation)
+        # # 绘制图片
+        pixmap = self.banner.scaled(self.size(), aspectMode=Qt.AspectRatioMode.KeepAspectRatioByExpanding, mode=Qt.TransformationMode.SmoothTransformation)
         painter.fillPath(path, QBrush(pixmap))
 
 

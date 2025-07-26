@@ -21,7 +21,7 @@
 
 ## 使用方法
 > [!TIP]
-> 推荐使用**MUMU模拟器**并把游戏分辨率和画质全调最低，模拟器分辨率调整为1280:720 dpi:240
+> 推荐使用**MUMU模拟器**分辨率必须为16:9，推荐: 1920x1080/1280x720
 ### 1. 打包程序直接运行
   - 在[releases](https://github.com/Night-stars-1/Auto_Resonance/releases/latest)下载`Auto_Resonance_xxx.zip`,如果没有就等一会儿
   - 解压在目录

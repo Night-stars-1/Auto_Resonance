@@ -127,7 +127,7 @@ class HomeInterface(ScrollArea):
         tipBar = InfoBar(
             icon=InfoBarIcon.WARNING,
             title=self.tr("Warning"),
-            content="推荐使用 MUMU模拟器 并把游戏分辨率和画质全调最低，模拟器分辨率调整为1280:720 dpi:240",
+            content="推荐使用 MUMU模拟器 分辨率必须为16:9，推荐: 1920x1080/1280x720",
             orient=Qt.Orientation.Vertical,
             isClosable=False,
             duration=-1,

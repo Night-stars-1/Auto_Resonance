@@ -139,6 +139,7 @@ def blurry_ocr_click(
     excursion_pos: Tuple[int, int] = (0, 0),
     trynum=3,
     log=True,
+    click_first=False,
 ):
     """
     模糊点击文本
@@ -148,6 +149,8 @@ def blurry_ocr_click(
     :param cropped_pos2: 裁剪坐标2
     :param excursion_pos: 点击偏移坐标
     :param trynum: 尝试次数
+    :param log: 是否打印日志
+    :param click_first: 是否使用第一个坐标点击
     """
     for _ in range(trynum):
         image = screenshot()
@@ -157,8 +160,12 @@ def blurry_ocr_click(
         for item in data:
             if text in item["text"]:
                 position = item["position"]
-                center_x = (position[0][0] + position[2][0]) / 2
-                center_y = (position[0][1] + position[2][1]) / 2
+                if click_first:
+                    center_x = position[0][0]
+                    center_y = position[0][1]
+                else:
+                    center_x = (position[0][0] + position[2][0]) / 2
+                    center_y = (position[0][1] + position[2][1]) / 2
 
                 coordinates = (center_x + excursion_pos[0], center_y + excursion_pos[1])
                 break

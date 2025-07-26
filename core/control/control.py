@@ -69,6 +69,7 @@ def input_swipe(pos1=(919, 617), pos2=(919, 908), swipe_time: int = 100):
     :param pos2: 坐标2
     :param time: 操作时间(毫秒)
     """
+    num = 0
     # 添加随机值
     pos_x1 = control.ratio * pos1[0] + random.randint(*EXCURSIONX)
     pos_y1 = control.ratio * pos1[1] + random.randint(*EXCURSIONY)
@@ -77,10 +78,12 @@ def input_swipe(pos1=(919, 617), pos2=(919, 908), swipe_time: int = 100):
 
     logger.debug(f"滑动 ({pos_x1}, {pos_y1}) -> ({pos_x2}, {pos_y2})")
     while abs(pos_x2 - pos_x1) > 10 or abs(pos_y2 - pos_y1) > 10:
-        limit_pos_x1 = max(20, min(pos_x1, control.safe_area[0]))
-        limit_pos_y1 = max(70, min(pos_y1, control.safe_area[1]))
-        limit_pos_x2 = max(20, min(pos_x2, control.safe_area[0]))
-        limit_pos_y2 = max(70, min(pos_y2, control.safe_area[1]))
+        if num >= 1:
+            time.sleep(0.5)
+        limit_pos_x1 = max(control.safe_area[0], min(pos_x1, control.safe_area[2]))
+        limit_pos_y1 = max(control.safe_area[1], min(pos_y1, control.safe_area[3]))
+        limit_pos_x2 = max(control.safe_area[0], min(pos_x2, control.safe_area[2]))
+        limit_pos_y2 = max(control.safe_area[1], min(pos_y2, control.safe_area[3]))
         logger.debug(
             f"多次滑动 ({limit_pos_x1}, {limit_pos_y1}) -> ({limit_pos_x2}, {limit_pos_y2})"
         )
@@ -92,6 +95,7 @@ def input_swipe(pos1=(919, 617), pos2=(919, 908), swipe_time: int = 100):
         # 减去当前执行的距离
         pos_x1 -= limit_pos_x1 - limit_pos_x2
         pos_y1 -= limit_pos_y1 - limit_pos_y2
+        num += 1
 
 
 def input_tap(pos: Tuple[int, int] = (880, 362)):

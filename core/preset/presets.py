@@ -102,7 +102,7 @@ def click_station(name: str, cur_station: Optional[str] = None):
         y1 = source_y + city_differences[1] / 2.5
 
         # 滑动到目标站点
-        input_swipe((x1, y1), (source_x, source_y), swipe_time=500)
+        input_swipe((x1, y1), (source_x, source_y), swipe_time=800)
         # 向回拖动避免画面长时间移动
         input_swipe(
             (source_x, source_y), (source_x - 10, source_y - 10), swipe_time=500
@@ -191,13 +191,13 @@ def go_outlets(name: str):
     """
     go_city()
     logger.info(f"前往 => {name}")
-    if result := blurry_ocr_click(name, excursion_pos=(-2, 50), log=False):
+    if result := blurry_ocr_click(name, excursion_pos=(25, 42), log=False, click_first=True):
         return result
     input_swipe((969, 369), (457, 340), swipe_time=500)
-    if result := blurry_ocr_click(name, excursion_pos=(-2, 50), log=False):
+    if result := blurry_ocr_click(name, excursion_pos=(25, 42), log=False, click_first=True):
         return result
     input_swipe((641, 246), (637, 615), swipe_time=500)
-    if result := blurry_ocr_click(name, excursion_pos=(-2, 50)):
+    if result := blurry_ocr_click(name, excursion_pos=(25, 42), click_first=True):
         return result
 
 

@@ -110,7 +110,7 @@ venv.bak/
 logs/
 gui/
 examples/
-test.*
+test*.py
 config*
 !config.py
 temp/

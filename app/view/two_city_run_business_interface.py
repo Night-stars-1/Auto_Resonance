@@ -35,7 +35,7 @@ class TwoRunBusinessInterface(ScrollArea):
         self.expandLayout = ExpandLayout(self.scrollWidget)
 
         # label
-        self.settingLabel = QLabel("跑商配置", self)
+        self.titleLabel = QLabel("跑商配置", self)
 
         self.__initWidget()
 
@@ -49,7 +49,7 @@ class TwoRunBusinessInterface(ScrollArea):
 
         # initialize style sheet
         self.scrollWidget.setObjectName("scrollWidget")
-        self.settingLabel.setObjectName("titleLabel")
+        self.titleLabel.setObjectName("titleLabel")
         StyleSheet.VIEW_INTERFACE.apply(self)
 
         # initialize layout
@@ -105,7 +105,7 @@ class TwoRunBusinessInterface(ScrollArea):
             checkbox.setChecked(False)
 
     def __initLayout(self):
-        self.settingLabel.move(36, 30)
+        self.titleLabel.move(36, 30)
 
         self.bookGroup._adjustViewSize()
         self.haggleGroup._adjustViewSize()

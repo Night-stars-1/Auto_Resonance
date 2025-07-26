@@ -7,6 +7,7 @@ LastEditors: Night-stars-1 nujj1042633805@gmail.com
 
 from enum import Enum
 
+from loguru import logger
 from qfluentwidgets import StyleSheetBase, Theme, qconfig
 
 from app.utils.constants import QSS_PATH

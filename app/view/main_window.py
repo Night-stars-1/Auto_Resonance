@@ -6,7 +6,7 @@ LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 from typing import Union
 
-from PySide6.QtCore import QSize, Qt
+from PySide6.QtCore import QSize, Qt, QTimer
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication, QWidget
 from loguru import logger
@@ -19,7 +19,10 @@ from qfluentwidgets import (
     MSFluentWindow,
     NavigationItemPosition,
     SplashScreen,
-    FluentIconBase
+    FluentIconBase,
+    SystemThemeListener,
+    isDarkTheme,
+    setTheme
 )
 
 import app.common.resource  # 图标数据
@@ -43,6 +46,9 @@ class MainWindow(MSFluentWindow):
         super().__init__()
         self.wights = {}
 
+        # 主题监听器
+        self.themeListener = SystemThemeListener(self)
+
         self.initWindow()
         self.setInterface()
 
@@ -53,10 +59,14 @@ class MainWindow(MSFluentWindow):
         self.splashScreen.finish()
         # 检查更新
         self.updater = MirrorUpdateUtils()
-        self.checkUpdate()
+        # self.checkUpdate()
+        # 启用主题监听器
+        self.themeListener.start()
 
     def connectSignalToSlot(self):
         signalBus.switchToCard.connect(self.switchToCard)
+        # 监听主题切换
+        cfg.themeChanged.connect(setTheme)
 
     def initNavigation(self):
         self.addSubInterface(self.homeInterface, FIF.HOME, "主页")
@@ -136,6 +146,19 @@ class MainWindow(MSFluentWindow):
     def switchToCard(self, routeKey):
         """切换到指定界面"""
         self.switchTo(self.wights[routeKey])
+
+    def closeEvent(self, e):
+        # 停止监听器线程
+        self.themeListener.terminate()
+        self.themeListener.deleteLater()
+        super().closeEvent(e)
+
+    def _onThemeChangedFinished(self):
+        super()._onThemeChangedFinished()
+
+        # 云母特效启用时需要增加重试机制
+        if self.isMicaEffectEnabled():
+            QTimer.singleShot(100, lambda: self.windowEffect.setMicaEffect(self.winId(), isDarkTheme()))
 
     def Update(self):
         """

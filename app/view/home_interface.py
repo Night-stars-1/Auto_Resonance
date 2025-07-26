@@ -132,7 +132,7 @@ class HomeInterface(ScrollArea):
             isClosable=False,
             duration=-1,
             position=InfoBarPosition.NONE,
-            parent=self,
+            parent=self.view,
         )
 
         basicInputView = ButtonCardView(

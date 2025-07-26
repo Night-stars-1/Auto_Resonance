@@ -5,8 +5,8 @@ LastEditTime: 2024-04-14 14:20:47
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
-from PyQt5.QtCore import QObject, Qt, pyqtSignal
-from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget
+from PySide6.QtCore import QObject, Qt, Signal
+from PySide6.QtWidgets import QLabel, QVBoxLayout, QWidget
 from qfluentwidgets import PlainTextEdit, ScrollArea
 
 from core.logger import logger
@@ -15,18 +15,16 @@ from ..common.style_sheet import StyleSheet
 
 
 class LoguruHandler(QObject):
-    # 创建一个信号
-    new_log_signal = pyqtSignal(str)
+    new_log_signal = Signal(str)
 
     def __init__(self, widget: PlainTextEdit):
         super().__init__()
         self.widget = widget
         self.widget.setReadOnly(True)
-        # 连接信号到槽，安全地更新文本控件
+        
         self.new_log_signal.connect(self.widget.appendPlainText)
 
     def write(self, message):
-        # 使用信号发送消息
         self.new_log_signal.emit(message[:-1])
 
 
@@ -42,11 +40,12 @@ class LoggerInterface(ScrollArea):
         self.loggerLabel = QLabel("日志", self)
         self.log_widget = PlainTextEdit(self)
 
-        self.__initWidget()
+        self.initWidget()
+        self.initLayout()
         self.loadLogger()
 
-    def __initWidget(self):
-        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+    def initWidget(self):
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.setWidget(self.scrollWidget)
         self.setWidgetResizable(True)
         self.setObjectName("LoggerInterface")
@@ -56,10 +55,8 @@ class LoggerInterface(ScrollArea):
         self.loggerLabel.setObjectName("settingLabel")
         StyleSheet.SETTING_INTERFACE.apply(self)
 
-        # initialize layout
-        self.__initLayout()
 
-    def __initLayout(self):
+    def initLayout(self):
         self.loggerLabel.move(36, 30)
 
         self.vBoxLayout.setContentsMargins(36, 80, 36, 10)

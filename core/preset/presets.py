@@ -10,19 +10,24 @@ from typing import Dict, Optional, Tuple
 
 from loguru import logger
 
-from core.adb.control import input_swipe, input_tap, screenshot
-from core.image import get_all_color_pos, get_bgrs, match_screenshot, wait_stopped
+from core.control.control import (
+    input_swipe,
+    input_tap,
+    screenshot,
+    screenshot_image,
+    wait_stopped,
+)
 from core.module.bgr import BGRGroup
-from core.ocr import predict
+from core.image.ocr import predict
 from core.preset import blurry_ocr_click, go_home
-from core.utils.utils import read_json
+from core.utils.utils import RESOURCES_PATH, read_json
 
-from .control import click_image
+from .control import click_image, ocr_click
 from .station import STATION
 
 FIGHT_TIME = 1000
 
-STATION_NAME2PNG: Dict[str, str] = read_json("resources/stations/name2id.json")
+STATION_NAME2PNG: Dict[str, str] = read_json(RESOURCES_PATH / "stations/name2id.json")
 
 # 站点坐标，左上角为(0, 0)
 # STATION_POS_DATA = {
@@ -39,7 +44,7 @@ STATION_NAME2PNG: Dict[str, str] = read_json("resources/stations/name2id.json")
 #     "海角城": (164 + 293, 420 + 577 + 569),
 # }
 STATION_POS_DATA: Dict[str, Tuple[int, int]] = read_json(
-    "resources/goods/CityPosData.json"
+    RESOURCES_PATH / "goods/CityPosData.json"
 )
 
 
@@ -66,7 +71,7 @@ def click_station(name: str, cur_station: Optional[str] = None):
     :param cur_station: 当前站点
     """
     logger.info(f"点击站点 => {name}")
-    if match_screenshot(screenshot(), "resources/main_map.png")["max_val"] < 0.95:
+    if screenshot().match_template(RESOURCES_PATH / "main_map.png", 0.95) == False:
         logger.info("未检测到主地图界面，返回主地图")
         go_home()
     logger.info("检测到主地图界面，识别站点")
@@ -104,27 +109,31 @@ def click_station(name: str, cur_station: Optional[str] = None):
         )
         wait_stopped(threshold=7100000)  # 等待滑动完成
 
-        result = match_screenshot(
-            screenshot(), f"resources/stations/{STATION_NAME2PNG[name]}"
+        image = screenshot()
+        image.crop_image((0, 0), (1280, 654))
+        result = image.match_template(
+            RESOURCES_PATH / "stations" / STATION_NAME2PNG[name], 0.95
         )
-        if result["max_val"] > 0.95:
+        if result:
             # 点击站点
-            input_tap(result["max_loc"])
+            input_tap(result.loc)
         else:
-            logger.error(f"未找到站点: {name}")
-            return STATION(False)
+            logger.info(f"未找到站点 {name}，尝试OCR识别")
+            if not ocr_click(name):
+                logger.error(f"未找到站点: {name}")
+                return STATION(False)
         time.sleep(0.5)
         # 点击前往目的地按钮
         logger.info("点击前往目的地按钮")
         if click_image(
-            "resources/map/go_station.png",
+            RESOURCES_PATH / "map/go_station.png",
             cropped_pos1=(937, 605),
             cropped_pos2=(1218, 679),
             trynum=5,
         ):
             time.sleep(1.0)
             click_image(
-                "map/join_station.png",
+                RESOURCES_PATH / "map/join_station.png",
                 cropped_pos1=(719, 405),
                 cropped_pos2=(927, 485),
                 trynum=5,
@@ -146,7 +155,9 @@ def get_station(is_go_home: bool = True):
     go_home()
     input_tap((1170, 493))
     time.sleep(1.0)
-    reslut = predict(screenshot(), cropped_pos1=(166, 520), cropped_pos2=(470, 600))
+    reslut = predict(
+        screenshot_image(), cropped_pos1=(166, 520), cropped_pos2=(470, 600)
+    )
     if len(reslut) == 0:
         raise ValueError("未识别到当前城市")
     logger.info(f"当前站点: {reslut[0]['text']}")
@@ -162,13 +173,10 @@ def go_city():
         进入城市界面
     """
     while (
-        match_screenshot(
-            screenshot(),
-            "resources/fame.png",
-            cropped_pos1=(25, 634),
-            cropped_pos2=(99, 707),
-        )["max_val"]
-        < 0.95
+        screenshot()
+        .crop_image(cropped_pos1=(25, 634), cropped_pos2=(99, 707))
+        .match_template(RESOURCES_PATH / "fame.png", 0.95)
+        == False
     ):
         input_tap((1270, 494))
         time.sleep(2.0)
@@ -202,7 +210,7 @@ def wait_fight_end():
     start = time.perf_counter()
     while time.perf_counter() - start < FIGHT_TIME:
         image = screenshot()
-        bgrs = get_bgrs(image, [(1114, 630), (1204, 624), (167, 29)])
+        bgrs = image.get_bgrs([(1114, 630), (1204, 624), (167, 29)])
         logger.debug(f"等待战斗结束颜色检查: {bgrs}")
         if (
             BGRGroup([198, 200, 200], [202, 204, 204]) == bgrs[0]
@@ -211,11 +219,8 @@ def wait_fight_end():
             logger.info("检测到执照等级提升")
             input_tap((1151, 626))
             continue
-        elif (
-            match_screenshot(
-                image, "resources/fight/end_fight.png", (1070, 600), (1251, 670)
-            )["max_val"]
-            > 0.995
+        elif image.crop_image((1070, 600), (1251, 670)).match_template(
+            RESOURCES_PATH / "fight/end_fight.png", 0.995
         ):
             logger.info("战斗结束")
             time.sleep(1.0)

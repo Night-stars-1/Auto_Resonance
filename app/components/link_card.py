@@ -5,9 +5,9 @@ LastEditTime: 2024-04-21 20:06:47
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
-from PyQt5.QtCore import Qt, QUrl
-from PyQt5.QtGui import QDesktopServices, QPixmap
-from PyQt5.QtWidgets import QFrame, QHBoxLayout, QLabel, QVBoxLayout, QWidget
+from PySide6.QtCore import Qt, QUrl
+from PySide6.QtGui import QDesktopServices
+from PySide6.QtWidgets import QFrame, QHBoxLayout, QLabel, QVBoxLayout, QWidget
 from qfluentwidgets import FluentIcon, IconWidget, SingleDirectionScrollArea, TextWrap
 
 from ..common.style_sheet import StyleSheet
@@ -27,7 +27,7 @@ class LinkCard(QFrame):
         self.__initWidget()
 
     def __initWidget(self):
-        self.setCursor(Qt.PointingHandCursor)
+        self.setCursor(Qt.CursorShape.PointingHandCursor)
 
         self.iconWidget.setFixedSize(54, 54)
         self.urlWidget.setFixedSize(16, 16)
@@ -41,7 +41,7 @@ class LinkCard(QFrame):
         self.vBoxLayout.addWidget(self.titleLabel)
         self.vBoxLayout.addSpacing(8)
         self.vBoxLayout.addWidget(self.contentLabel)
-        self.vBoxLayout.setAlignment(Qt.AlignLeft | Qt.AlignTop)
+        self.vBoxLayout.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
         self.urlWidget.move(170, 192)
 
         self.titleLabel.setObjectName("titleLabel")
@@ -56,18 +56,18 @@ class LinkCardView(SingleDirectionScrollArea):
     """Link card view"""
 
     def __init__(self, parent=None):
-        super().__init__(parent, Qt.Horizontal)
+        super().__init__(parent, Qt.Orientation.Horizontal)
         self.view = QWidget(self)
         self.hBoxLayout = QHBoxLayout(self.view)
 
         self.hBoxLayout.setContentsMargins(36, 0, 0, 0)
         self.hBoxLayout.setSpacing(12)
-        self.hBoxLayout.setAlignment(Qt.AlignLeft)
+        self.hBoxLayout.setAlignment(Qt.AlignmentFlag.AlignLeft)
 
         self.setWidget(self.view)
         self.setWidgetResizable(True)
-        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 
         self.view.setObjectName("view")
         StyleSheet.LINK_CARD.apply(self)
@@ -75,4 +75,4 @@ class LinkCardView(SingleDirectionScrollArea):
     def addCard(self, icon, title, content, url):
         """add link card"""
         card = LinkCard(icon, title, content, url, self.view)
-        self.hBoxLayout.addWidget(card, 0, Qt.AlignLeft)
+        self.hBoxLayout.addWidget(card, 0, Qt.AlignmentFlag.AlignLeft)

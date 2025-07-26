@@ -10,15 +10,16 @@ from typing import Dict
 
 from pydantic import BaseModel, Field
 
-from core.utils.utils import read_json
+from core.control.adb_port import EmulatorInfo, EmulatorType
+from core.utils.utils import RESOURCES_PATH, read_json
 
 ROOT_PATH = Path().resolve()
 """项目根目录路径"""
 APP_PATH = ROOT_PATH / "config" / "app.json"
 """自动程序配置文件路径"""
-APP_PATH.parent.exists() or APP_PATH.parent.mkdir(parents=True, exist_ok=True)
+APP_PATH.parent.mkdir(parents=True, exist_ok=True)
 city_sell_data: Dict[str, Dict[str, int]] = read_json(
-    "resources/goods/CityGoodsSellData.json"
+    RESOURCES_PATH / "goods/CityGoodsSellData.json"
 )
 CITYS = list(city_sell_data.keys())
 
@@ -26,17 +27,9 @@ CITYS = list(city_sell_data.keys())
 class GlobalModel(BaseModel):
     """全局模型"""
 
-    adbOrder: str = ""
-    """ADB Order"""
-    adbPort: str = ""
-    """ADB 端口"""
-    adbPath: str = ""
-    """ADB 路径"""
-    emulatorType: str = ""
-    """模拟器类型"""
-    goodsType: bool = False
-    """货物类型"""
-    uuid: str = ""
+    device: EmulatorInfo = EmulatorInfo(
+        name="自定义端口", port=16384, path="", type=EmulatorType.CUSTOM, index=0
+    )
     mirrorCdk: str = ""
     """Mirror酱CDK"""
 

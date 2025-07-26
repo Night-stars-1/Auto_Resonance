@@ -10,7 +10,7 @@ from loguru import logger
 from auto.run_business import run, start
 from auto.run_business.main import buy_business, click_station, go_business
 from auto.run_business.sell import sell_business
-from core.adb.control import connect
+from core.control.control import connect
 
 if __name__ == "__main__1":
     run(

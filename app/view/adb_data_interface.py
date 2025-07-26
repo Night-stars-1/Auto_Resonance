@@ -4,19 +4,20 @@ Date: 2024-04-10 22:54:08
 LastEditTime: 2025-02-05 18:42:29
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
-from PyQt5.QtWidgets import QWidget, QVBoxLayout
-from PyQt5.QtCore import QTimer
-from qfluentwidgets import ScrollArea
+
 from functools import partial
 
-from app.components.button_card import ButtonCardView
-from core.adb.adb_port import get_all_port
+from PySide6.QtCore import QTimer
+from PySide6.QtWidgets import QVBoxLayout, QWidget
+from qfluentwidgets import ScrollArea
 
-from app.common.config import cfg
+from app.common.config import cfg, qconfig
 from app.common.style_sheet import StyleSheet
-from app.common.worker import Worker
+from app.components.button_card import ButtonCardView
+from app.utils.worker import Worker
+from core.control.adb_port import EmulatorInfo, get_adb_port
 from core.model.config import config
-from app.common.config import qconfig
+
 
 class ADBDataInterface(ScrollArea):
     """ADB端口信息扫描 interface"""
@@ -44,34 +45,34 @@ class ADBDataInterface(ScrollArea):
 
     def showEvent(self, event):
         """当切换到该页面时，触发这个事件"""
-        super().showEvent(event) 
+        super().showEvent(event)
         self.basicInputView.removeAllSampleCards()
         self.basicInputView.set_title("加载中...")
         QTimer.singleShot(100, self.start_port_scan)
 
     def start_port_scan(self):
         """动画结束后调用的方法"""
-        self.worker = Worker(get_all_port)
+        self.worker = Worker(get_adb_port)
         self.worker.result.connect(self.update_adb)
         self.worker.start()
-        
+
     def loadSamples(self):
         """load samples"""
         self.basicInputView = ButtonCardView("加载中...", parent=self.scrollWidget)
 
         self.vBoxLayout.addWidget(self.basicInputView)
 
-    def update_adb(self, data: dict[str, str]):
+    def update_adb(self, info_list: list[EmulatorInfo]):
         self.basicInputView.set_title("ADB信息")
-        for name, port in data.items():
+        for info in info_list:
+            if not info.port:
+                continue
             self.basicInputView.addSampleCard(
                 icon=":/gallery/images/controls/Button.png",
-                title=name,
-                content=f"127.0.0.1:{port}",
-                func=partial(self.set_port, str(port)),
+                title=info.name,
+                content=f"127.0.0.1:{info.port}",
+                func=partial(self.set_port, info),
             )
 
-    def set_port(self, port: str):
-        qconfig.set(cfg.adbPort, port)
-        qconfig.set(cfg.emulatorType, "Custom")
-    
+    def set_port(self, info: EmulatorInfo):
+        qconfig.set(cfg.device, info)

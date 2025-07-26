@@ -7,7 +7,8 @@ sys.path.append(str(project_root))
 
 import cv2
 import numpy as np
-from core.adb.control import connect, screenshot
+
+from core.control.control import connect, screenshot
 
 # 加载图像
 connect()
@@ -76,4 +77,5 @@ cv2.imshow("Original Image", image)
 # cv2.imshow('Purple Area', purple_area)
 
 cv2.waitKey(0)
+cv2.destroyAllWindows()
 cv2.destroyAllWindows()

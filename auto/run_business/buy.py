@@ -12,14 +12,12 @@ import cv2 as cv
 import numpy as np
 from loguru import logger
 
-from core.adb.control import input_swipe, input_tap, screenshot
-from core.exception_handling import get_excption
-from core.image import get_bgr, get_hsv
+from core.control.control import input_swipe, input_tap, screenshot, screenshot_image
+from core.exception.exception_handling import get_excption
+from core.image.image import Image
 from core.module.bgr import BGR, BGRGroup
 from core.module.hsv import HSV
-from core.ocr import predict
-from core.preset import click, find_text
-from core.preset import go_home
+from core.preset import click, find_text, go_home
 
 
 def buy_business(
@@ -72,9 +70,9 @@ def buy_business(
 
 
 def is_empty_goods():
-    bgr = get_bgr(
-        screenshot(), (898, 169), cropped_pos1=(870, 132), cropped_pos2=(994, 205)
-    )
+    image = screenshot()
+    image.crop_image((870, 132), (994, 205))
+    bgr = image.get_bgr((898, 169))
     logger.debug(f"货物是否为空检查 {bgr}")
     return BGR(27, 26, 26) == bgr
 
@@ -86,12 +84,11 @@ def buy_good(good: str, book: int, max_book: int, again: bool = False):
         cropped_pos1=(622, 136),
         cropped_pos2=(854, 685),
         log=False,
-        return_image=True,
     )  # 点击商品
     if not pos:
         pos, image = find_good(good)  # 点击失败查找并点击商品
-    if pos:
-        hsv = get_hsv(image, (564, 667 if pos[1] + 22 > 720 else pos[1] + 22))
+    if pos and image is not None:
+        hsv = image.get_hsv((564, 667 if pos[1] + 22 > 720 else pos[1] + 22))
         """
         cv.rectangle(
             image,
@@ -129,7 +126,7 @@ def use_book(pos: Tuple[int, int], book: int):
     click((pos[0] - 215, pos[1]))
     time.sleep(1.0)
     click((959, 541))
-    while (hsv := get_hsv(screenshot(), pos))[-1] < 60:
+    while (hsv := screenshot().get_hsv(pos))[-1] < 60:
         logger.debug(f"进货书是否所有成功颜色检查: {hsv}")
         time.sleep(0.5)
 
@@ -152,7 +149,6 @@ def find_good(good, timeout=10):
             cropped_pos1=(622, 136),
             cropped_pos2=(854, 685),
             log=False,
-            return_image=True,
         )
         if result:
             return result, image
@@ -164,7 +160,7 @@ def get_boatload():
     说明:
         获取载货量百分比
     """
-    image = screenshot()
+    image = screenshot_image()
     lower_color_bound = np.array([35, 35, 35])
     upper_color_bound = np.array([36, 36, 36])
 
@@ -190,14 +186,16 @@ def click_bargain_button_of_bargain(target_bargain=0):
     """
     start = time.perf_counter()
     while time.perf_counter() - start < 15:
-        reslut = predict(screenshot(), (988, 450), (1042, 475))
+        image = screenshot()
+        image.crop_image((988, 450), (1042, 475))
+        reslut = image.ocr()
         bargain = reslut[0]["text"][:-1] if len(reslut) > 0 else None
         logger.info(f"降价幅度: {bargain}%")
         if bargain and target_bargain <= bargain:
             return True
         if get_excption() == "议价次数不足":
             return False
-        bgr = get_bgr(screenshot(), (1176, 461))
+        bgr = screenshot().get_bgr((1176, 461))
         logger.debug(f"降价界面颜色检查: {bgr}")
         if BGR(5, 135, 245) == bgr:
             input_tap((1177, 461))
@@ -224,7 +222,7 @@ def click_bargain_button(num=0):
     while time.perf_counter() - start < 15:
         if num <= 0:
             return True
-        bgr = get_bgr(screenshot(), (1176, 461))
+        bgr = screenshot().get_bgr((1176, 461))
         logger.debug(f"降价界面颜色检查: {bgr}")
         if BGRGroup([0, 123, 240], [2, 133, 255]) == bgr:
             input_tap((1177, 461))
@@ -236,7 +234,7 @@ def click_bargain_button(num=0):
             logger.info("疲劳不足")
             input_tap((83, 36))
             return True
-        hsv = get_hsv(screenshot(), (629, 271), (516, 224), (787, 439))
+        hsv = screenshot().crop_image((516, 224), (787, 439)).get_hsv((629, 271))
         logger.debug(f"降价是否成功颜色检查(HSV): {hsv}")
         if 95 <= hsv[0] <= 105:
             logger.info("降价成功")
@@ -256,7 +254,7 @@ def click_buy_button():
         input_tap((1056, 647))
         time.sleep(1)
         image = screenshot()
-        bgr = get_bgr(image, (1177, 459), offset=5)
+        bgr = image.get_bgr((1177, 459), offset=5)
         logger.debug(f"购买物品界面颜色检查: {bgr}")
         if bgr != [2, 133, 253] and bgr != [251, 253, 253]:
             return True

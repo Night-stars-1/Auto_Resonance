@@ -6,23 +6,23 @@ LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
 from functools import partial
-from typing import Dict
+from typing import Dict, Optional
 
 from loguru import logger
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QLabel, QWidget
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QLabel, QWidget
 from qfluentwidgets import CheckBox, ExpandLayout, ExpandSettingCard
 from qfluentwidgets import FluentIcon as FIF
 from qfluentwidgets import ScrollArea, InfoBar
 
 from app.common.config import cfg
-from app.common.running_business_config import CITYS, STATIONS
 from app.common.signal_bus import signalBus
 from app.common.style_sheet import StyleSheet
-from app.common.worker import Worker
+from app.utils.worker import Worker
 from app.components.primary_push_load_card import PrimaryPushLoadCard
 from app.components.settings.checkbox_group_card import CheckboxGroup
 from app.components.settings.spin_box_setting_card import SpinBoxSettingCard
+from app.utils.config import CITYS
 
 
 class TwoRunBusinessInterface(ScrollArea):
@@ -41,7 +41,7 @@ class TwoRunBusinessInterface(ScrollArea):
 
     def __initWidget(self):
         self.resize(1000, 800)
-        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.setViewportMargins(0, 80, 0, 20)
         self.setWidget(self.scrollWidget)
         self.setWidgetResizable(True)
@@ -49,13 +49,13 @@ class TwoRunBusinessInterface(ScrollArea):
 
         # initialize style sheet
         self.scrollWidget.setObjectName("scrollWidget")
-        self.settingLabel.setObjectName("settingLabel")
-        StyleSheet.SETTING_INTERFACE.apply(self)
+        self.settingLabel.setObjectName("titleLabel")
+        StyleSheet.VIEW_INTERFACE.apply(self)
 
         # initialize layout
         self.loadSamples()
         self.__initLayout()
-        self.__connectSignalToSlot()
+        self.connectSignalToSlot()
 
     def loadSamples(self):
         """load samples"""
@@ -75,15 +75,15 @@ class TwoRunBusinessInterface(ScrollArea):
             checkbox.toggled.connect(partial(self.check_checkbox, checkbox))
 
         self.bookGroup = ExpandSettingCard(
-            FIF.BRUSH, "进货书设置", parent=self.scrollWidget
+            FIF.EDIT, "进货书设置", parent=self.scrollWidget
         )
         self.haggleGroup = ExpandSettingCard(
-            FIF.BRUSH, "议价设置", parent=self.scrollWidget
+            FIF.EDIT, "议价设置", parent=self.scrollWidget
         )
         for city in CITYS:
             bookCard = SpinBoxSettingCard(
                 getattr(cfg, f"{city}进货书"),
-                FIF.ACCEPT,
+                FIF.PENCIL_INK,
                 city,
                 f"{city}进货书",
                 spin_box_max=20,
@@ -92,7 +92,7 @@ class TwoRunBusinessInterface(ScrollArea):
             self.bookGroup.viewLayout.addWidget(bookCard)
             haggleCard = SpinBoxSettingCard(
                 getattr(cfg, f"{city}议价次数"),
-                FIF.ACCEPT,
+                FIF.PENCIL_INK,
                 city,
                 f"{city}议价次数",
                 spin_box_max=20,
@@ -100,9 +100,9 @@ class TwoRunBusinessInterface(ScrollArea):
             )
             self.haggleGroup.viewLayout.addWidget(haggleCard)
 
-    def check_checkbox(self, checkbox: CheckBox):
+    def check_checkbox(self, checkbox: CheckBox, checked: bool):
         if self.cityCheckboxGroup.count() > 2:
-            checkbox.setChecked(False)  # 取消选中
+            checkbox.setChecked(False)
 
     def __initLayout(self):
         self.settingLabel.move(36, 30)
@@ -118,8 +118,7 @@ class TwoRunBusinessInterface(ScrollArea):
         self.expandLayout.addWidget(self.bookGroup)
         self.expandLayout.addWidget(self.haggleGroup)
 
-    def __connectSignalToSlot(self):
-        """connect signal to slot"""
+    def connectSignalToSlot(self):
         self.testRunBusinessCard.clicked.connect(self.runBusiness)
 
     def runBusiness(self):
@@ -136,7 +135,7 @@ class TwoRunBusinessInterface(ScrollArea):
             InfoBar.warning(
                 title='',
                 content="请选择两个城市进行跑商",
-                orient=Qt.Horizontal,
+                orient=Qt.Orientation.Horizontal,
                 isClosable=False,
                 parent=self
             )
@@ -154,8 +153,9 @@ class TwoRunBusinessInterface(ScrollArea):
         self.workers.start()
         self.workers.finished.connect(lambda: self.on_worker_finished(self.workers))
 
-    def on_worker_finished(self, worker: Worker):
+    def on_worker_finished(self, worker: Optional[Worker]):
         # 线程完成时调用
         self.testRunBusinessCard.loading(False)
-        worker and worker.deleteLater()  # 安全删除Worker对象
+        if worker:
+            worker.deleteLater()
         self.workers = None

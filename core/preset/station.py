@@ -7,15 +7,13 @@ LastEditors: Night-stars-1 nujj1042633805@gmail.com
 
 import time
 
-import cv2 as cv
-import numpy as np
 from loguru import logger
 
-from core.adb.control import input_tap, screenshot
-from core.image import get_bgr, get_bgrs, match_screenshot
+from core.control.control import input_tap, screenshot
 from core.model.config import config
 from core.module.bgr import BGRGroup
 from core.preset.control import go_home
+from core.utils.utils import RESOURCES_PATH
 
 FIGHT_TIME = 300
 MAP_WAIT_TIME = 3000
@@ -53,14 +51,14 @@ class STATION:
             return True
         logger.info("进入行车监听")
         start = time.perf_counter()
-        while (time_interval := time.perf_counter() - start) < MAP_WAIT_TIME:
+        while time.perf_counter() - start < MAP_WAIT_TIME:
             image = screenshot()
             # 0-2攻击检测，3-4拦截检测
-            attack_bgrs = get_bgrs(
-                image, [(944, 247), (967, 229), (1056, 229), (1103, 328), (1128, 332)]
+            attack_bgrs = image.get_bgrs(
+                [(944, 247), (967, 229), (1056, 229), (1103, 328), (1128, 332)]
             )
-            reach_bgrs = get_bgrs(
-                image, [(839, 354), (814, 359), (1051, 641), (658, 690)]
+            reach_bgrs = image.get_bgrs(
+                [(839, 354), (814, 359), (1051, 641), (658, 690)]
             )
             logger.debug(f"行车攻击检测: {attack_bgrs}")
             logger.debug(f"行车检测: {reach_bgrs}")
@@ -92,7 +90,8 @@ class STATION:
                 logger.info("点击加速弹丸")
                 input_tap((1061, 657))
                 time.sleep(0.5)
-            config.global_config.is_auto_pick and input_tap((781, 484))  # 捡垃圾
+            if config.global_config.is_auto_pick:
+                input_tap((781, 484))  # 捡垃圾
             time.sleep(0.3)
         logger.error("站点超时")
         return False
@@ -105,13 +104,10 @@ class STATION:
         logger.info("等待进入行车地图")
         start = time.perf_counter()
         while time.perf_counter() - start < 10:
-            retult = match_screenshot(
-                screenshot(),
-                "resources/stations/speed_up.png",
-                cropped_pos1=(1032, 621),
-                cropped_pos2=(1123, 708),
-            )
-            if retult["max_val"] > 0.95:
+            image = screenshot()
+            image.crop_image((1032, 621), (1123, 708))
+            retult = image.match_template(RESOURCES_PATH / "stations/speed_up.png", 0.95)
+            if retult:
                 return True
         return False
 
@@ -120,17 +116,15 @@ class STATION:
         说明:
             进入并等待攻击结束
         """
+        time.sleep(0.5)
         input_tap((1009, 251))
         time.sleep(1)
         for _ in range(3):
-            result = match_screenshot(
-                screenshot(),
-                "resources/fight/start_fight.png",
-                cropped_pos1=(1133, 132),
-                cropped_pos2=(1268, 610),
-            )
-            if result["max_val"] > 0.95:
-                input_tap(result["max_loc"])
+            image = screenshot()
+            image.crop_image((1133, 132), (1268, 610))
+            result = image.match_template(RESOURCES_PATH / "fight/start_fight.png", 0.95)
+            if result:
+                input_tap(result.loc)
                 logger.info("加入攻击成功, 进入战斗监听")
                 break
             else:
@@ -140,7 +134,7 @@ class STATION:
         start = time.perf_counter()
         while time.perf_counter() - start < FIGHT_TIME:
             image = screenshot()
-            bgrs = get_bgrs(image, [(1114, 630), (1204, 624), (159, 26)])
+            bgrs = image.get_bgrs([(1114, 630), (1204, 624), (159, 26)])
             logger.debug(f"战斗检测: {bgrs}")
             if (
                 BGRGroup([198, 200, 200], [202, 204, 204]) == bgrs[0]
@@ -148,11 +142,8 @@ class STATION:
             ):
                 logger.info("检测到执照等级提升")
                 input_tap((1151, 626))
-            elif (
-                match_screenshot(
-                    image, "resources/fight/end_fight.png", (1137, 566), (1224, 652)
-                )["max_val"]
-                > 0.995
+            elif image.crop_image((1137, 566), (1224, 652)).match_template(
+                RESOURCES_PATH / "fight/end_fight.png", 0.995
             ):
                 logger.info("战斗结束")
                 time.sleep(1.5)
@@ -172,36 +163,3 @@ class STATION:
             time.sleep(3)
         logger.error("战斗超时")
         return False
-
-    def auto_pick(self):
-        """
-        捡垃圾
-        """
-        screenshot_cv = screenshot()
-
-        # 设置HSV范围
-        lower_color = np.array([100, 150, 200])
-        upper_color = np.array([120, 255, 255])
-
-        hsv_image = cv.cvtColor(screenshot_cv, cv.COLOR_BGR2HSV)
-
-        # 创建指定像素掩码
-        mask = cv.inRange(hsv_image, lower_color, upper_color)
-        # mask = cv.bitwise_and(mask, mask, mask=pick_mask)
-        # 高斯模糊以影响精度
-        # mask = cv.GaussianBlur(mask, (5, 5), 0)
-        # 找到指定区域的连通区域
-        contours, _ = cv.findContours(mask, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
-        if contours is None:
-            return
-        for contour in contours:
-            x, y, w, h = cv.boundingRect(contour)
-            if 10 < h < 80 and 20 < w < 100:
-                color_pixels_in_contour = cv.countNonZero(
-                    mask[contour[:, 0, 1], contour[:, 0, 0]]
-                )
-
-                if color_pixels_in_contour < 60 or color_pixels_in_contour > 200:
-                    continue
-                input_tap((x + w // 2, y + h // 2))
-                time.sleep(0.2)

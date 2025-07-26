@@ -5,9 +5,9 @@ LastEditTime: 2025-02-11 19:20:13
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
-from PyQt5.QtCore import Qt, QUrl
-from PyQt5.QtGui import QDesktopServices
-from PyQt5.QtWidgets import QLabel, QWidget
+from PySide6.QtCore import Qt, QUrl
+from PySide6.QtGui import QDesktopServices
+from PySide6.QtWidgets import QLabel, QWidget
 from qfluentwidgets import ExpandLayout, PrimaryPushSettingCard
 from qfluentwidgets import FluentIcon as FIF
 from qfluentwidgets import ScrollArea, SettingCardGroup, SwitchSettingCard
@@ -45,7 +45,7 @@ class SettingInterface(ScrollArea):
         )
         self.mirrorCard = PrimaryPushSettingCard(
             "Mirror酱",
-            FIF.LABEL,
+            FIF.SHARE,
             "浏览 Mirror 酱",
             "在 Mirror 酱官网购买 CDK",
             self.musicInThisPCGroup,
@@ -73,12 +73,10 @@ class SettingInterface(ScrollArea):
         #     parent=self.musicInThisPCGroup,
         # )
         self.adbOrderCard = CustomAdbSettingCard(
-            cfg.emulatorType,
-            cfg.adbPort,
+            cfg.device,
             FIF.GAME,
             "ADB地址",
-            "只支持部分模拟器，如果连接失败请使用自定义ADB端口",
-            texts=emulator_list.name2type,
+            "修改该内容自动变为自定义ADB端口",
             parent=self.musicInThisPCGroup,
         )
         # self.adbOrderCard = LineEditSettingCard(
@@ -117,7 +115,7 @@ class SettingInterface(ScrollArea):
 
     def __initWidget(self):
         self.resize(1000, 800)
-        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.setViewportMargins(0, 80, 0, 20)
         self.setWidget(self.scrollWidget)
         self.setWidgetResizable(True)

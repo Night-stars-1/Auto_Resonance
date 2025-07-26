@@ -5,44 +5,18 @@ LastEditTime: 2024-12-12 00:28:30
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
+from pathlib import Path
 import time
-from typing import Tuple
+from typing import Tuple, Union
 
+import cv2 as cv
 from loguru import logger
 
 from core.module.bgr import BGRGroup
 
-from ..adb.control import input_tap, screenshot
-from ..exception_handling import get_excption
-from ..image import get_bgr, match_screenshot
-from ..ocr import predict
-from .decorator import ensure_resources_prefix
-
-
-@ensure_resources_prefix
-def wait(
-    image: str,
-    cropped_pos1: Tuple[int, int] = (0, 0),
-    cropped_pos2: Tuple[int, int] = (0, 0),
-    trynum=10,
-    threshold=0.95,
-):
-    """
-    说明:
-        等待指定图片出现
-    参数:
-        :param image: 图片路径
-        :param cropped_pos: 裁剪坐标
-        :param trynum: 尝试次数
-        :param threshold: 阈值
-    """
-    for _ in range(trynum):
-        result = match_screenshot(screenshot(), image, cropped_pos1, cropped_pos2)
-        if result["max_val"] >= threshold:
-            return True
-        time.sleep(1)
-    logger.info(get_excption())
-    return False
+from core.control.control import input_tap, screenshot
+from core.exception.exception_handling import get_excption
+from core.utils.utils import RESOURCES_PATH
 
 
 def wait_gbr(
@@ -55,7 +29,7 @@ def wait_gbr(
 ):
     """
     说明:
-        等待指定图片出现
+        等待指定颜色出现
     参数:
         :param pos: 坐标
         :param min_gbr: 最小颜色
@@ -65,7 +39,9 @@ def wait_gbr(
         :param trynum: 尝试次数
     """
     for _ in range(trynum):
-        bgr = get_bgr(screenshot(), pos, cropped_pos1, cropped_pos2)
+        image = screenshot()
+        image.crop_image(cropped_pos1, cropped_pos2)
+        bgr = image.get_bgr(pos)
         if BGRGroup(min_gbr, max_gbr) == bgr:
             return True
         time.sleep(1)
@@ -73,19 +49,8 @@ def wait_gbr(
     return False
 
 
-def wait_time(seconds: float):
-    """
-    说明:
-        等待指定时间
-    参数:
-        :param time: 时间
-    """
-    time.sleep(seconds)
-
-
-@ensure_resources_prefix
 def click_image(
-    image: str,
+    template: Union[str, Path, cv.typing.MatLike],
     cropped_pos1: Tuple[int, int] = (0, 0),
     cropped_pos2: Tuple[int, int] = (0, 0),
     excursion_pos: Tuple[int, int] = (0, 0),
@@ -96,7 +61,7 @@ def click_image(
     说明:
         点击指定图片
     参数:
-        :param image_path: 图片路径
+        :param template: 图片
         :param cropped_pos1: 裁剪坐标1
         :param cropped_pos2: 裁剪坐标2
         :param excursion_pos: 点击偏移坐标
@@ -105,11 +70,13 @@ def click_image(
     """
     time.sleep(0.5)
     for _ in range(trynum):
-        result = match_screenshot(screenshot(), image, cropped_pos1, cropped_pos2)
-        if result["max_val"] > 0.95:
+        image = screenshot()
+        image.crop_image(cropped_pos1, cropped_pos2)
+        result = image.match_template(template, 0.95)
+        if result:
             pos = (
-                result["max_loc"][0] + excursion_pos[0],
-                result["max_loc"][1] + excursion_pos[1],
+                result.loc[0] + excursion_pos[0],
+                result.loc[1] + excursion_pos[1],
             )
             input_tap(pos)
             return True
@@ -145,7 +112,8 @@ def ocr_click(
         :param log: 是否打印日志
     """
     image = screenshot()
-    data = predict(image, cropped_pos1, cropped_pos2)
+    image.crop_image(cropped_pos1, cropped_pos2)
+    data = image.ocr()
     coordinates = None
     for item in data:
         if item["text"] == text:
@@ -173,26 +141,25 @@ def blurry_ocr_click(
     log=True,
 ):
     """
-    说明:
-        模糊点击文本
-    参数:
-        :param text: 文本
-        :param cropped_pos1: 裁剪坐标1
-        :param cropped_pos2: 裁剪坐标2
-        :param excursion_pos: 点击偏移坐标
-        :param trynum: 尝试次数
+    模糊点击文本
+
+    :param text: 文本
+    :param cropped_pos1: 裁剪坐标1
+    :param cropped_pos2: 裁剪坐标2
+    :param excursion_pos: 点击偏移坐标
+    :param trynum: 尝试次数
     """
     for _ in range(trynum):
         image = screenshot()
-        data = predict(image, cropped_pos1, cropped_pos2)
+        image.crop_image(cropped_pos1, cropped_pos2)
+        data = image.ocr()
         coordinates = None
         for item in data:
             if text in item["text"]:
-                # 读取位置信息
                 position = item["position"]
-                # 计算中心坐标
                 center_x = (position[0][0] + position[2][0]) / 2
                 center_y = (position[0][1] + position[2][1]) / 2
+
                 coordinates = (center_x + excursion_pos[0], center_y + excursion_pos[1])
                 break
         if coordinates:
@@ -208,7 +175,6 @@ def find_text(
     cropped_pos1: Tuple[int, int] = (0, 0),
     cropped_pos2: Tuple[int, int] = (0, 0),
     log=True,
-    return_image=False,
 ):
     """
     说明:
@@ -217,10 +183,10 @@ def find_text(
         :param text: 文本
         :param cropped_pos1: 裁剪坐标1
         :param cropped_pos2: 裁剪坐标2
-        :param image: 是否返回图片
     """
     image = screenshot()
-    data = predict(image, cropped_pos1, cropped_pos2)
+    image.crop_image(cropped_pos1, cropped_pos2)
+    data = image.ocr()
     for item in data:
         if text in item["text"]:
             if log:
@@ -229,25 +195,22 @@ def find_text(
             # 计算中心坐标
             center_x = (position[0][0] + position[2][0]) / 2
             center_y = (position[0][1] + position[2][1]) / 2
-            if return_image:
-                return (center_x, center_y), image
-            return (center_x, center_y)
+            return (center_x, center_y), image
     if log:
         logger.error(f"未找到指定文本 => {text}")
-    if return_image:
-        return None, None
-    return None
+    return None, image
+
 
 def go_home():
     """
-    说明:
-        返回主界面
+    返回主界面
     """
     logger.info("返回主界面")
-    while match_screenshot(screenshot(), "resources/main_map.png")["max_val"] < 0.96:
+    while screenshot().match_template(RESOURCES_PATH / "main_map.png", 0.96) == False:
         time.sleep(1)
+        logger.debug("尝试返回主界面")
         click_image(
-            "go_home.png",
+            RESOURCES_PATH / "go_home.png",
             (154, 9),
             (243, 67),
             trynum=1,

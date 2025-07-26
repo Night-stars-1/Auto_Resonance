@@ -1,7 +1,7 @@
 import sys
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Callable, Optional
+from typing import Optional
 
 from loguru import logger
 from pydantic import BaseModel
@@ -67,50 +67,6 @@ class BaseUpdateUtils(ABC):
     @abstractmethod
     def get_latest_info(self, cdk: str) -> LatestInfoResponse:
         pass
-
-    def download(
-        self,
-        progress_changed: Callable[[int], None],
-        update_finished: Callable[[bool], None],
-    ):
-        if not self.data:
-            raise ValueError("data未初始化，请先调用get_latest_info")
-        if self.data.code != 0:
-            raise ValueError(f"获取最新信息失败: {self.data.msg}")
-        download_url = self.data.data.url
-        update_type = self.data.data.update_type
-        logger.info(f"开始下载更新包: {update_type}-{download_url}")
-        if not download_url:
-            raise ValueError("下载地址未空")
-        download_file(
-            url=download_url,
-            path=self.zip_path,
-            progress_changed=progress_changed,
-            update_finished=update_finished,
-        )
-        logger.info(f"更新包下载完成: {self.zip_name}")
-
-    def unzip(
-        self,
-        progress_changed: Optional[Callable[[int], None]] = None,
-        update_finished: Optional[Callable[[bool], None]] = None,
-    ):
-        """
-        解压更新包
-        :param progress_changed: 可选的进度更新回调函数，接收一个整数参数表示解压进度百分比
-        :param update_finished: 可选的更新完成回调函数，接收一个布尔值表示是否成功
-        """
-        logger.info(f"开始解压更新包: {self.zip_name}")
-        if not self.zip_path.exists():
-            raise FileNotFoundError(f"更新包不存在: {self.zip_path}")
-        unzip(
-            zip_path=self.zip_path,
-            extract_path=TEMP_PATH / "Auto_Resonance",
-            progress_changed=progress_changed,
-            update_finished=update_finished,
-        )
-
-        logger.info(f"更新包解压完成: {self.zip_name}")
 
     def get_update_status(self, cdk: str, reload: bool = False) -> UpdateStatus:
         """

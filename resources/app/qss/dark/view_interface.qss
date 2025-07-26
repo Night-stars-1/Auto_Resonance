@@ -1,0 +1,22 @@
+#frame {
+    border: 1px solid rgba(255, 255, 255, 13);
+    border-radius: 5px;
+    background-color: transparent;
+}
+
+#scrollWidget {
+    background-color: transparent;
+}
+
+QScrollArea {
+    border: none;
+    background-color: transparent;
+}
+
+
+/* 标签 */
+QLabel#titleLabel {
+    font: 33px 'Microsoft YaHei Light';
+    background-color: transparent;
+    color: white;
+}

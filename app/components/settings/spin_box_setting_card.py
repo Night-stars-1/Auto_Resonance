@@ -7,8 +7,8 @@ LastEditors: Night-stars-1 nujj1042633805@gmail.com
 
 from typing import Union
 
-from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtGui import QIcon
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QIcon
 from qfluentwidgets import ConfigItem, FluentIconBase, SettingCard, SpinBox, qconfig
 
 from app.common.signal_bus import signalBus
@@ -16,8 +16,6 @@ from app.common.signal_bus import signalBus
 
 class SpinBoxSettingCard(SettingCard):
     """Setting card with a push button"""
-
-    text_change = pyqtSignal()
 
     def __init__(
         self,
@@ -55,12 +53,8 @@ class SpinBoxSettingCard(SettingCard):
         self.spinBox.setValue(configItem.value)
 
         self.spinBox.valueChanged.connect(self.valueChanged)
-        self.hBoxLayout.addWidget(self.spinBox, 0, Qt.AlignRight)
+        self.hBoxLayout.addWidget(self.spinBox, 0, Qt.AlignmentFlag.AlignRight)
         self.hBoxLayout.addSpacing(16)
-        signalBus.skillchanged.connect(self.onskillchanged)
 
     def valueChanged(self, value: int):
         qconfig.set(self.configItem, value)
-
-    def onskillchanged(self):
-        self.spinBox.setValue(self.configItem.value)

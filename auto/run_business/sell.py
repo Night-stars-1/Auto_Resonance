@@ -9,11 +9,9 @@ import time
 
 from loguru import logger
 
-from core.adb.control import input_tap, screenshot
-from core.exception_handling import get_excption
-from core.image import get_bgr, get_hsv
+from core.control.control import input_tap, screenshot
+from core.exception.exception_handling import get_excption
 from core.module.bgr import BGR, BGRGroup
-from core.ocr import number_predict, predict
 
 
 def sell_business(num=0):
@@ -25,7 +23,8 @@ def sell_business(num=0):
     """
     start_time = time.perf_counter()
     while time.perf_counter() - start_time < 15:
-        bgr = get_bgr(screenshot(), (1156, 100))
+        image = screenshot()
+        bgr = image.get_bgr((1156, 100))
         logger.debug(f"是否出售货物颜色检查 {bgr}")
         if not (bgr.b == 0 and bgr.g == 0 and 90 <= bgr.r <= 100):
             logger.debug(f"出售全部货物颜色检查 {bgr}")
@@ -46,9 +45,9 @@ def sell_business(num=0):
 
 
 def is_empty_goods():
-    bgr = get_bgr(
-        screenshot(), (898, 169), cropped_pos1=(870, 132), cropped_pos2=(994, 205)
-    )
+    image = screenshot()
+    image.crop_image((870, 132), (994, 205))
+    bgr = image.get_bgr((898, 169))
     logger.debug(f"货物是否为空检查 {bgr}")
     return BGR(25, 33, 33) == bgr
 
@@ -65,7 +64,8 @@ def click_bargain_button(num=0):
     while time.perf_counter() - start < 15:
         if num <= 0:
             return True
-        bgr = get_bgr(screenshot(), (1176, 461))
+        image = screenshot()
+        bgr = image.get_bgr((1176, 461))
         logger.debug(f"抬价界面颜色检查: {bgr}")
         if BGRGroup([0, 170, 240], [5, 185, 255]) == bgr:
             input_tap((1177, 461))
@@ -77,7 +77,9 @@ def click_bargain_button(num=0):
             logger.info("疲劳不足")
             input_tap((83, 36))
             return True
-        hsv = get_hsv(screenshot(), (626, 273), (516, 224), (787, 439))
+        image = screenshot()
+        image.crop_image((516, 224), (787, 439))
+        hsv = image.get_hsv((626, 273))
         logger.debug(f"抬价是否成功颜色检查(HSV): {hsv}")
         if 30 <= hsv[0] <= 40:
             logger.info("抬价成功")
@@ -96,7 +98,7 @@ def click_sell_button():
         input_tap((1056, 647))
         time.sleep(1)
         image = screenshot()
-        bgr = get_bgr(image, (1175, 470), offset=5)
+        bgr = image.get_bgr((1175, 470), offset=5)
         logger.debug(f"出售物品界面颜色检查: {bgr}")
         if bgr == [227, 131, 82]:
             logger.info("检测到包含本地商品")

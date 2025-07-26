@@ -7,10 +7,13 @@ LastEditors: Night-stars-1 nujj1042633805@gmail.com
 
 import json
 from pathlib import Path
+import sys
 from typing import Any, List, Tuple, Union
 
 ROOT_PATH = Path().resolve()
-"""项目根目录路径"""
+"""项目根目录"""
+if getattr(sys, 'frozen', False):
+    ROOT_PATH = Path(sys.executable).parent.resolve()
 RESOURCES_PATH = ROOT_PATH / "resources"
 """资源路径"""
 TEMP_PATH = ROOT_PATH / "temp"

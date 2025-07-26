@@ -1,9 +1,7 @@
-from PyQt5.QtCore import Qt, pyqtSignal
 from qfluentwidgets import IndeterminateProgressRing, PushSettingCard
 
 
 class PrimaryPushLoadCard(PushSettingCard):
-    """Push setting card with primary color"""
 
     def __init__(self, text, icon, title, content=None, parent=None):
         super().__init__(text, icon, title, content, parent)

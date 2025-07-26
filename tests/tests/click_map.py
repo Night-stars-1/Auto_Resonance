@@ -9,7 +9,7 @@ LastEditors: Night-stars-1 nujj1042633805@gmail.com
 # 修格里城 (285+1049, 121+345) 铁盟哨站 (501+1049, 122+345) 荒原站 (753+1049, 121+345)
 # 曼德矿场 (602+1049, 322+345) 淘金乐园 (701+1049, 604+345)
 
-from core.adb.control import connect
+from core.control.control import connect
 from core.preset import click_station
 
 MAP_DATA = {

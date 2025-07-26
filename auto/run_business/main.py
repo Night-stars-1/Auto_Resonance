@@ -6,23 +6,20 @@ LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
 import time
-from typing import Dict, Literal
+from typing import Any, Dict, Literal
 
 from loguru import logger
 
 from auto.run_business.buy import buy_business
 from auto.run_business.sell import sell_business
-from core.adb.control import STOP, connect, input_tap, screenshot
-from core.image import get_bgr
+from core.control.control import STOP, connect, input_tap, screenshot
 from core.model import app
 from core.model.city_goods import RouteModel, RoutesModel
 from core.module.bgr import BGR, BGRGroup
 from core.preset import click_station, get_station, go_outlets, wait_gbr
-from core.utils.utils import read_json
+from core.utils.utils import read_json, RESOURCES_PATH
 
-_city_sell_data: Dict[str, Dict[str, int]] = read_json(
-    "resources/goods/CityGoodsSellData.json"
-)
+_city_sell_data: Any = read_json(RESOURCES_PATH / "goods/CityGoodsSellData.json")
 city_sell_data = {
     city: dict(sorted(goods.items(), key=lambda item: item[1]["price"], reverse=True))
     for city, goods in _city_sell_data.items()
@@ -45,11 +42,12 @@ def show(routes: RoutesModel):
 
 
 def go_business(type: Literal["buy", "sell"] = "buy"):
+    logger.info("前往交易所")
     result = go_outlets("交易所")
     is_join = wait_gbr(
         pos=(286, 35),
-        min_gbr=[250, 250, 250],
-        max_gbr=[255, 255, 255],
+        min_gbr=(250, 250, 250),
+        max_gbr=(255, 255, 255),
         cropped_pos1=(242, 11),
         cropped_pos2=(414, 66),
     )
@@ -59,7 +57,7 @@ def go_business(type: Literal["buy", "sell"] = "buy"):
         elif type == "sell":
             input_tap((932, 404))
         time.sleep(1.0)
-        bgr = get_bgr(screenshot(), (1175, 460))
+        bgr = screenshot().get_bgr((1175, 460))
         logger.debug(f"进入交易所颜色检查: {bgr}")
         if (
             BGRGroup([0, 123, 240], [2, 133, 255]) == bgr

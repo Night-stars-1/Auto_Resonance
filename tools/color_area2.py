@@ -16,7 +16,7 @@ sys.path.append(str(project_root))
 
 import cv2
 
-from core.adb.control import connect, screenshot
+from core.control.control import connect, screenshot
 
 connect(16384)
 

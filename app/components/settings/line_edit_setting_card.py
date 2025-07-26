@@ -7,8 +7,8 @@ LastEditors: Night-stars-1 nujj1042633805@gmail.com
 
 from typing import Union
 
-from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtGui import QIcon
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QIcon
 from qfluentwidgets import (
     SettingCard,
     FluentIconBase,
@@ -20,8 +20,6 @@ from qfluentwidgets import (
 
 class LineEditSettingCard(SettingCard):
     """Setting card with a push button"""
-
-    text_change = pyqtSignal()
 
     def __init__(
         self,
@@ -58,13 +56,15 @@ class LineEditSettingCard(SettingCard):
             self.lineEdit = PasswordLineEdit(self)
         else:
             self.lineEdit = LineEdit(self)
-        self.lineEdit.setText(qconfig.get(self.configItem))
+        self.initText()
         self.lineEdit.setPlaceholderText(holderText)
 
         self.lineEdit.textChanged.connect(self.textChanged)
-        self.hBoxLayout.addWidget(self.lineEdit, 0, Qt.AlignRight)
+        self.hBoxLayout.addWidget(self.lineEdit, 0, Qt.AlignmentFlag.AlignRight)
         self.hBoxLayout.addSpacing(16)
-        # self.button.clicked.connect(self.clicked)
+    
+    def initText(self):
+        self.lineEdit.setText(qconfig.get(self.configItem))
 
     def textChanged(self, text):
         qconfig.set(self.configItem, text)

@@ -2,7 +2,6 @@ from typing import Callable, Optional
 from zipfile import ZipFile
 from loguru import logger
 import requests
-from core.utils.utils import TEMP_PATH
 
 
 def download_file(

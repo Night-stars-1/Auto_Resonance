@@ -5,8 +5,8 @@ LastEditTime: 2024-07-08 22:36:04
 LastEditors: Night-stars-1 nujj1042633805@gmail.com
 """
 
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QHBoxLayout, QLabel, QLayout, QVBoxLayout, QWidget
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QHBoxLayout, QLabel, QLayout, QVBoxLayout, QWidget
 from qfluentwidgets import CardWidget, FlowLayout, IconWidget, TextWrap
 
 from ..common.signal_bus import signalBus

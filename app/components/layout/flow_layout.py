@@ -5,12 +5,12 @@ LastEditors: Night-stars-1 nujj1042633805@gmail.com
 LastEditTime: 2024-12-28 01:10:06
 """
 
-from PyQt5.QtCore import QRect, QSize, pyqtSignal
-from PyQt5.QtWidgets import QLayout
+from PySide6.QtCore import QRect, QSize, Signal
+from PySide6.QtWidgets import QLayout
 
 
 class FlowLayout(QLayout):
-    layoutChanged = pyqtSignal()  # 信号，用于通知布局发生了变化
+    layoutChanged = Signal()
 
     def __init__(self, parent=None):
         super().__init__(parent)

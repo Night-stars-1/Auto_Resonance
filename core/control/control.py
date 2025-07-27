@@ -37,7 +37,7 @@ def connect(adb_port: Optional[int] = None):
     global control, STOP
     STOP = False
     device = app.Global.device
-    if device.type == EmulatorType.MUMUV5:
+    if device.is_mumu:
         control = NEMU()
         status = control.connect(adb_port)
         if status:

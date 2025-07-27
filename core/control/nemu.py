@@ -6,6 +6,7 @@ from typing import Optional
 
 from loguru import logger
 import numpy as np
+from core.control.adb_port import EmulatorType
 from core.control.base_control import IADB
 import cv2 as cv
 
@@ -36,7 +37,12 @@ class NEMU(IADB):
     def __init__(self) -> None:
         self.device = app.Global.device
         self.path = self.device.path
-        path = os.path.join(self.path, "./nx_device/12.0/shell/sdk/external_renderer_ipc.dll")
+        if self.device.type == EmulatorType.MUMUV5:
+            path = os.path.join(self.path, "./nx_device/12.0/shell/sdk/external_renderer_ipc.dll")
+        elif self.device.type == EmulatorType.MUMUV4:
+            path = os.path.join(self.path, "./shell/sdk/external_renderer_ipc.dll")
+        else:
+            raise Exception(f"不支持的模拟器类型: {self.device.type}")
         self.nemu = init(path)
 
     def connect(self, adb_port: Optional[int] = None) -> bool:

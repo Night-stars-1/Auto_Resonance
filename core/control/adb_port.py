@@ -86,19 +86,19 @@ def get_mumu_info(exe_path: str, data: EmulatorDataItem):
     """获取MuMu模拟器信息"""
     cmd_path = path.abspath(path.join(exe_path, data.manager_path))
     cmd = [cmd_path] + data.params.split()
-    result = run(
+    shell_result = run(
         cmd,
         shell=False,
         capture_output=True,
         text=False,
         creationflags=subprocess.CREATE_NO_WINDOW,
     )
-    if result.returncode != 0:
+    if shell_result.returncode != 0:
         return []
 
-    out = result.stdout
-    result = json.loads(out)
-    if isinstance(result, dict):
+    out = shell_result.stdout
+    result: dict = json.loads(out)
+    if not result.get("0"):
         # 不支持多开的MUMU模拟器貌似只返回一个dict
         return [
             EmulatorInfo(

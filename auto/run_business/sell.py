@@ -11,7 +11,8 @@ from loguru import logger
 
 from core.control.control import input_tap, screenshot
 from core.exception.exception_handling import get_excption
-from core.module.bgr import BGR, BGRGroup
+from core.module.bgr import BGR
+from core.preset.control import wait_gbr
 
 
 def sell_business(num=0):
@@ -67,7 +68,7 @@ def click_bargain_button(num=0):
         image = screenshot()
         bgr = image.get_bgr((1176, 461))
         logger.debug(f"抬价界面颜色检查: {bgr}")
-        if BGRGroup([0, 170, 240], [5, 185, 255]) == bgr:
+        if BGR(0, 170, 240) <= bgr <= BGR(5, 185, 255):
             input_tap((1177, 461))
             time.sleep(1.0)
         elif bgr == [251, 253, 253]:
@@ -86,9 +87,9 @@ def click_bargain_button(num=0):
             num -= 1
         else:
             logger.info("抬价失败")
-        if get_excption() == "议价次数不足":
-            return False
 
+        # 等待降价动画消失
+        wait_gbr((627,100), BGR(38, 56, 72), BGR(38, 56, 72), cropped_pos1=(600,82), cropped_pos2=(665,114))
     return False
 
 

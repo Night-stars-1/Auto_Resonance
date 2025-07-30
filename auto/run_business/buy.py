@@ -15,9 +15,10 @@ from loguru import logger
 from core.control.control import input_swipe, input_tap, screenshot, screenshot_image
 from core.exception.exception_handling import get_excption
 from core.image.image import Image
-from core.module.bgr import BGR, BGRGroup
+from core.module.bgr import BGR
 from core.module.hsv import HSV
 from core.preset import click, find_text, go_home
+from core.preset.control import wait_gbr
 
 
 def buy_business(
@@ -222,7 +223,7 @@ def click_bargain_button(num=0):
             return True
         bgr = screenshot().get_bgr((1176, 461))
         logger.debug(f"降价界面颜色检查: {bgr}")
-        if BGRGroup([0, 123, 240], [2, 133, 255]) == bgr:
+        if BGR(0, 123, 240) <= bgr <= BGR(2, 133, 255):
             input_tap((1177, 461))
             time.sleep(1.0)
         elif bgr == [251, 253, 253]:
@@ -239,6 +240,8 @@ def click_bargain_button(num=0):
             num -= 1
         else:
             logger.info("降价失败")
+        # 等待降价动画消失
+        wait_gbr((627,100), BGR(70, 63, 41), BGR(70, 63, 41), cropped_pos1=(600,82), cropped_pos2=(665,114))
     return False
 
 

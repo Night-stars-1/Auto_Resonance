@@ -16,9 +16,9 @@ sys.path.append(str(project_root))
 
 import cv2
 
-from core.control.control import connect, screenshot
+from core.control.control import connect, screenshot, screenshot_image
 
-connect(16384)
+connect()
 
 
 # 定义鼠标点击事件处理函数
@@ -27,11 +27,11 @@ def click_event(event, x, y, flags, param):
     # 检查事件是否为左键点击
     if event == cv2.EVENT_LBUTTONDOWN:
         color = param[y, x]
-        color_bgr = color.tolist()  # 将颜色值转换为列表形式
-        color_hsv = cv2.cvtColor(param, cv2.COLOR_BGR2HSV)[y, x]
+        color_bgr = color.tolist()
+        color_hsv = cv2.cvtColor(param, cv2.COLOR_BGR2HSV)[y, x].tolist()
         print("Clicked at: ", (x, y))
-        print("Color (BGR): ", color_bgr)
-        print("Color (HSV): ", color_hsv.tolist())
+        print("Color (BGR): ", f"({color_bgr[0]}, {color_bgr[1]}, {color_bgr[2]})")
+        print("Color (HSV): ", f"({color_hsv[0]}, {color_hsv[1]}, {color_hsv[2]})")
 
         # 放大模式下显示点击区域的放大图
         if zoom_mode:
@@ -64,7 +64,7 @@ def click_event(event, x, y, flags, param):
 # 全局变量
 zoom_mode = False  # 放大模式开关
 zoomed_image = None
-original_image = screenshot()
+original_image = screenshot_image()
 
 cv2.namedWindow("image")
 cv2.setMouseCallback("image", click_event, param=original_image)

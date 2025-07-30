@@ -10,10 +10,10 @@ from pathlib import Path
 import sys
 from typing import Any, List, Tuple, Union
 
-ROOT_PATH = Path().resolve()
+ROOT_PATH = Path()
 """项目根目录"""
 if getattr(sys, 'frozen', False):
-    ROOT_PATH = Path(sys.executable).parent.resolve()
+    ROOT_PATH = Path(sys.executable).parent
 RESOURCES_PATH = ROOT_PATH / "resources"
 """资源路径"""
 TEMP_PATH = ROOT_PATH / "temp"

@@ -17,7 +17,7 @@ from core.control.control import (
     screenshot_image,
     wait_stopped,
 )
-from core.module.bgr import BGRGroup
+from core.module.bgr import BGR
 from core.image.ocr import predict
 from core.preset import blurry_ocr_click, go_home
 from core.utils.utils import RESOURCES_PATH, read_json
@@ -191,13 +191,13 @@ def go_outlets(name: str):
     """
     go_city()
     logger.info(f"前往 => {name}")
-    if result := blurry_ocr_click(name, excursion_pos=(25, 42), log=False, click_first=True):
+    if result := blurry_ocr_click(name, excursion_pos=(30, 80), log=False, click_first=True):
         return result
     input_swipe((969, 369), (457, 340), swipe_time=500)
-    if result := blurry_ocr_click(name, excursion_pos=(25, 42), log=False, click_first=True):
+    if result := blurry_ocr_click(name, excursion_pos=(30, 80), log=False, click_first=True):
         return result
     input_swipe((641, 246), (637, 615), swipe_time=500)
-    if result := blurry_ocr_click(name, excursion_pos=(25, 42), click_first=True):
+    if result := blurry_ocr_click(name, excursion_pos=(30, 80), click_first=True):
         return result
 
 
@@ -213,8 +213,8 @@ def wait_fight_end():
         bgrs = image.get_bgrs([(1114, 630), (1204, 624), (167, 29)])
         logger.debug(f"等待战斗结束颜色检查: {bgrs}")
         if (
-            BGRGroup([198, 200, 200], [202, 204, 204]) == bgrs[0]
-            and BGRGroup([183, 185, 185], [187, 189, 189]) == bgrs[1]
+            BGR(198, 200, 200) <= bgrs[0] <= BGR(202, 204, 204) 
+            and BGR(183, 185, 185) <= bgrs[1] <= BGR(187, 189, 189)
         ):
             logger.info("检测到执照等级提升")
             input_tap((1151, 626))

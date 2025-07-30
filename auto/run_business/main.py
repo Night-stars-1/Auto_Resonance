@@ -15,7 +15,7 @@ from auto.run_business.sell import sell_business
 from core.control.control import STOP, connect, input_tap, screenshot
 from core.model import app
 from core.model.city_goods import RouteModel, RoutesModel
-from core.module.bgr import BGR, BGRGroup
+from core.module.bgr import BGR
 from core.preset import click_station, get_station, go_outlets, wait_gbr
 from core.utils.utils import read_json, RESOURCES_PATH
 
@@ -46,8 +46,8 @@ def go_business(type: Literal["buy", "sell"] = "buy"):
     result = go_outlets("交易所")
     is_join = wait_gbr(
         pos=(286, 35),
-        min_gbr=(250, 250, 250),
-        max_gbr=(255, 255, 255),
+        min_gbr=BGR(250, 250, 250),
+        max_gbr=BGR(255, 255, 255),
         cropped_pos1=(242, 11),
         cropped_pos2=(414, 66),
     )
@@ -60,9 +60,9 @@ def go_business(type: Literal["buy", "sell"] = "buy"):
         bgr = screenshot().get_bgr((1175, 460))
         logger.debug(f"进入交易所颜色检查: {bgr}")
         if (
-            BGRGroup([0, 123, 240], [2, 133, 255]) == bgr
+            BGR(0, 123, 240) <= bgr <= BGR(2, 133, 255)
             or BGR(225, 225, 225) == bgr
-            or BGRGroup([0, 170, 240], [5, 185, 255]) == bgr
+            or BGR(0, 170, 240) <= bgr <= BGR(5, 185, 255)
         ):
             return True
         else:

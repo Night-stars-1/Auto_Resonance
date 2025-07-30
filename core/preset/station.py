@@ -11,7 +11,7 @@ from loguru import logger
 
 from core.control.control import input_tap, screenshot
 from core.model.config import config
-from core.module.bgr import BGRGroup
+from core.module.bgr import BGR
 from core.preset.control import go_home
 from core.utils.utils import RESOURCES_PATH
 
@@ -63,20 +63,20 @@ class STATION:
             logger.debug(f"行车攻击检测: {attack_bgrs}")
             logger.debug(f"行车检测: {reach_bgrs}")
             if (
-                BGRGroup([8, 168, 234], [10, 171, 245]) == attack_bgrs[0]
-                and BGRGroup([8, 168, 234], [10, 171, 245]) == attack_bgrs[1]
-                and BGRGroup([8, 168, 234], [10, 171, 245]) == attack_bgrs[2]
+                BGR(8, 168, 234) <= attack_bgrs[0] <= BGR(10, 171, 245)
+                and BGR(8, 168, 234) <= attack_bgrs[1] <= BGR(10, 171, 245)
+                and BGR(8, 168, 234) <= attack_bgrs[2] <= BGR(10, 171, 245)
             ):
                 logger.info("检测到拦截，进行攻击")
                 self.join_wait_fight()
             elif (
-                BGRGroup([8, 168, 234], [9, 171, 245]) == attack_bgrs[3]
-                and BGRGroup([8, 168, 234], [9, 171, 245]) == attack_bgrs[4]
+                BGR(8, 168, 234) <= attack_bgrs[3] <= BGR(9, 171, 245)
+                and BGR(8, 168, 234) <= attack_bgrs[4] <= BGR(9, 171, 245)
             ):
                 logger.info("检测到可撞击")
             elif (
-                BGRGroup([20, 20, 20], [25, 25, 25]) == reach_bgrs[0]
-                and BGRGroup([250, 250, 250], [255, 255, 255]) == reach_bgrs[1]
+                BGR(20, 20, 20) <= reach_bgrs[0] <= BGR(25, 25, 25)
+                and BGR(250, 250, 250) <= reach_bgrs[1] <= BGR(255, 255, 255)
             ):
                 logger.info("站点到达")
                 input_tap((877, 359))
@@ -84,7 +84,8 @@ class STATION:
                 return True
             elif (
                 reach_bgrs[2] == [251, 253, 253]
-                and BGRGroup([235, 235, 250], [240, 240, 255]) != reach_bgrs[2]
+                and reach_bgrs[2] < BGR(235, 235, 250) 
+                and reach_bgrs[2] > BGR(240, 240, 255)
                 and config.global_config.is_speed
             ):
                 logger.info("点击加速弹丸")
@@ -137,8 +138,8 @@ class STATION:
             bgrs = image.get_bgrs([(1114, 630), (1204, 624), (159, 26)])
             logger.debug(f"战斗检测: {bgrs}")
             if (
-                BGRGroup([198, 200, 200], [202, 204, 204]) == bgrs[0]
-                and BGRGroup([183, 185, 185], [187, 189, 189]) == bgrs[1]
+                BGR(198, 200, 200) <= bgrs[0] <= BGR(202, 204, 204)
+                and BGR(183, 185, 185) <= bgrs[1] <= BGR(187, 189, 189)
             ):
                 logger.info("检测到执照等级提升")
                 input_tap((1151, 626))

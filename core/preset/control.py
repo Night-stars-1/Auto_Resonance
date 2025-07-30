@@ -12,7 +12,7 @@ from typing import Tuple, Union
 import cv2 as cv
 from loguru import logger
 
-from core.module.bgr import BGRGroup
+from core.module.bgr import BGR
 
 from core.control.control import input_tap, screenshot
 from core.exception.exception_handling import get_excption
@@ -21,8 +21,8 @@ from core.utils.utils import RESOURCES_PATH
 
 def wait_gbr(
     pos: Tuple[int, int],
-    min_gbr: Tuple[int, int, int],
-    max_gbr: Tuple[int, int, int],
+    min_gbr: BGR,
+    max_gbr: BGR,
     cropped_pos1: Tuple[int, int] = (0, 0),
     cropped_pos2: Tuple[int, int] = (0, 0),
     trynum=10,
@@ -42,7 +42,7 @@ def wait_gbr(
         image = screenshot()
         image.crop_image(cropped_pos1, cropped_pos2)
         bgr = image.get_bgr(pos)
-        if BGRGroup(min_gbr, max_gbr) == bgr:
+        if min_gbr <= bgr <= max_gbr:
             return True
         time.sleep(1)
     logger.info(get_excption())
@@ -81,7 +81,7 @@ def click_image(
             input_tap(pos)
             return True
     if check_err:
-        logger.error(f"未找到指定图片 => {image}")
+        logger.error(f"未找到指定图片 => {template}")
         logger.info(get_excption())
     return False
 

@@ -5,26 +5,32 @@ def compare_ranges(
     low: Union["BGR", Tuple[int, int, int], List[int]],
     x: Union["BGR", Tuple[int, int, int], List[int]],
     high: Union["BGR", Tuple[int, int, int], List[int]],
+    check_self: bool = True
 ):
     """
-    说明:
-        判断指定颜色是否在范围
-    参数:
-        :param low: 最低颜色
-        :param x: 目标颜色
-        :param high: 最高颜色
+    判断指定颜色是否在范围
+
+    :param low: 最低颜色
+    :param x: 目标颜色
+    :param high: 最高颜色
+    :param check_self: 是否检查自己
     """
-    # 解构列表到单独的变量
     low_0, low_1, low_2 = low
     x_0, x_1, x_2 = x
     high_0, high_1, high_2 = high
 
-    # 比较每个元素
-    return (
-        (low_0 <= x_0 <= high_0)
-        and (low_1 <= x_1 <= high_1)
-        and (low_2 <= x_2 <= high_2)
-    )
+    if check_self:
+        return (
+            (low_0 <= x_0 <= high_0)
+            and (low_1 <= x_1 <= high_1)
+            and (low_2 <= x_2 <= high_2)
+        )
+    else:
+        return (
+            (low_0 < x_0 < high_0)
+            and (low_1 < x_1 < high_1)
+            and (low_2 < x_2 < high_2)
+        )
 
 
 class BGR:
@@ -44,10 +50,9 @@ class BGR:
 
     def __eq__(self, other: Union["BGR", Tuple[int, int, int], List[int]]):
         """
-        说明:
-            判断指定BGR是否在范围
-        参数:
-            :param other: 另一个 BGR
+        判断指定BGR是否在范围
+        
+        :param other: 另一个 BGR
         :warning: 该方法会根据 offset 对前一个 BGR 进行范围偏移
         """
         return compare_ranges(
@@ -58,16 +63,26 @@ class BGR:
 
     def __ne__(self, other: Union["BGR", Tuple[int, int, int], List[int]]):
         """
-        说明:
-            判断指定BGR是否不在范围
-        参数:
-            :param other: 另一个 BGR
+        判断指定BGR是否不在范围
+        
+        :param other: 另一个 BGR
         :warning: 该方法会根据 offset 对前一个 BGR 进行范围偏移
         """
         return not compare_ranges(
             (self.b - self.offset, self.g - self.offset, self.r - self.offset),
             other,
             (self.b + self.offset, self.g + self.offset, self.r + self.offset),
+        )
+    
+    def __le__(self, other: "BGR"):
+        return self.b <= other.b and self.g <= other.g and self.r <= other.r
+
+    def __lt__(self, other: "BGR"):
+        return compare_ranges(
+            (self.b - self.offset, self.g - self.offset, self.r - self.offset),
+            other,
+            (self.b + self.offset, self.g + self.offset, self.r + self.offset),
+            False
         )
 
     def __iter__(self):
@@ -87,34 +102,3 @@ class BGR:
                 raise IndexError("BGR index out of range")
         else:
             raise TypeError("Invalid index type. Must be an integer.")
-
-class BGRGroup:
-    """BGR 组"""
-
-    def __init__(self, low_bgr: Union[Tuple[int, int, int], list[int]], high_bgr: Union[Tuple[int, int, int], list[int]]):
-        self.low_bgr = low_bgr
-        self.high_bgr = high_bgr
-
-    def __str__(self):
-        return f"Low: {self.low_bgr}, High: {self.high_bgr}"
-
-    def __repr__(self):
-        return f"BGRGroup({self.low_bgr}, {self.high_bgr})"
-
-    def __eq__(self, other: Union["BGR", Tuple[int, int, int]]):
-        """
-        说明:
-            判断指定BGR是否在范围
-        参数:
-            :param other: 另一个 BGRGroup
-        """
-        return compare_ranges(self.low_bgr, other, self.high_bgr)
-
-    def __ne__(self, other: Union["BGR", Tuple[int, int, int]]):
-        """
-        说明:
-            判断指定BGR是否不在范围
-        参数:
-            :param other: 另一个 BGRGroup
-        """
-        return not compare_ranges(self.low_bgr, other, self.high_bgr)

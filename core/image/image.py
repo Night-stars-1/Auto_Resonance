@@ -13,6 +13,7 @@ from loguru import logger
 
 from core.image.ocr import number_predict, predict
 from core.image.utils import MATCH_TEMPLATE_RESULT, crop_image, get_bgr, get_bgrs, get_hsv, match_template, save_image, show_image
+from core.module.bgr import BGR
 
 
 class Image:

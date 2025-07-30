@@ -89,18 +89,16 @@ def buy_good(good: str, book: int, max_book: int, again: bool = False):
         pos, image = find_good(good)  # 点击失败查找并点击商品
     if pos and image is not None:
         hsv = image.get_hsv((564, 667 if pos[1] + 22 > 720 else pos[1] + 22))
-        """
-        cv.rectangle(
-            image,
-            (564, 667 if pos[1] + 22 > 720 else int(pos[1] + 22)),  # 左上角坐标
-            (564, 667 if pos[1] + 22 > 720 else int(pos[1] + 22)),  # 右下角坐标
-            (0, 255, 0),  # 颜色 (绿色，使用BGR格式)
-            5,  # 线条粗细
-        )
-        show_image(image)
-        """
+        # cv.rectangle(
+        #     image,
+        #     (564, 667 if pos[1] + 22 > 720 else int(pos[1] + 22)),
+        #     (564, 667 if pos[1] + 22 > 720 else int(pos[1] + 22)),
+        #     (0, 255, 0),
+        #     5,
+        # )
+        # show_image(image)
         logger.debug(f"是否进货检测: {hsv}")
-        if HSV(95, 5, 255) == hsv or HSV(5, 5, 255) == hsv:
+        if 55 <= hsv.v <= 70:
             if book < max_book:
                 use_book(pos, book)
                 return (
@@ -236,7 +234,7 @@ def click_bargain_button(num=0):
             return True
         hsv = screenshot().crop_image((516, 224), (787, 439)).get_hsv((629, 271))
         logger.debug(f"降价是否成功颜色检查(HSV): {hsv}")
-        if 95 <= hsv[0] <= 105:
+        if 95 <= hsv.h <= 105:
             logger.info("降价成功")
             num -= 1
         else:

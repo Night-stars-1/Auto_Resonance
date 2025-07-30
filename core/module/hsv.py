@@ -77,6 +77,9 @@ class HSV:
             (self.h + self.offset, self.s + self.offset, self.v + self.offset),
         )
 
+    def __le__(self, other: "HSV"):
+        return self.h <= other.h and self.s <= other.s and self.v <= other.v
+    
     def __iter__(self):
         yield self.h
         yield self.s

@@ -84,4 +84,9 @@ while True:
     if key == ord("q"):
         break
 
+    if key == ord("r"):
+        original_image = screenshot_image()
+        zoom_mode = False
+        break
+
 cv2.destroyAllWindows()

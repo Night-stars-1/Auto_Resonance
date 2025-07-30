@@ -28,20 +28,20 @@ def wait_gbr(
     trynum=10,
 ):
     """
-    说明:
-        等待指定颜色出现
-    参数:
-        :param pos: 坐标
-        :param min_gbr: 最小颜色
-        :param max_gbr: 最大颜色
-        :param cropped_pos1: 裁剪坐标
-        :param cropped_pos2: 裁剪坐标
-        :param trynum: 尝试次数
+    等待指定颜色出现
+
+    :param pos: 坐标
+    :param min_gbr: 最小颜色
+    :param max_gbr: 最大颜色
+    :param cropped_pos1: 裁剪坐标
+    :param cropped_pos2: 裁剪坐标
+    :param trynum: 尝试次数
     """
     for _ in range(trynum):
         image = screenshot()
         image.crop_image(cropped_pos1, cropped_pos2)
         bgr = image.get_bgr(pos)
+        logger.debug(f"等待指定坐标的颜色: {bgr}")
         if min_gbr <= bgr <= max_gbr:
             return True
         time.sleep(1)
@@ -100,6 +100,8 @@ def ocr_click(
     text: str,
     cropped_pos1: Tuple[int, int] = (0, 0),
     cropped_pos2: Tuple[int, int] = (0, 0),
+    excursion_pos: Tuple[int, int] = (0, 0),
+    trynum=3,
     log=True,
 ):
     """
@@ -109,27 +111,29 @@ def ocr_click(
         :param text: 文本
         :param cropped_pos1: 裁剪坐标1
         :param cropped_pos2: 裁剪坐标2
+        :param trynum: 尝试次数
         :param log: 是否打印日志
     """
-    image = screenshot()
-    image.crop_image(cropped_pos1, cropped_pos2)
-    data = image.ocr()
-    coordinates = None
-    for item in data:
-        if item["text"] == text:
-            position = item["position"]
-            # 计算中心坐标
-            center_x = (position[0][0] + position[2][0]) / 2
-            center_y = (position[0][1] + position[2][1]) / 2
-            coordinates = (center_x, center_y)
-            break
-    if coordinates:
-        input_tap(coordinates)
-        return True
-    else:
-        if log:
-            logger.error(f"未找到指定文本 => {text}")
-        return False
+    for _ in range(trynum):
+        image = screenshot()
+        image.crop_image(cropped_pos1, cropped_pos2)
+        data = image.ocr()
+        coordinates = None
+        for item in data:
+            if item["text"] == text:
+                position = item["position"]
+                # 计算中心坐标
+                center_x = (position[0][0] + position[2][0]) / 2
+                center_y = (position[0][1] + position[2][1]) / 2
+                coordinates = (center_x + excursion_pos[0], center_y + excursion_pos[1])
+                break
+        if coordinates:
+            input_tap(coordinates)
+            return True
+        time.sleep(1)
+    if log:
+        logger.error(f"未找到指定文本 => {text}")
+    return False
 
 
 def blurry_ocr_click(
@@ -139,6 +143,7 @@ def blurry_ocr_click(
     excursion_pos: Tuple[int, int] = (0, 0),
     trynum=3,
     log=True,
+    score=0.7,
     click_first=False,
 ):
     """
@@ -158,7 +163,7 @@ def blurry_ocr_click(
         data = image.ocr()
         coordinates = None
         for item in data:
-            if text in item["text"]:
+            if text in item["text"] and len(text) / len(item["text"]) >= score:
                 position = item["position"]
                 if click_first:
                     center_x = position[0][0]
@@ -172,6 +177,7 @@ def blurry_ocr_click(
         if coordinates:
             input_tap(coordinates)
             return True
+        time.sleep(1)
     if log:
         logger.error(f"未找到指定文本 => {text}")
     return False

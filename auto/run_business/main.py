@@ -10,6 +10,7 @@ from typing import Any, Dict, Literal
 
 from loguru import logger
 
+from auto.module.strength import check_shop_strength, use_strength
 from auto.run_business.buy import buy_business
 from auto.run_business.sell import sell_business
 from core.control.control import STOP, connect, input_tap, screenshot
@@ -17,6 +18,7 @@ from core.model import app
 from core.model.city_goods import RouteModel, RoutesModel
 from core.module.bgr import BGR
 from core.preset import click_station, get_station, go_outlets, wait_gbr
+from core.preset.control import click
 from core.utils.utils import read_json, RESOURCES_PATH
 
 _city_sell_data: Any = read_json(RESOURCES_PATH / "goods/CityGoodsSellData.json")
@@ -86,6 +88,12 @@ def run(routes: RoutesModel):
         logger.info(f"{city.buy_city_name}->{city.sell_city_name}")
         click_station(city.buy_city_name, cur_station=city_name).wait()
         go_business("buy")
+        if not check_shop_strength():
+            logger.info("检测到体力不足，使用快过期的提神棒棒糖")
+            click((974, 32))
+            if not use_strength():
+                logger.error("使用快过期的提神棒棒糖失败, 停止跑商")
+                return False
         goods_data = list(city.goods_data.keys())
         buy_business(
             goods_data[:1],

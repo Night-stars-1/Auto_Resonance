@@ -94,7 +94,7 @@ class TwoRunBusinessInterface(ScrollArea):
                 getattr(cfg, f"{city}议价次数"),
                 FIF.PENCIL_INK,
                 city,
-                f"{city}议价次数",
+                f"{city}议价成功次数",
                 spin_box_max=20,
                 parent=self.haggleGroup,
             )

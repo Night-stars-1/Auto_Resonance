@@ -184,10 +184,9 @@ def go_city():
 
 def go_outlets(name: str):
     """
-    说明:
-        前往指定门店
-    参数:
-        :param name: 门店名称
+    前往指定门店
+
+    :param name: 门店名称
     """
     go_city()
     logger.info(f"前往 => {name}")
@@ -206,6 +205,11 @@ def go_outlets(name: str):
     if result := ocr_click(name, excursion_pos=(0, 80)):
         return result
 
+def go_shop():
+    """
+    前往交易所
+    """
+    click_image(RESOURCES_PATH / "shop" / "1.png", trynum=1, check_err=False)
 
 def wait_fight_end():
     """

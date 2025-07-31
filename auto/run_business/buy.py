@@ -89,17 +89,9 @@ def buy_good(good: str, book: int, max_book: int, again: bool = False):
     if not pos:
         pos, image = find_good(good)  # 点击失败查找并点击商品
     if pos and image is not None:
-        hsv = image.get_hsv((564, 667 if pos[1] + 22 > 720 else pos[1] + 22))
-        # cv.rectangle(
-        #     image,
-        #     (564, 667 if pos[1] + 22 > 720 else int(pos[1] + 22)),
-        #     (564, 667 if pos[1] + 22 > 720 else int(pos[1] + 22)),
-        #     (0, 255, 0),
-        #     5,
-        # )
-        # show_image(image)
-        logger.debug(f"是否进货检测: {hsv}")
-        if 55 <= hsv.v <= 70:
+        bgr = image.get_bgr((641, pos[1]))
+        logger.debug(f"是否进货检测: {bgr}")
+        if 13 <= bgr.r <= 16:
             if book < max_book:
                 use_book(pos, book)
                 return (
@@ -241,7 +233,7 @@ def click_bargain_button(num=0):
         else:
             logger.info("降价失败")
         # 等待降价动画消失
-        wait_gbr((627,100), BGR(65, 60, 35), BGR(70, 65, 45), cropped_pos1=(600,82), cropped_pos2=(665,114))
+        wait_gbr((628, 102), BGR(60, 55, 30), BGR(70, 65, 40))
     return False
 
 

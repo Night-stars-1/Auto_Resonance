@@ -206,8 +206,8 @@ def find_text(
                 logger.info(f"找到文本 => {text}")
             position = item["position"]
             # 计算中心坐标
-            center_x = (position[0][0] + position[2][0]) / 2
-            center_y = (position[0][1] + position[2][1]) / 2
+            center_x = int((position[0][0] + position[2][0]) / 2)
+            center_y = int((position[0][1] + position[2][1]) / 2)
             return (center_x, center_y), image
     if log:
         logger.error(f"未找到指定文本 => {text}")

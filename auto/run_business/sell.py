@@ -88,7 +88,7 @@ def click_bargain_button(num=0):
         else:
             logger.info("抬价失败")
         # 等待降价动画消失
-        wait_gbr((627,100), BGR(40, 60, 70), BGR(20, 70, 80), cropped_pos1=(600,82), cropped_pos2=(665,114))
+        wait_gbr((629, 101), BGR(30, 50, 65), BGR(40, 60, 75))
     return False
 
 

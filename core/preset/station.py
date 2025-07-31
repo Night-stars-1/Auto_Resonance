@@ -60,8 +60,10 @@ class STATION:
             reach_bgrs = image.get_bgrs(
                 [(839, 354), (814, 359), (1051, 641), (658, 690)]
             )
+            run_bgr = image.get_bgr((1225, 481))
             logger.debug(f"行车攻击检测: {attack_bgrs}")
             logger.debug(f"行车检测: {reach_bgrs}")
+            logger.debug(f"是否进站检测: {run_bgr}")
             if (
                 BGR(8, 168, 234) <= attack_bgrs[0] <= BGR(10, 171, 245)
                 and BGR(8, 168, 234) <= attack_bgrs[1] <= BGR(10, 171, 245)
@@ -80,7 +82,10 @@ class STATION:
             ):
                 logger.info("站点到达")
                 input_tap((877, 359))
-                go_home()
+                # go_home()
+                return True
+            elif BGR(251, 253, 253) == run_bgr:
+                logger.info("站点到达")
                 return True
             elif (
                 reach_bgrs[2] == [251, 253, 253]

@@ -103,6 +103,12 @@ def run(routes: RoutesModel):
         )
         click_station(city.sell_city_name, cur_station=city_name).wait()
         go_business("sell")
+        if not check_shop_strength():
+            logger.info("检测到体力不足，使用快过期的提神棒棒糖")
+            click((974, 32))
+            if not use_strength():
+                logger.error("使用快过期的提神棒棒糖失败, 停止跑商")
+                return False
         sell_business(city.haggle_num)
         # 流程跑完，更改站点名称为当前出售商品的站点
         city_name = city.sell_city_name

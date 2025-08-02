@@ -55,7 +55,7 @@ class STATION:
             image = screenshot()
             # 0-2攻击检测，3-4拦截检测
             attack_bgrs = image.get_bgrs(
-                [(944, 247), (967, 229), (1056, 229), (1103, 328), (1128, 332)]
+                [(944, 247), (967, 229), (1056, 229), (1120, 312)]
             )
             reach_bgrs = image.get_bgrs(
                 [(839, 354), (814, 359), (1051, 641), (658, 690)]
@@ -72,10 +72,10 @@ class STATION:
                 logger.info("检测到拦截，进行攻击")
                 self.join_wait_fight()
             elif (
-                BGR(8, 168, 234) <= attack_bgrs[3] <= BGR(9, 171, 245)
-                and BGR(8, 168, 234) <= attack_bgrs[4] <= BGR(9, 171, 245)
+                BGR(9, 167, 235) == attack_bgrs[3]
             ):
                 logger.info("检测到可撞击")
+                input_tap((1120, 312))
             elif (
                 BGR(20, 20, 20) <= reach_bgrs[0] <= BGR(25, 25, 25)
                 and BGR(250, 250, 250) <= reach_bgrs[1] <= BGR(255, 255, 255)

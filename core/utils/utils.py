@@ -10,10 +10,13 @@ from pathlib import Path
 import sys
 from typing import Any, List, Tuple, Union
 
+from loguru import logger
+
 ROOT_PATH = Path()
 """项目根目录"""
 if getattr(sys, 'frozen', False):
     ROOT_PATH = Path(sys.executable).parent
+logger.info(f"项目目录 {ROOT_PATH.resolve()}")
 RESOURCES_PATH = ROOT_PATH / "resources"
 """资源路径"""
 TEMP_PATH = ROOT_PATH / "temp"

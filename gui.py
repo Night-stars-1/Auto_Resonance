@@ -9,6 +9,7 @@ import atexit
 import sys
 
 from PySide6.QtWidgets import QApplication
+from qfluentwidgets import FluentTranslator
 
 from app.common.config import cfg
 
@@ -32,6 +33,10 @@ atexit.register(close_service)  # 注册退出时的清理函数
 
 
 app = QApplication(sys.argv)
+
+translator = FluentTranslator()
+app.installTranslator(translator)
+
 w = MainWindow()
 w.show()
 app.exec()

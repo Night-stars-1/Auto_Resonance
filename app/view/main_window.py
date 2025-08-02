@@ -22,14 +22,16 @@ from qfluentwidgets import (
     FluentIconBase,
     SystemThemeListener,
     isDarkTheme,
-    setTheme
+    setTheme,
+    MessageBox
 )
 
 import app.common.resource  # 图标数据
 from app.common.config import VERSION, cfg, isWin11
 from app.common.signal_bus import signalBus
 from app.components.update_message_box import UpdateMessageBox
-from app.utils.constants import ICON_PATH
+from app.utils.constants import ICON_PATH, ROOT_PATH
+from app.utils.utils import is_chinese
 from app.view.two_city_run_business_interface import TwoRunBusinessInterface
 from core.utils.update.base_update_utils import UpdateStatus
 from core.utils.update.mirror_update_utils import MirrorUpdateUtils
@@ -62,6 +64,8 @@ class MainWindow(MSFluentWindow):
         # self.checkUpdate()
         # 启用主题监听器
         self.themeListener.start()
+        
+        self.checkChinesePath()
 
     def connectSignalToSlot(self):
         signalBus.switchToCard.connect(self.switchToCard)
@@ -84,7 +88,7 @@ class MainWindow(MSFluentWindow):
             routeKey="Update",
             icon=FIF.UPDATE,
             text="更新",
-            onClick=self.Update,
+            onClick=self._update,
             selectable=False,
             position=NavigationItemPosition.BOTTOM,
         )
@@ -160,7 +164,7 @@ class MainWindow(MSFluentWindow):
         if self.isMicaEffectEnabled():
             QTimer.singleShot(100, lambda: self.windowEffect.setMicaEffect(self.winId(), isDarkTheme()))
 
-    def Update(self):
+    def _update(self):
         """
         检查更新
         """
@@ -227,3 +231,12 @@ class MainWindow(MSFluentWindow):
                 position=InfoBadgePosition.NAVIGATION_ITEM,
             )
             self.updateBadge.setFixedSize(10, 10)
+
+    def checkChinesePath(self):
+        if is_chinese(str(ROOT_PATH)):
+            w = MessageBox("兼容性警告", "程序运行在中文路径上，请移动至英文路径", self)
+            
+            w.yesButton.setText("知道了")
+            w.cancelButton.hide()
+            w.buttonLayout.insertStretch(1)
+            w.exec()

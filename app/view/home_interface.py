@@ -21,7 +21,7 @@ from qfluentwidgets import (
     InfoBarIcon,
     InfoBarPosition,
     ScrollArea,
-    isDarkTheme,
+    isDarkTheme
 )
 
 from app.common.config import REPO_URL, cfg

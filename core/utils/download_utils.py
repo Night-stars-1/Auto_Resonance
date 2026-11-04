@@ -18,7 +18,7 @@ def download_file(
         :param path: 保存的路径
         :param progress_changed: 可选的进度更新回调函数，接收一个整数参数表示下载进度百分比
     """
-    response = requests.get(url, stream=True)
+    response = requests.get(url, stream=True, timeout=30)
     if response.status_code == 200:
         # 设置下载进度条
         total_size = int(response.headers.get("content-length", 0))

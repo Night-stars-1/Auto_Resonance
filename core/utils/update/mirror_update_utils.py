@@ -14,6 +14,6 @@ class MirrorUpdateUtils(BaseUpdateUtils):
     def get_latest_info(self, cdk: str):
         logger.info(f"获取最新版本信息 version={__version__} cdk={len(cdk)}")
         query = {"current_version": __version__, "cdk": cdk, "user_agent": RES_ID}
-        resposne = requests.get(LATEST_URL, params=query)
+        resposne = requests.get(LATEST_URL, params=query, timeout=30)
         self.data = LatestInfoResponse.model_validate(resposne.json())
         return self.data
